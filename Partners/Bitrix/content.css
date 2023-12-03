@@ -1,0 +1,23 @@
+
+
+.crm-kanban-item-fields-item-value-user:hover #CustomDiv{
+    display: block;
+}
+
+#CustomDiv{
+    display: none;
+}
+.side-panel-container{max-width: 2000px !important;}
+
+
+.CodyBlock{
+	width: 200px
+	height:200px;
+	
+}
+
+.main-kanban-column-title-spam-inner{
+    margin-top: 6px;
+    font-weight: 600;
+    font-size: 13px;
+}

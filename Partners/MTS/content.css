@@ -1,0 +1,19 @@
+#PasteButton1{
+    background: #f4f1e8;
+    padding: 11px;
+    border: 2px solid #bfbcb6;
+    border-radius: 10px;
+    font-weight: 500;
+    color: #202026;
+	cursor: pointer;
+	margin-left: -6px;
+    margin-top: 4%;
+    width: 112px;
+    font-size: 18px;
+    padding-top: 8px;
+    padding-left: 13px;
+}
+
+#PasteButton1:hover{
+	background: #e7e7e7;
+}

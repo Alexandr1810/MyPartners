@@ -1,0 +1,131 @@
+var number;
+var nameval;
+
+
+window.addEventListener('load', function () { 
+    console.log("Начинаю шаманить")
+    chrome.runtime.sendMessage({
+        user: "novotelecom",
+        Message: "Обновись!"
+    });
+
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse){
+            console.log(request, sender, sendResponse);
+            console.log(request.Recipient, request.Recipient, request.Message);
+            if (request.Recipient == 'novotelecom') {
+                if (request.Message=='true') {
+                    setTimeout(InStart(), 5000);
+                    setInterval(FindPaste, 1000)
+                }
+                if (request.Message=='false') {
+                  console.log(request.Message);
+                }
+            }
+        }
+    );
+
+    
+})
+
+function getClipboardData(data) {
+    var myVariable = data;
+    console.log(myVariable); // вывод в консоль или другие дальнейшие операции с данными
+    // Дальнейший код здесь...
+}
+
+function FindPaste(){
+  //console.log("Есть контакт");
+  try{
+    const IcoGroup = document.getElementsByClassName("logo")[0];
+    //const FormGroup = document.getElementsByClassName("g-recaptcha")[0];
+    const FormGroup = document.querySelector('[style="width: 304px; height: 78px;"]');
+
+    
+
+    console.log(IcoGroup)
+    if (IcoGroup.innerHTML.indexOf("Коммисии") < 0) {
+      IcoGroup.innerHTML += '<a href="http://pap.novotelecom.ru/affiliates/panel.php#Transactions-List" style="z-index: 10000; font-weight: 600; padding: 7px; background-color: #2ecc71; border-color: #2ecc71; color: #fff; border-radius: 6px; position: relative; top: 50px; left: 49%;">Коммисии</a>';
+    }
+    if (FormGroup.innerHTML.indexOf("Вставить") < 0) {
+      //FormGroup.innerHTML += '<a id="PasteButton" style="font-weight: 600;padding: 9px;background-color: #2ecc71;border-color: #2ecc71;color: #fff;border-radius: 6px;position: relative;top: 35px;left: 55%;cursor: pointer;">Вставить</a>';
+    }
+
+
+    document.getElementById("PasteButton").addEventListener("click", e => {
+      // Получение данных из буфера обмена
+
+      var textArea = document.createElement("textarea");
+      textArea.style.position = "fixed";
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.width = "2em";
+      textArea.style.height = "2em";
+      textArea.style.padding = 0;
+      textArea.style.border = "none";
+      textArea.style.outline = "none";
+      textArea.style.boxShadow = "none";
+      textArea.style.background = "transparent";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      document.execCommand('paste');
+      var clipboardData = textArea.value;
+      console.log(clipboardData);
+      getClipboardData(clipboardData);
+      document.body.removeChild(textArea);
+      
+      
+
+      
+      /*navigator.clipboard.readText()
+      .then(text => {
+        console.log(text);
+        var json = JSON.parse(text);
+        console.log(json);
+
+        const FIO = document.querySelector('[placeholder="ФИО абонента"]');
+        const PhNumber = document.querySelector('[placeholder="9991112233"]');
+        const Street = document.querySelector('[placeholder="Улица"]');
+        const House = document.querySelector('[placeholder="Дом"]');
+        const Korpus = document.querySelector('[placeholder="Корпус"]');
+        const Kvartira = document.querySelector('[placeholder="Квартира"]');
+        const Comment = document.querySelector('[placeholder="Комментарий"]');
+
+        
+
+        replaseNumber(json.PhoneNumber);
+        replaseName(json.fio);
+
+        FIO.value = json.fio;
+        Comment.value = json.OtherInfo;
+        PhNumber.value = number.slice(1);
+      })
+      .catch(err => {
+        // возможно, пользователь не дал разрешение на чтение данных из буфера обмена
+        console.log('Something went wrong', err);
+      });
+      */
+    });
+    
+  }
+  
+  catch(e){
+    console.log(e)
+  }
+}
+
+function InStart(){
+  var link = document.querySelector("link[rel='icon']");
+  if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+      
+  }
+  link.href = 'https://e-gorod54.ru/favicon/favicon.ico';
+}
+
+function replaseNumber(num){
+  number = num.replace(/[-+()\s]/g, '');
+}
+

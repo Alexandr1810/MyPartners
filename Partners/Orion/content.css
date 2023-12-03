@@ -1,0 +1,32 @@
+/* Текст подсказки */
+
+#tooltip {
+    position: fixed;
+    bottom: 10%;
+    right: 5%;
+    width: 332px;
+    height: 283px;
+    border-radius: 6px;
+    background-color: #e13333;
+    padding: 20px;
+    color: white;
+    font-weight: 700;
+    visibility: hidden;
+}
+
+#tooltip ::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #d3d3d3 transparent transparent;
+}
+
+
+/* Показ текста всплывающей подсказки при наведении указателя мыши на контейнер */
+#newform:hover #tooltip {
+    visibility: visible;
+}
