@@ -16,6 +16,12 @@ var ESSD_On_Off = '';
 var OtherMRF_login = 'strijak_ov';
 var OtherMRF_password = 'Poiuyt123!';
 
+var MoskowObl_login = null;
+var MoskowObl_password = null;
+var OtherMRF_login_FromApi = null;
+var OtherMRF_password_FromApi = null;
+
+
 
 window.addEventListener('load', function () { 
 
@@ -142,12 +148,30 @@ function ESSD_ON(){
     
 
     //-------------------------------Выбор учетки при входе в партнерку-----------//
+    fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+      method: 'GET',
+      headers: {'content-type':'application/json'},
+    }).then(res => {
+      if (res.ok) {
+          return res.json();
+      }
+      // handle error
+    }).then(tasks => {
+      console.log(tasks.MoskowOblLog)
+      MoskowObl_login = tasks.MoskowOblLog
+      MoskowObl_password  = tasks.MoskowOblPass
+      OtherMRF_login_FromApi = tasks.OtherMrfLog
+      OtherMRF_password_FromApi = tasks.OtherMrfPass
+    }).catch(error => {
+      // handle error
+    })
+
     try { 
         MoscowObl.onclick = function() {
             RTcheckbox[0].dispatchEvent(clickEvent);
             for (var i = 0; i < LoginInput.length; i++) {
-                LoginInput[0].value = "мо_полховская_оф"; // подставляем логин и пароль
-                LoginInput[1].value = "cpJ-jqa-9Ku-Rs6";
+                LoginInput[0].value = MoskowObl_login; // подставляем логин и пароль
+                LoginInput[1].value = MoskowObl_password;
             }
             EnterFormButton[0].dispatchEvent(clickEvent);
 
@@ -163,8 +187,8 @@ function ESSD_ON(){
                     LoginInput[1].value = OtherMRF_password; 
                 }
                 else{
-                    LoginInput[0].value = "strijak_ov";
-                    LoginInput[1].value = "Poiuyt123!";
+                    LoginInput[0].value = OtherMRF_login_FromApi;
+                    LoginInput[1].value = OtherMRF_password_FromApi;
                 }
             }
             EnterFormButton[0].dispatchEvent(clickEvent);

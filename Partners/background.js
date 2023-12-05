@@ -360,7 +360,7 @@ function RMS_On_Off(){
 		    console.log(tabs.length)
 		    for (var i = 0; i < tabs.length; i++) {
 		    	console.log(tabs[i].url)
-		    	if (tabs[i].url.indexOf("ertelecom") >= 0) {
+		    	if (tabs[i].url.indexOf("rms") >= 0) {
 		    		console.log("НАШЕЛ!")
 		    		chrome.tabs.sendMessage(tabs[i].id, {user: 'background', Recipient: 'RMS', Message: 'true'});
 		    	}
@@ -375,7 +375,7 @@ function RMS_On_Off(){
 		    console.log(tabs.length)
 		    for (var i = 0; i < tabs.length; i++) {
 		    	console.log(tabs[i].url)
-		    	if (tabs[i].url.indexOf("ertelecom") >= 0) {
+		    	if (tabs[i].url.indexOf("rms") >= 0) {
 		    		console.log("НАШЕЛ!")
 		    		chrome.tabs.sendMessage(tabs[i].id, {user: 'background', Recipient: 'RMS', Message: 'false'});
 		    	}
