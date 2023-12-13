@@ -2,8 +2,8 @@
     "manifest_version": 3,
     "name": "MyPartners",
     "description": "Помощь в работе с партнерскими программами различных Провайдеров",
-    "version": "12.2",
-    "author": "EasyIT development",
+    "version": "13.1",
+    "author": "Rothaarige_Bestia",
     "action": {
         "default_popup": "Popup/popup.html",
         "default_icon": {

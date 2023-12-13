@@ -3,10 +3,26 @@ var Price = document.getElementsByClassName('ui-btn-primary');
 var Head = document.querySelectorAll('head');
 var names = null
 var DelLids = 0
+var NedozLids = 0
 var isDel = true
 var TodayTime = null
 var CurrentHour = null
-var AllNumber = []
+var AllNumbers = []
+var AllFirlds = []
+var ApiNames = null
+fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names', {
+  method: 'GET',
+  headers: {'content-type':'application/json'},
+}).then(res => {
+  if (res.ok) {
+      return res.json();
+  }
+  // handle error
+}).then(tasks => {
+  ApiNames = tasks;
+}).catch(error => {
+  // handle error
+})
 
 var NumbersReshifrator = {
           SpeedInet: "9039236742",
@@ -91,7 +107,7 @@ function GetPrice(){
     ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.154
     ItogPrice = Math.round(ItogPrice);
     ItogPrice = ItogPrice.toLocaleString();
-    console.log(ItogPrice);
+    //console.log(ItogPrice);
 
     Price1[i].innerHTML += '<span class="crm-kanban-total-price-total2">'+'≈'+ItogPrice+' руб.'+'</span>';
 
@@ -108,7 +124,7 @@ function SetPriceIntrval(){
           ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.154
           ItogPrice = Math.round(ItogPrice);
           ItogPrice = ItogPrice.toLocaleString();
-          console.log(ItogPrice);
+          //console.log(ItogPrice);
             
           Price2[i].innerText = '≈'+ItogPrice+' руб.';
 
@@ -125,8 +141,46 @@ function InStart(){
     var Tester = document.getElementsByClassName('crm-kanban-total-price-total');
     GetPrice();
     if (document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML.indexOf("Спам") < 0) {
-      document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner">Спам</div>';
+      document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner">Недозвоны</div>';
     }
+    document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML += `<div id="EditName_Block"><a style="" href="#openModal"> <img src="https://psv4.userapi.com/c236331/u451199873/docs/d27/77bfc022faaa/paint-brush.png?extra=6oKznMY0UrQUlq_eURaIY8OlnV8B__ZhDe6S8bmyulIwuptPWjWaTrrDvQn0wV6eKxCjkuqK7ZtV1p5JcmGh516eUkcjbPlgHNhbOdpGmyC0lUq4oSeIdlQ4oXiGARejip-lFVHxkeM7cjanvg8T9HEzOVA" style=" width: 65%; margin: 18%; "> </a></div>  
+    <div id="openModal" class="modal"> 
+      <div class="modal-dialog"> 
+        <div class="modal-content"> 
+        <div class="modal-body">
+          <div class="EditBlock">
+          <a href="#close" title="Close" class="close">×</a> 
+          <div class="EditBlockHeader">
+            <h1 class="EditBlockkHeaderText">Изменение имени в Битрикс24</h1>
+          </div>
+          <div class="EditBlockContent">
+            <h1 class="EditBlockContentText" style="margin-top: 5%;">Оригинальное Имя</h1>
+            <input class="EditBlockContentInput" id="OriginalName" type="text">
+            <h1 class="EditBlockContentText">Новое Имя</h1>
+            <input class="EditBlockContentInput" id="NewName" type="text">
+            <button class="EditBlockContentButton">Добавить</button>
+            <div id="CreateAlert">Имя Добавленно</div>
+            <div id="ResetAlert">Имя Измененно</div>
+            <div id="NullAlert">Данные не внесены</div>
+            <div id="ErrorAlert">Неизвестная ошибка</div>
+          </div>
+        </div>
+      </div> 
+    </div> 
+    </div> </div>`;
+    document.addEventListener("DOMContentLoaded", function () {
+      var scrollbar = document.body.clientWidth - window.innerWidth + 'px';
+      console.log(scrollbar);
+      document.querySelector('[href="#openModal"]').addEventListener('click', function () {
+        document.body.style.overflow = 'hidden';
+        document.querySelector('#openModal').style.marginLeft = scrollbar;
+      });
+      document.querySelector('[href="#close"]').addEventListener('click', function () {
+        document.body.style.overflow = 'visible';
+        document.querySelector('#openModal').style.marginLeft = '0px';
+      });
+    });
+    document.getElementsByClassName("EditBlockContentButton")[0].onclick = SetName;
   }
   catch{
     console.log("Страница еще не загружена");
@@ -316,41 +370,54 @@ function SetNames(){
   catch {
   }
   //console.log("Работаю", NewCards.length)
-  for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам и перенесенных из недозвонов
+  for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам, дубли и перенесенных из недозвонов
+    console.log("Новый Цикл")
      
-    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0) {
+    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0) {
         console.log("Найдена пустая завка ", i)
         NewCards[i].parentNode.removeChild(NewCards[i]);
         DelLids++;
     }
-    if (i == (NewCards.length-1) && isDel) {
-      
-      document.getElementsByClassName("main-kanban-column-title-spam-inner")[0].innerText = 'Спам (' + DelLids + ')';
-      console.log('DelLids: ', DelLids)
-      DelLids = 0;
-      isDel = false;
-      console.log('DelLids: ', DelLids)
-    }
-
     if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0){
       TodayTime = NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.replace("сегодня, ", "")
       TodayTime = TodayTime.split(':')[0]
       TodayTime = Number(TodayTime)
       var date = new Date();
       CurrentHour = date.getHours()
-      console.log("TodayTime: ", TodayTime, "\n", "CurrentHour: ", CurrentHour)
+      //console.log("TodayTime: ", TodayTime, "\n", "CurrentHour: ", CurrentHour)
     }
-
     if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая") {
-        //console.log("Найдена заявка из недозвонов ", i)
+        //console.log("Найдена заявка из недозвонов ", i, "из", NewCards.length-1, NewCards[i])
         //console.log(NewCards[i].getElementsByClassName('main-kanban-item')[0].getElementsByClassName("crm-kanban-item-date")[0])
-        NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(242 28 75 / 70%);');
-
+        NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
+        NedozLids++;
     }
+    if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 1 && CurrentHour-TodayTime <= 2) {
+        console.log("Найдена штрафная заявка ", i, "из", NewCards.length-1, NewCards[i])
+        //console.log(NewCards[i].getElementsByClassName('main-kanban-item')[0].getElementsByClassName("crm-kanban-item-date")[0])
+        NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(240 0 0 / 70%);');
+        NedozLids++;
+    }
+    if (i == (NewCards.length-1) && isDel) {
+      document.getElementsByClassName("main-kanban-column-title-spam-inner")[0].innerText = 'Спам (' + DelLids + ')';
+
+      DelLids = 0;
+      isDel = false;
+      //console.log('DelLids: ', DelLids)
+    }
+    if (i == (NewCards.length-1)) {
+      document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвон (' + NedozLids + ')';
+      console.log('NedozLids: ', NedozLids)
+      NedozLids = 0;
+    }
+    
+
+
   }
 
   for (var i = 0; i <= (AllCards.length-1); i++){
-    //getNumberFromCard(AllCards[i])
+    getNumberFromCard(AllCards[i])
+    //console.log("Промежуточний срез по массиву: ");
 
     if (AllCards[i].innerHTML.indexOf("Билайн АТС") >= 0){
       for (var j = 0; j < AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value').length; j++){
@@ -466,8 +533,49 @@ function SetNames(){
       //NewCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[0]
     }
   }
+  //console.log("Отправляю в функцию: ", AllNumbers)
+  FoundDublicate(AllFields, AllNumbers)
+  
+  AllNumbers.length=0
+  AllFirlds.length=0
 
-  for (var i = 0; i <= (names.length-1); i++) {
+
+  for (var i = 0; i <= (names.length-1); i++) { //Смена имени
+    //Новый Код
+    for (var j = 0; j < ApiNames.length; j++) {
+      if (names[i].innerHTML == ApiNames[j].OldName) {
+        names[i].innerHTML = ApiNames[j].NewName;
+
+        var div = document.createElement('div');
+        div.style.background = '#ebebeb';
+        div.style.height = '104px';
+        div.style.padding = '5px';
+        div.style.borderRadius = '4px';
+        div.style.color = '#3e444a';
+        div.id = 'CustomDiv';
+
+        var span = document.createElement('span');
+        span.style.whiteSpace = 'normal';
+        span.textContent = 'Это имя видят только пользователи расширения MyPartners. Что бы кастомизировать свое имя нажмите на кисточку справа от строки поиска.';
+        div.appendChild(span);
+        names[i].parentNode.appendChild(div);
+        if (names[i].innerHTML == "Чертова Рыжая Бестия") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Татьяна Бабич!") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #902aff 9%, #5d29d2 64%, #2932ad 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Этиловый Бес") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+
+        //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
+      }
+
+    }
+    //Новый Код
+
+    /*
     if (names[i].innerHTML == "Павел Обухов") {
       names[i].innerHTML = "Павел мать его Андреевич!";
 
@@ -693,19 +801,161 @@ function SetNames(){
 
       //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
     }
-
+    */
   }
   
 }
 
 function getNumberFromCard(card){
-  console.log(card);
-  var AllFirlds = card.getElementsByClassName("crm-kanban-item-fields-item")
-  for (var i = 0; i <= AllFirlds.length; i++) {
-    if (AllFirlds[i].getElementsByClassName("crm-kanban-item-fields-item-title").innerHTML.indexOf("Номер") >= 0) {
-      numberText = AllFirlds[i].getElementsByClassName("field-item")
-      console.log(numberText)
+  //console.log(card);
+ 
+  AllFields = card.getElementsByClassName("crm-kanban-item-fields-item")
+
+  for (var i = 0; i < AllFields.length; i++) {
+    try{
+      if (AllFields[i].getElementsByClassName("crm-kanban-item-fields-item-title")[0].innerHTML.indexOf("Номер") >= 0) {
+
+        numberText = AllFields[i].getElementsByClassName("field-item")
+        //console.log(numberText[0].innerText)
+        AllFirlds.push(numberText[0])
+        AllNumbers.push(numberText[0].innerText)
+      }
+    }
+    catch(e){
+      console.log(e)
     }
   }
+  
 }
 
+function FoundDublicate(elements, numbers){ 
+  //console.log("Пришло в функцию: ", numbers)
+  for (var i = 0; i < numbers.length; i++) {
+
+    //numbers[i] = numbers[i].replace(/[-+()\s]/g, ''); //Приводим все номера к одному виду
+    numbers[i] = numbers[i].replace(' dublicate', '');
+  }
+  const findDuplicates = numbers => numbers.filter((item, index) => numbers.indexOf(item) !== index)
+  const duplicates = findDuplicates(numbers);
+  
+
+  //console.log("Дубли: ", duplicates); 
+
+  for (var i = 0; i < AllFirlds.length; i++) {// Чет не пашет(( 
+    //console.log("Хуй1")
+    for (var j = 0; j < duplicates.length; j++) {
+      //console.log("Хуй2")
+      if (AllFirlds[i].innerText == duplicates[j] && document.body.innerHTML.indexOf('main-kanban-item-disabled') < 0) {
+        //console.log("Выявлен дубль!! ", AllFirlds[i]);
+        if (AllFirlds[i].innerHTML.indexOf('dublicate')<0) {
+          AllFirlds[i].innerHTML += '<span style="color: #f23e53"> dublicate</span>'
+        }
+      }
+      /*else{
+        
+        if (AllFirlds[i].innerHTML.indexOf('dublicate')>=0) {
+          console.log("Фейковый Дубль", AllFirlds[i])
+          AllFirlds[i].innerHTML = AllFirlds[i].innerHTML.replace('dublicate','')
+        }
+      }*/
+    }
+    
+  }
+
+
+}
+
+function SetName(){
+      var IsReset = false;
+      var ResetId = null
+      var OldName = document.getElementById("OriginalName").value;
+      var NewName = document.getElementById("NewName").value;
+      if (OldName != '' && NewName != '') {
+        fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names', {
+          method: 'GET',
+          headers: {'content-type':'application/json'},
+        }).then(res => {
+          if (res.ok) {
+              return res.json();
+          }
+          // handle error
+        }).then(tasks => {
+          console.log("OldName: ", OldName)
+          console.log("NewName: ", NewName)
+          console.log("tasks: ", tasks)
+          for (var i = 0; i < tasks.length; i++) {
+            if (tasks[i].OldName == OldName) {
+              IsReset = true
+              ResetId = tasks[i].id
+            }
+
+          }
+          if (IsReset) {
+            console.log("Изменить текущее")
+
+            ResetName(ResetId, OldName, NewName)
+            document.getElementById("ResetAlert").style.display = "block";
+            setTimeout(function(){
+              document.getElementById("ResetAlert").style.display = "none";
+            }, 2000);
+          }
+          else {
+            console.log("Дабавить новое")
+            CreateName(OldName, NewName)
+            document.getElementById("CreateAlert").style.display = "block";
+            setTimeout(function(){
+              document.getElementById("CreateAlert").style.display = "none";
+            }, 2000);
+          }
+        }).catch(error => {
+          document.getElementById("ErrorAlert").style.display = "block";
+          setTimeout(function(){
+            document.getElementById("ErrorAlert").style.display = "none";
+          }, 2000);
+        })
+      }
+      else{
+        document.getElementById("NullAlert").style.display = "block";
+          setTimeout(function(){
+            document.getElementById("NullAlert").style.display = "none";
+          }, 2000);
+      }
+    }
+    function ResetName(id, old, newN){
+      fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names/'+id, {
+        method: 'PUT', // or PATCH
+        headers: {'content-type':'application/json'},
+        body: JSON.stringify({OldName: old, NewName: newN})
+      }).then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        // handle error
+      }).then(task => {
+        console.log(task)
+      }).catch(error => {
+        // handle error
+      })
+    }
+    function CreateName(old, newN){
+      const newTask = {
+        OldName: old,
+        NewName: newN,
+      };
+
+      fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names/', {
+        method: 'POST',
+        headers: {'content-type':'application/json'},
+        // Send your data in the request body as JSON
+        body: JSON.stringify(newTask)
+      }).then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        // handle error
+      }).then(task => {
+        // do something with the new task
+      }).catch(error => {
+        // handle error
+      })
+    }

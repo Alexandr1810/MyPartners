@@ -92,3 +92,8 @@ $('.dropdown16').click(function () {
         $(this).toggleClass('active17');
         $(this).find('.dropdown-menu').slideToggle(300);
     });
+$('.dropdown17').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active18');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });

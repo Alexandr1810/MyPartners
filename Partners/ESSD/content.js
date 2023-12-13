@@ -277,11 +277,29 @@ function FindError(){
     catch(e){
 
     }
+
     try { 
+        fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+          method: 'GET',
+          headers: {'content-type':'application/json'},
+        }).then(res => {
+          if (res.ok) {
+              return res.json();
+          }
+          // handle error
+        }).then(tasks => {
+          console.log(tasks.MoskowOblLog)
+          MoskowObl_login = tasks.MoskowOblLog
+          MoskowObl_password  = tasks.MoskowOblPass
+          OtherMRF_login_FromApi = tasks.OtherMrfLog
+          OtherMRF_password_FromApi = tasks.OtherMrfPass
+        }).catch(error => {
+          // handle error
+        })
         MoscowOblErr.onclick = function() {
 
-            document.getElementById("login").value = "мо_полховская_оф"; // подставляем логин и пароль
-            document.getElementById("passw").value = "cpJ-jqa-9Ku-Rs6";
+            document.getElementById("login").value = MoskowObl_login; // подставляем логин и пароль
+            document.getElementById("passw").value = MoskowObl_password;
             
             document.getElementsByClassName('btn-type-1_ib')[8].dispatchEvent(clickEvent);
 
@@ -294,8 +312,8 @@ function FindError(){
                 document.getElementById("passw").value = OtherMRF_password; 
             }
             else{
-                document.getElementById("login").value = "strijak_ov";
-                document.getElementById("passw").value = "Poiuyt123!";
+                document.getElementById("login").value = OtherMRF_login_FromApi;
+                document.getElementById("passw").value = OtherMRF_password_FromApi;
             }
             document.getElementsByClassName('btn-type-1_ib')[8].dispatchEvent(clickEvent);
      

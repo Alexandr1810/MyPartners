@@ -53,13 +53,13 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("61") >= 0){ //СС
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Сибирские сети</h3><span> До 500: 1674 руб.</span><br><span> От 500 до 799: 2139 руб.</span><br><span> От 800: 2418 руб.</span><br><span>Скидка за свой счет</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Сибирские сети</h3><span> До 499: 1674 руб.</span><br><span> От 500 до 799: 2139 руб.</span><br><span> От 800: 2418 руб.</span><br><span>Скидка за свой счет</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }
       
       else if  (Tester.indexOf("11") >= 0){ //МТС
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"  style="background-color: #ff1515b0;"><h3 class="Provider">МТС</h3><span>Моно, Пакет, Конвергент *3</span><br><span> Норильск *2</span><br><span> Москва(МГТС) *2,15</span><br><span>Скидка за свой счет</span><br><span>Оборудка не платится</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"  style="background-color: #ff1515b0;"><h3 class="Provider">МТС</h3><span>Моно, Пакет, Конвергент *3</span><br><span> Норильск *2</span><br><span> Москва(МГТС) *2,15</span><br><span>Скидка за свой счет</span><br><span>Роутер в рассрочку/покупку: 350р</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }
@@ -111,7 +111,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("48") >= 0){ //Электронный город
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Электронный город</h3><span>Моно: *2,2</span><br><span>Пакет: *2,2</span><br><span>КТВ: 372 руб.</span><br><span>За оборудку *0,08*0,93</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Электронный город</h3><span>Моно: *2,2 * 0.93</span><br><span>Пакет: *2,2 * 0.93</span><br><span>КТВ: 372 руб.</span><br><span>За оборудку *0,08*0,93</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }
@@ -158,7 +158,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("59") >= 0){ //SkyNet
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="background-color: #19c067c2;height: 241px;top: 16%;"><h3 class="Provider">SkyNet</h3><span>Хочу SkyNet 2232 руб</span><br><span>Терминатор - 1674 руб</span><br><span>Моно - 2232 руб</span><br><span>Тариф 400 или 800 мбит - 372р</span><br><span>Продажа приставки - 372р</span><br><span>Продажа ТВ - 372р</span><br><span>Продажа контракта на 6 или 12мес - 372р</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="background-color: #19c067c2;height: 241px;top: 16%;"><h3 class="Provider">SkyNet</h3><span>Хочу SkyNet 2232 руб</span><br><span>Терминатор - 1674 руб</span><br><span>Моно - 2232 руб</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }
@@ -214,7 +214,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("77") >= 0){ //Т2
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="background-color: #00000085"><h3 class="Provider">TELE2</h3><span>НЕ ПРОДАЕМ</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="background-color: #00000085"><h3 class="Provider">TELE2</h3><span>Сдаем на Тарифник</span><br><span> 465 руб.</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }

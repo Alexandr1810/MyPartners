@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Кастомизировать Имя</title>
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@900&family=Noto+Sans:wght@900&family=Phudu&family=Ubuntu:wght@700&display=swap');
+
+		*{
+			font-family: Calibri, sans-serif;
+		}
+		body {
+		    background: linear-gradient(131deg, #4bb2f7 23%, #0c61ca 74%, #1f72af 81%);
+		    background-size: auto;
+		    background-attachment: fixed;
+		}
+		
+		.EditBlock{
+		    display: inline-block;
+		    box-shadow: 0px 0px 20px 7px #005b9e;
+		    background: white;
+		    padding: 1%;
+		    height: 700px;
+		    border-radius: 10px;
+		    width: 24%;
+		    vertical-align: middle;
+			position: fixed;
+    		left: 40%;
+		}
+		.EditBlockHeader{
+			border-bottom: 2px solid #2986df;
+		}
+		.EditBlockContentInput{
+		    height: 30px;
+		    width: 95%;
+		    border: 2px solid #2986df;
+		    border-radius: 8px;
+		    font-size: 17px;
+		    font-weight: 600;
+		    padding: 3px;
+		}
+		.EditBlockContentButton{
+		    border: 2px solid #2986df;
+		    margin-top: 3%;
+		    background: white;
+		    padding-right: 15%;
+		    padding-left: 15%;
+		    padding-top: 2%;
+		    padding-bottom: 2%;
+		    font-size: 19px;
+		    border-radius: 15px;
+		    font-weight: 600;
+		}
+		.EditBlockContentButton:hover{
+		    border: 2px solid #4bb2f7;
+		    background: #f9f9f9;
+		    cursor: pointer;
+		}
+		#CreateAlert{
+			width: 100%;
+		    background: #00e0006e;
+		    height: 41px;
+		    font-size: 26px;
+		    font-weight: bold;
+		    border-radius: 10px;
+		    color: white;
+		    text-align: center;
+		    padding-top: 1%;
+		    margin-top: 2%;
+		    display: none;
+		}
+		#ResetAlert{
+			width: 100%;
+		    background: #e0b9006e;
+		    height: 41px;
+		    font-size: 26px;
+		    font-weight: bold;
+		    border-radius: 10px;
+		    color: white;
+		    text-align: center;
+		    padding-top: 1%;
+		    margin-top: 2%;
+		    display: none;
+		}
+		#NullAlert{
+			width: 100%;
+		    background: #f29191;
+		    height: 41px;
+		    font-size: 26px;
+		    font-weight: bold;
+		    border-radius: 10px;
+		    color: white;
+		    text-align: center;
+		    padding-top: 1%;
+		    margin-top: 2%;
+		    display: none;
+		}
+		#ErrorAlert{
+			width: 100%;
+		    background: #f29191;
+		    height: 41px;
+		    font-size: 26px;
+		    font-weight: bold;
+		    border-radius: 10px;
+		    color: white;
+		    text-align: center;
+		    padding-top: 1%;
+		    margin-top: 2%;
+		    display: none;
+		}
+	</style>
+</head>
+<body>
+
+</body>
+	<div class="EditBlock">
+		<div class="EditBlockHeader">
+			<h1 class="EditBlockkHeaderText">Изменение имени в Битрикс24</h1>
+		</div>
+		<div class="EditBlockContent">
+			<h1 class="EditBlockContentText">Оригинальное Имя</h1>
+			<input class="EditBlockContentInput" id="OriginalName" type="text">
+			<h1 class="EditBlockContentText">Новое Имя</h1>
+			<input class="EditBlockContentInput" id="NewName" type="text">
+			<button class="EditBlockContentButton" onclick="SetName()">Добавить</button>
+			<div id="CreateAlert">Имя Добавленно</div>
+			<div id="ResetAlert">Имя Измененно</div>
+			<div id="NullAlert">Данные не внесены</div>
+			<div id="ErrorAlert">Неизвестная ошибка</div>
+		</div>
+	</div>
+
+
+
+
+	<script type="text/javascript" src="script.js">
+
+	</script>
+</html>
