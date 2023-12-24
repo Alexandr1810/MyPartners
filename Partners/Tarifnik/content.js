@@ -163,7 +163,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("62") >= 0){ //НорКом
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">НорКом</h3><span>До 2500: 930р</span><br><span>От 2501 до 3000: 1395р</span><br><span>От 3301: 1760р</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">НорКом</h3><span>0 до 500: 500р</span><br><span>От 501 до 2100: 1500р</span><br><span>от 2101 до 3000: 2000р</span><br><span>от 3001: 3000р</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }

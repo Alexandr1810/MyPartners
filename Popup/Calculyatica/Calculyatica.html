@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="Calculyatica.css"/>
+        <script src="Calculyatica.js"></script>
+    </head>
+    <body>
+      <h1>My Partners</h1><hr>
+
+        <div class="select">
+          <select id="standard-select" style="font-weight: bold; text-align: center; color: #3f3f3f;">
+            <option value="RTK">Ростелеком</option>
+            <option value="RTK_Moskva">Ростелеком Москва</option>
+            <option value="DomRu">ДомРу</option>
+            <option value="EG">Электронный Город</option>
+            <option value="TTK">ТТК</option>
+            <option value="SibSet">Сибирские Сети</option>
+            <option value="NorCom">НорКом</option>
+            <option value="Beeline">Билайн</option>
+            <option value="MTS">МТС</option>
+            <option value="MGTS">МГТС</option>
+            <option value="Megafon">Мегафон</option>
+            <option value="OAlmatel">Almatel</option>
+            <option value="Orion">Орион</option>
+            <option value="Izet">Izet</option>
+            <option value="Akado">Акадо</option>
+            <option value="Rinet">Rinet</option>
+            <option value="MarinoNet">Марьино-Нет</option>
+            <option value="YfaNet">УфаНет</option>
+            <option value="Tarifnik">Тарифник</option>
+          </select>
+        </div>
+        <h1 id="DownArrow">➽</h1>
+
+        <div id="RTK_Block">
+          <div class="Select_Services">
+            <h1 class="headText">Услуги</h1>
+            <h1 class="Service_Text">Интернет</h1> <input type="checkbox" class="Service_Checkbox" id="RTK_Internet_Checkbox">
+            <h1 class="Service_Text">Телевидение</h1><input type="checkbox" class="Service_Checkbox" id="RTK_TV_Checkbox">
+            <h1 class="Service_Text">Оплата в месяц:</h1>
+            <input type="text" class="Service_Input" id="RTK_AP"><h1 class="PUB_Text"> руб.</h1>
+            <button class="Service_Button" id="RTK_Button">Посчитать</button>
+          </div>
+          <div class="Price_Preview">
+            <h1 class="headText">Детализация</h1>
+            <h1 class="Service_Text" id="RTK_Internet_Preview_Text"></h1>
+            <div id="RTK_BR"><br></div>
+            <h1 class="Service_Text" id="RTK_TV_Preview_Text"></h1>
+          </div>
+        </div>
+
+
+
+        <div id="RTK_Moskva_Block">
+          <div class="Select_Services">
+            <h1 class="headText">Услуги</h1>
+            <h1 class="Service_Text">Интернет</h1> <input type="checkbox" class="Service_Checkbox" id="RTK_Moskva_Internet_Checkbox">
+            <h1 class="Service_Text">Телевидение</h1><input type="checkbox" class="Service_Checkbox" id="RTK_Moskva_TV_Checkbox">
+            <h1 class="Service_Text">Сим-карта:</h1><input type="checkbox" class="Service_Checkbox" id="RTK_Moskva_Sim_Checkbox">
+            <h1 class="Service_Text">Игоровой:</h1><input type="checkbox" class="Service_Checkbox" id="RTK_Moskva_Game_Checkbox">
+            <input type="text" class="Service_Input" id="RTK_Moskva_AP"><h1 class="PUB_Text"> руб.</h1>
+            <button class="Service_Button" id="RTK_Moskva_Button">Посчитать</button>
+          </div>
+          <div class="Price_Preview">
+            <h1 class="headText">Детализация</h1>
+            <h1 class="Service_Text" id="RTK_Moskva_Internet_Preview_Text"></h1>
+            <div id="RTK_Moskva_BR"><br></div>
+            <h1 class="Service_Text" id="RTK_Moskva_TV_Preview_Text"></h1>
+            <div id="RTK_Moskva_BR2"><br></div>
+            <h1 class="Service_Text" id="RTK_Moskva_Sim_Preview_Text"></h1>
+            <h1 class="Service_Text" id="RTK_Moskva_Game_Preview_Text"></h1>
+          </div>
+        </div>
+
+        <div id="DomRu_Block">
+          <div class="Select_Services">
+            <h1 class="headText">Услуги</h1>
+            <h1 class="Service_Text">Интернет</h1> <input type="checkbox" class="Service_Checkbox" id="DomRu_Internet_Checkbox"><br>
+            <h1 class="Service_Text">КТВ</h1><input type="checkbox" class="Service_Checkbox" id="DomRu_KTV_Checkbox"><br>
+            <h1 class="Service_Text">ЦТВ</h1><input type="checkbox" class="Service_Checkbox" id="DomRu_ITV_Checkbox"><br>
+            <h1 class="Service_Text">Роутер(шт)</h1><input type="text" class="Service_Input" value="0" id="DomRu_Royter_Count_Input"><br>
+            <h1 class="Service_Text">Приставка</h1><input type="text" class="Service_Input" value="0" id="DomRu_Pristavka_Count_Input"><br>
+            <h1 class="Service_Text">Оплата в месяц:</h1>
+            <input type="text" class="Service_Input" id="DomRu_AP"><h1 class="PUB_Text"> руб.</h1>
+            <button class="Service_Button" id="DomRu_Button">Посчитать</button>
+          </div>
+          <div class="Price_Preview">
+            <h1 class="headText">Детализация</h1>
+            <h1 class="Service_Text" id="DomRu_Internet_Preview_Text"></h1><br>
+            <h1 class="Service_Text" id="DomRu_KTV_Preview_Text"></h1><br>
+            <h1 class="Service_Text" id="DomRu_ITV_Preview_Text"></h1><br>
+            <h1 class="Service_Text" id="DomRu_Royter_Preview_Text"></h1><br>
+            <h1 class="Service_Text" id="DomRu_Pristavka_Preview_Text"></h1><br>
+          </div>
+        </div>
+
+
+
+
+        <div class="ItogPrice">
+
+          <h1 class="ItogPrice_Text" id="All_ItogPrice">Оплата за заявку: </h1>
+        </div>
+
+
+        <footer><h4>MyPartners by RB</h4><a href="/MainPage/index.html" target="_blank">...</a><a href="../popup.html" style="margin-left: 0;"><img style="margin-bottom: -11px;" src="img/home.ico"></a></footer>
+
+    </body>
+
+</html>

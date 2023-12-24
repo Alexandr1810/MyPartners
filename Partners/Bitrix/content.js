@@ -4,12 +4,14 @@ var Head = document.querySelectorAll('head');
 var names = null
 var DelLids = 0
 var NedozLids = 0
-var isDel = true
+var hideSpam = true
+var hideNedozvons = false
 var TodayTime = null
 var CurrentHour = null
 var AllNumbers = []
 var AllFirlds = []
 var ApiNames = null
+
 fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names', {
   method: 'GET',
   headers: {'content-type':'application/json'},
@@ -29,6 +31,7 @@ var NumbersReshifrator = {
           PerSet: "9039248205",
           DomRu: "9039246531",
           DomRu1: "9039229204",
+          DomRu2: "9039225026",
           SibSet: "9039225814",
           SibSet1: "9607578786",
           SibSet2: "9039218114",
@@ -80,7 +83,6 @@ window.addEventListener('load', function () {
             console.log(request.Recipient, request.Recipient, request.Message, request.BigCard);
             if (request.Recipient == 'Bitrix') {
                 if (request.Message=='true') {
-                    
                     Head[0].innerHTML += "<style>.crm-kanban-total-price-total2{width:100%;overflow:hidden;display:inline-block;font-size:26px;white-space:nowrap;-ms-text-overflow:ellipsis;text-overflow:ellipsis;padding:0 10px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:white}.crm-kanban-total-price:hover .crm-kanban-total-price-total2{display:inline-block}.crm-kanban-total-price:hover .crm-kanban-total-price-total{display:none} #CopyButton{border-bottom: 1px dashed #2067b0 !important; margin-right: 10px !important;}</style>"
      
                     setTimeout(InStart, 6000);
@@ -95,7 +97,6 @@ window.addEventListener('load', function () {
         }
     );
 
-    
 })
 
 
@@ -104,33 +105,45 @@ function GetPrice(){
   var Price1 = document.getElementsByClassName('crm-kanban-total-price');
   for (var i = 0; i < Price.length; ++i) {
     var item = Price[i];  
-    ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.154
+    ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.145
     ItogPrice = Math.round(ItogPrice);
     ItogPrice = ItogPrice.toLocaleString();
-    //console.log(ItogPrice);
+    console.log(ItogPrice);
 
     Price1[i].innerHTML += '<span class="crm-kanban-total-price-total2">'+'≈'+ItogPrice+' руб.'+'</span>';
 
   }
-  setInterval(SetPriceIntrval, 16000);
+  setInterval(SetPriceIntrval, 6000);
 }
 
 function SetPriceIntrval(){
   try{
     var Price = document.getElementsByClassName('crm-kanban-total-price-total');
+    console.log(Price);
+
     var Price2 = document.getElementsByClassName('crm-kanban-total-price-total2');
     for (var i = 0; i < Price.length; ++i) {
           var item = Price[i];  
-          ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.154
+          ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.145
           ItogPrice = Math.round(ItogPrice);
           ItogPrice = ItogPrice.toLocaleString();
-          //console.log(ItogPrice);
+          console.log(ItogPrice);
+          if (Price2[i] != undefined) {
+            Price2[i].innerText = '≈'+ItogPrice+' руб.';
+          }
+          else{
+            var Price1 = document.getElementsByClassName('crm-kanban-total-price');
+            console.log(Price1)
+            if (Price1[i].innerHTML.indexOf('crm-kanban-total-price-total2') < 0) {
+              Price1[i].innerHTML += '<span class="crm-kanban-total-price-total2">'+'≈'+ItogPrice+' руб.'+'</span>';
+            }
             
-          Price2[i].innerText = '≈'+ItogPrice+' руб.';
+          }
 
     }
   }
-  catch{
+  catch(e){
+    console.log(e)
     console.log("Страница еще не загружена");
   }
 }
@@ -141,34 +154,37 @@ function InStart(){
     var Tester = document.getElementsByClassName('crm-kanban-total-price-total');
     GetPrice();
     if (document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML.indexOf("Спам") < 0) {
-      document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner">Недозвоны</div>';
+      document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны</div>';
+      AddListener_In_Head();
     }
-    document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML += `<div id="EditName_Block"><a style="" href="#openModal"> <img src="https://psv4.userapi.com/c236331/u451199873/docs/d27/77bfc022faaa/paint-brush.png?extra=6oKznMY0UrQUlq_eURaIY8OlnV8B__ZhDe6S8bmyulIwuptPWjWaTrrDvQn0wV6eKxCjkuqK7ZtV1p5JcmGh516eUkcjbPlgHNhbOdpGmyC0lUq4oSeIdlQ4oXiGARejip-lFVHxkeM7cjanvg8T9HEzOVA" style=" width: 65%; margin: 18%; "> </a></div>  
-    <div id="openModal" class="modal"> 
-      <div class="modal-dialog"> 
-        <div class="modal-content"> 
-        <div class="modal-body">
-          <div class="EditBlock">
-          <a href="#close" title="Close" class="close">×</a> 
-          <div class="EditBlockHeader">
-            <h1 class="EditBlockkHeaderText">Изменение имени в Битрикс24</h1>
+    if (document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML.indexOf("Изменение имени в Битрикс24") < 0) {
+      document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML += `<div id="EditName_Block"><a style="font-size: 25px;" href="#openModal">🖋</a></div>  
+      <div id="openModal" class="modal"> 
+        <div class="modal-dialog"> 
+          <div class="modal-content"> 
+          <div class="modal-body">
+            <div class="EditBlock">
+            <a href="#close" title="Close" class="close">×</a> 
+            <div class="EditBlockHeader">
+              <h1 class="EditBlockkHeaderText">Изменение имени в Битрикс24</h1>
+            </div>
+            <div class="EditBlockContent">
+              <h1 class="EditBlockContentText" style="margin-top: 5%;">Оригинальное Имя</h1>
+              <input class="EditBlockContentInput" placeholder="Никита Колганов" id="OriginalName" type="text">
+              <h1 class="EditBlockContentText">Новое Имя</h1>
+              <input class="EditBlockContentInput" placeholder="Отец" id="NewName" type="text">
+              <button class="EditBlockContentButton">Добавить</button>
+              <div id="CreateAlert">Имя Добавленно</div>
+              <div id="ResetAlert">Имя Измененно</div>
+              <div id="NullAlert">Данные не внесены</div>
+              <div id="ErrorAlert">Неизвестная ошибка</div>
+            </div>
           </div>
-          <div class="EditBlockContent">
-            <h1 class="EditBlockContentText" style="margin-top: 5%;">Оригинальное Имя</h1>
-            <input class="EditBlockContentInput" id="OriginalName" type="text">
-            <h1 class="EditBlockContentText">Новое Имя</h1>
-            <input class="EditBlockContentInput" id="NewName" type="text">
-            <button class="EditBlockContentButton">Добавить</button>
-            <div id="CreateAlert">Имя Добавленно</div>
-            <div id="ResetAlert">Имя Измененно</div>
-            <div id="NullAlert">Данные не внесены</div>
-            <div id="ErrorAlert">Неизвестная ошибка</div>
-          </div>
-        </div>
+        </div> 
       </div> 
-    </div> 
-    </div> </div>`;
-    document.addEventListener("DOMContentLoaded", function () {
+      </div> </div>`;
+    }
+   document.addEventListener("DOMContentLoaded", function () {
       var scrollbar = document.body.clientWidth - window.innerWidth + 'px';
       console.log(scrollbar);
       document.querySelector('[href="#openModal"]').addEventListener('click', function () {
@@ -196,6 +212,7 @@ function UpdateCard(){
     const iframe = document.getElementsByClassName("side-panel-iframe")[0];
     const iWindow = iframe.contentWindow;
     const iDocument = iWindow.document;
+    var NamesInApiCol = 0
     
     //console.log(iframe);
     
@@ -203,15 +220,44 @@ function UpdateCard(){
     const iframeHead = iDocument.querySelectorAll("head")[0];
     //console.log(ButtonCollage);
 
+    iDocumentName = iDocument.getElementsByClassName('crm-widget-employee-name')[0];
+      NamesInApiCol = 0;
+      for (var j = 0; j < ApiNames.length; j++) {
+        if (iDocumentName.innerHTML == ApiNames[j].OldName) {
+          iDocumentName.innerHTML = ApiNames[j].NewName;
+
+
+          if (iDocumentName.innerHTML == "Чертова Рыжая Бестия") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #1e1d1d 3%, #e10000 10%, #b38500 26%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Татьяна Бабич!") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #902aff 0%, #5d29d2 7%, #2932ad 25%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "MAXIMU$") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Татьяна Платонова") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Рыжая Сука") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+
+        }
+
+      }
+
+
     if (ButtonCollage.innerHTML.indexOf("Скопировать") < 0) {
-      iframeHead.innerHTML += "<style>#CopyButton{border-bottom:1px dashed #2067b0;margin-left:10px}#CopyButton:hover{border-bottom:1px dashed #eef2f4; cursor: pointer;}</style>"
+      iframeHead.innerHTML += "<style>#CopyButton{border-bottom:1px dashed #2067b0;margin-left:10px}#CopyButton:hover{border-bottom:1px dashed #eef2f4; cursor: pointer;}.crm-widget-employee-name{font-weight: 500;}</style>"
       ButtonCollage.innerHTML += '<a id="CopyButton">Скопировать</a><a style="margin-left: 10px;color: white;background-color: rgb(63, 205, 74);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlert">Успешно скопированно!</a><a style="margin-left: 10px;color: white;background-color: rgb(205 63 63);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlertError">Ошибка при Копировании!</a><a style="float: right; vertical-align: middle; border: 1px solid #eaeaea; border-radius: 10px; cursor: pointer;" id="CodyIcon"><img src="https://www.kody.su/favicon.ico" style="vertical-align: middle; height: 17px; border: medium none; padding: 4px;"></a><div class="Cody"></div>';
       CopyButtonText = iDocument.getElementById("CopyButton");
       newAlert = iDocument.getElementById("newAlert");
       newAlertError = iDocument.getElementById("newAlertError");
       iDocument.getElementsByClassName('ui-entity-editor-block-title-text')[9].innerHTML = "Комментарий (Для Партнерки)";
+      
 
-
+      
 
 
       iDocument.querySelector("#CopyButton").addEventListener("click", e => {
@@ -343,10 +389,7 @@ function SetNames(){
       document.getElementById("user-name").innerText = "Рыжая Бестия";
       document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
   }
-  if (document.getElementById("user-name").innerText == "Илья Пчельников") {
-      document.getElementById("user-name").innerText = "Этиловый Бес";
-      document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-  }
+
   if (document.getElementById("user-name").innerText == "Павел Обухов") {
       document.getElementById("user-name").innerText = "Павел Андреевич";
       //document.getElementById("user-name").setAttribute('style', 'background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
@@ -359,9 +402,7 @@ function SetNames(){
       if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Павел Андреевич") {
         Columns[i].innerHTML = "Мусорка"
       }
-      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Этиловый Бес") {
-        Columns[i].innerHTML = "Мусорка"
-      }
+
       if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Марк Плющ") {
         Columns[i].innerHTML = "Мусорка"
       }
@@ -371,11 +412,16 @@ function SetNames(){
   }
   //console.log("Работаю", NewCards.length)
   for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам, дубли и перенесенных из недозвонов
-    console.log("Новый Цикл")
+    //console.log("Новый Цикл")
      
-    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0) {
+    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0) {
         console.log("Найдена пустая завка ", i)
-        NewCards[i].parentNode.removeChild(NewCards[i]);
+        if (hideSpam) {
+          NewCards[i].style.display = "none";
+        }
+        else{
+          NewCards[i].style.display = "block";
+        }
         DelLids++;
     }
     if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0){
@@ -386,31 +432,37 @@ function SetNames(){
       CurrentHour = date.getHours()
       //console.log("TodayTime: ", TodayTime, "\n", "CurrentHour: ", CurrentHour)
     }
+
     if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая") {
-        //console.log("Найдена заявка из недозвонов ", i, "из", NewCards.length-1, NewCards[i])
-        //console.log(NewCards[i].getElementsByClassName('main-kanban-item')[0].getElementsByClassName("crm-kanban-item-date")[0])
-        NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
+        if (hideNedozvons) {
+          NewCards[i].style.display = "none";
+        }
+        else{
+          NewCards[i].style.display = "block";
+          NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
+        }
+        
         NedozLids++;
     }
+
     if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 1 && CurrentHour-TodayTime <= 2) {
-        console.log("Найдена штрафная заявка ", i, "из", NewCards.length-1, NewCards[i])
-        //console.log(NewCards[i].getElementsByClassName('main-kanban-item')[0].getElementsByClassName("crm-kanban-item-date")[0])
         NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(240 0 0 / 70%);');
-        NedozLids++;
     }
-    if (i == (NewCards.length-1) && isDel) {
+    if (i == (NewCards.length-1)) {
       document.getElementsByClassName("main-kanban-column-title-spam-inner")[0].innerText = 'Спам (' + DelLids + ')';
 
       DelLids = 0;
-      isDel = false;
-      //console.log('DelLids: ', DelLids)
     }
-    if (i == (NewCards.length-1)) {
-      document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвон (' + NedozLids + ')';
-      console.log('NedozLids: ', NedozLids)
-      NedozLids = 0;
+    try{
+      if (i == (NewCards.length-1)) {
+        document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedozLids + ')';
+        console.log('NedozLids: ', NedozLids)
+        NedozLids = 0;
+      }
     }
-    
+    catch{
+      
+    }
 
 
   }
@@ -424,7 +476,7 @@ function SetNames(){
         if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.indexOf("Билайн АТС") >= 0) {
           //AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '')
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.SpeedInet) {
-            //console.log("Входящий SpeedInet", AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j]);
+            console.log("Входящий SpeedInet");
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий SpeedInet";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.PerSet) {
@@ -436,6 +488,10 @@ function SetNames(){
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu1) {
+
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu2) {
 
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
@@ -540,10 +596,11 @@ function SetNames(){
   AllFirlds.length=0
 
 
+
   for (var i = 0; i <= (names.length-1); i++) { //Смена имени
     //Новый Код
     for (var j = 0; j < ApiNames.length; j++) {
-      if (names[i].innerHTML == ApiNames[j].OldName) {
+      if (names[i].innerHTML == ApiNames[j].OldName && names[i].parentNode.innerHTML.indexOf("Это имя видят только пользователи") < 0) {
         names[i].innerHTML = ApiNames[j].NewName;
 
         var div = document.createElement('div');
@@ -556,6 +613,7 @@ function SetNames(){
 
         var span = document.createElement('span');
         span.style.whiteSpace = 'normal';
+
         span.textContent = 'Это имя видят только пользователи расширения MyPartners. Что бы кастомизировать свое имя нажмите на кисточку справа от строки поиска.';
         div.appendChild(span);
         names[i].parentNode.appendChild(div);
@@ -565,243 +623,21 @@ function SetNames(){
         if (names[i].innerHTML == "Татьяна Бабич!") {
           names[i].setAttribute('style', 'background: linear-gradient(90deg, #902aff 9%, #5d29d2 64%, #2932ad 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-        if (names[i].innerHTML == "Этиловый Бес") {
+        if (names[i].innerHTML == "MAXIMU$") {
           names[i].setAttribute('style', 'background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Татьяна Платонова") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Рыжая Сука") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
 
         //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
       }
 
     }
-    //Новый Код
 
-    /*
-    if (names[i].innerHTML == "Павел Обухов") {
-      names[i].innerHTML = "Павел мать его Андреевич!";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Александр Шатохин") {
-      names[i].innerHTML = "Чертова Рыжая Бестия";
-      names[i].setAttribute('style', 'background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Татьяна Бабич") {
-      names[i].innerHTML = "Татьяна Бабич!";
-      names[i].setAttribute('style', 'background: linear-gradient(90deg, #902aff 9%, #5d29d2 64%, #2932ad 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Дмитрий Полховский") {
-      names[i].innerHTML = "Новое обращение";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Тест Сайтов") {
-      names[i].innerHTML = "Новое обращение";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Никита Колганов") {
-      names[i].innerHTML = "Отец";
-      //names[i].setAttribute('style', 'background: linear-gradient(90deg, #d000dd 31%, #005ae1 30%, #32a800 76%, #d11a1a 34%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Марк Плющ") {
-      names[i].innerHTML = "Марковка🥕";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Максим Шатных") {
-      names[i].innerHTML = "MAXIMU$";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Даниил Плотников") {
-      names[i].innerHTML = "Даня оператор Жесткий";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Илья Пчельников") {
-      names[i].innerHTML = "Этиловый Бес";
-      names[i].setAttribute('style', 'background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    if (names[i].innerHTML == "Елена Зайцева") {
-      names[i].innerHTML = "Елена Зайцева.net";
-
-      var div = document.createElement('div');
-      div.style.background = '#ebebeb';
-      div.style.height = '104px';
-      div.style.padding = '5px';
-      div.style.borderRadius = '4px';
-      div.style.color = '#3e444a';
-      div.id = 'CustomDiv';
-
-      var span = document.createElement('span');
-      span.style.whiteSpace = 'normal';
-      span.textContent = 'Это имя видят только пользователи расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику';
-      span.innerHTML +='<br><a href="https://t.me/Rothaarige_Bestia" target="_blank">@Rothaarige_Bestia</a>'
-      div.appendChild(span);
-      names[i].parentNode.appendChild(div);
-
-      //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-    }
-    */
   }
   
 }
@@ -845,10 +681,12 @@ function FoundDublicate(elements, numbers){
     //console.log("Хуй1")
     for (var j = 0; j < duplicates.length; j++) {
       //console.log("Хуй2")
-      if (AllFirlds[i].innerText == duplicates[j] && document.body.innerHTML.indexOf('main-kanban-item-disabled') < 0) {
-        //console.log("Выявлен дубль!! ", AllFirlds[i]);
-        if (AllFirlds[i].innerHTML.indexOf('dublicate')<0) {
-          AllFirlds[i].innerHTML += '<span style="color: #f23e53"> dublicate</span>'
+      if (AllFirlds[i] != undefined) {
+        if (AllFirlds[i].innerText == duplicates[j] && document.body.innerHTML.indexOf('main-kanban-item-disabled') < 0) {
+          //console.log("Выявлен дубль!! ", AllFirlds[i]);
+          if (AllFirlds[i].innerHTML.indexOf('dublicate')<0) {
+            AllFirlds[i].innerHTML += '<span style="color: #f23e53"> dublicate</span>'
+          }
         }
       }
       /*else{
@@ -959,3 +797,27 @@ function SetName(){
         // handle error
       })
     }
+function AddListener_In_Head(){
+    document.getElementById('spamText').addEventListener('click', function (event) {
+        console.log("Spam");
+        if (hideSpam) {
+          hideSpam = false;
+          document.getElementById('spamText').style.borderBottom = "2px solid #737373";
+        }
+        else{
+          hideSpam = true;
+          document.getElementById('spamText').style.borderBottom = "none";
+        }
+    });
+    document.getElementById('NedovonText').addEventListener('click', function (event) {
+        console.log("Nedovon");
+        if (hideNedozvons) {
+          hideNedozvons = false;
+          document.getElementById('NedovonText').style.borderBottom = "2px solid #737373";
+        }
+        else{
+          hideNedozvons = true;
+          document.getElementById('NedovonText').style.borderBottom = "none";
+        }
+    });
+}
