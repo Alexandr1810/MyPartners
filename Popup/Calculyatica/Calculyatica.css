@@ -137,6 +137,9 @@ img{
 #DomRu_Block{
   display: none;
 }
+#EG_Block{
+  display: none;
+}
 
 .Select_Services{
     height: auto;
@@ -264,4 +267,38 @@ img{
     position: absolute;
     top: 208px;
     right: 70px;
+}
+#EG_Royter_Price_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 22%;
+}
+#EG_Royter_Mounth_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 15%;
+}
+#EG_Royter_Count_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 15%;
+}
+#EG_Pristavka_Price_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 22%;
+}
+#EG_Pristavka_Mounth_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 15%;
+}
+#EG_Pristavka_Count_Input{
+    font-size: 17px;
+    font-weight: 700;
+    width: 15%;
+}
+.EG_DopTex{
+    font-weight: 700;
+    font-size: 13px;
 }

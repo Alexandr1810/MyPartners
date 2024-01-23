@@ -1,3 +1,22 @@
+var ExtentionToken = null;
+var PerToken = null;
+
+fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+      method: 'GET',
+      headers: {'content-type':'application/json'},
+    }).then(res => {
+      if (res.ok) {
+          return res.json();
+      }
+      // handle error
+    }).then(tasks => {
+        PerToken = tasks.Pers_Token;
+        
+    }).catch(error => {
+      // handle error
+    })
+
+
 /*Dropdown Menu*/
 $('.dropdown').click(function () {
         $(this).attr('tabindex', 1).focus();
@@ -102,3 +121,28 @@ $('.dropdown18').click(function () {
         $(this).toggleClass('active19');
         $(this).find('.dropdown-menu').slideToggle(300);
     });
+$('.dropdown19').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active20');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+$('.dropdown20').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active21');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+$('.dropdown21').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active22');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+
+window.addEventListener('load', function () { 
+    document.getElementById("DevPanel").onclick = function(){
+        if (prompt('Ваш код доступа: ', '') == PerToken) {
+            
+            window.location.href = '../MainPage/DevPanel/index.html';
+        }
+        
+    }
+});

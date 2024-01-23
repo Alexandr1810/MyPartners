@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@900&family=Noto+Sans:wght@900&family=Phudu&family=Ubuntu:wght@700&display=swap');
+
+#MyPartnersLog{
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: #ffffff;
+    font-family: "roboto-bold", arial, sans-serif;
+    border-radius: 5px;
+    height: 32px;
+    font-size: 19px;
+    font-weight: 500;
+    cursor: pointer;
+
+    top: 25px;
+    width: 119%;
+    left: 20px;
+    background: #1ca4ff;
+
+}
+
+#MyPartnersText{
+    position: relative;
+    left: 18px;
+    top: 1px;
+    color: #ffffff;
+}
+#MyPartnersText:hover{
+    top: 0px;
+}
+
+#MyPartnersImg{
+    position: relative;
+    vertical-align: middle;
+    top: 0px;
+    width: 24%;
+    left: -127px;
+}
+
+#MyPartnersLog:hover{
+    top: 26px;
+    background: rgb(0 142 237);
+}
+
+
+
+#MyPartnersLogMSK{
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: #ffffff;
+    font-family: "roboto-bold", arial, sans-serif;
+    border-radius: 5px;
+    height: 32px;
+    font-size: 19px;
+    font-weight: 500;
+    cursor: pointer;
+
+
+    width: 119%;
+    left: 172px;
+    top: -7px;
+    background: #1ca4ff;
+
+}
+
+#MyPartnersTextMSK{
+    position: relative;
+    left: 12px;
+    top: 6px;
+    color: #ffffff;
+}
+#MyPartnersTextMSK:hover{
+    top: 5px;
+}
+
+#MyPartnersLogMSK:hover{
+    top: -6px;
+    background: rgb(0 142 237);
+}

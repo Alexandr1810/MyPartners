@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Настройка Паролей</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<header>
+		<a href="../index.html"><img src="img/128.png" style="background-color: #ffffff; border-radius: 10px;"></a>
+		<h1>My Partners Web</h1>
+		<h1>SpeedInet</h1>
+	</header>
+	<div class="NotifyList">
+		<div class="SuccessAlert"><h1 class="ErrorAlertText">Запись изменена</h1></div>
+		<div class="ErrorAlert"><h1 class="ErrorAlertText">Неизвестная ошибка</h1></div>
+	</div>
+	<content>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">ЕИССД (МО)</h1>
+				<img src="img/RTK.svg" style=" width: 130px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="EISSD_MO_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="EISSD_MO_Pass" type="text">
+				<button class="EditBlockContentButton" id="EISSD_MO_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">ЕИССД (Все МРФ)</h1>
+				<img src="img/RTK.svg" style=" width: 130px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="EISSD_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="EISSD_Pass" type="text">
+				<button class="EditBlockContentButton" id="EISSD_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">РТК Москва</h1>
+				<img src="img/RTK_MSK.png" style=" width: 170px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="EISSD_MSK_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="EISSD_MSK_Pass" type="text">
+				<button class="EditBlockContentButton" id="EISSD_MSK_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">РТК Юр.Лица</h1>
+				<img src="img/RTK_Yr.svg" style=" width: 30px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="EISSD_Yr_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="EISSD_Yr_Pass" type="text">
+				<button class="EditBlockContentButton" id="EISSD_Yr_Button">Добавить</button>
+			</div>
+		</div>
+		
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">ТТК</h1>
+				<img src="img/TTK.svg" style=" width: 130px; float: right; margin-top: 25px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="TTK_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="TTK_Pass" type="text">
+				<button class="EditBlockContentButton" id="TTK_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">МТС</h1>
+				<img src="img/MTS.svg" style=" width: 50px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="MTS_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="MTS_Pass" type="text">
+				<button class="EditBlockContentButton" id="MTS_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">ДомРу (РМС)</h1>
+				<img src="img/DomRu.svg" style=" width: 160px; float: right; margin-top: 25px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="RMS_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="RMS_Pass" type="text">
+				<button class="EditBlockContentButton" id="RMS_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">ДомРу (Стар. Уч.)</h1>
+				<img src="img/DomRu.svg" style=" width: 160px; float: right; margin-top: 25px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="DomRu_old_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="DomRu_old_Pass" type="text">
+				<button class="EditBlockContentButton" id="DomRu_old_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Мегафон</h1>
+				<img src="img/Megafon.svg" style=" width: 160px; float: right; margin-top: 20px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Megafon_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Megafon_Pass" type="text">
+				<button class="EditBlockContentButton" id="Megafon_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Норильск)</h1>
+				<img src="img/NorKom.svg" style=" width: 80px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Norilsk_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Norilsk_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Norilsk_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Кемерово)</h1>
+				<img src="img/SibSeti.svg" style=" width: 130px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Kem_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Kem_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Kem_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Новокузнецк)</h1>
+				<img src="img/SibSeti.svg" style=" width: 110px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Novokuznezk_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Novokuznezk_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Novokuznezk_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Новосибирск)</h1>
+				<img src="img/SibSeti.svg" style=" width: 110px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Novosibirsk_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Novosibirsk_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Novosibirsk_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Красноярск)</h1>
+				<img src="img/SibSeti.svg" style=" width: 130px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Krasnouarsk_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Krasnouarsk_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Krasnouarsk_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">СибСети (Барнаул)</h1>
+				<img src="img/SibSeti.svg" style=" width: 130px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SS_Barnaul_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SS_Barnaul_Pass" type="text">
+				<button class="EditBlockContentButton" id="SS_Barnaul_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Электронный Город</h1>
+				<img src="img/EG.svg" style=" width: 130px; float: right; margin-top: 15px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="EG_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="EG_Pass" type="text">
+				<button class="EditBlockContentButton" id="EG_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Билайн</h1>
+				<img src="img/Beeline.svg" style=" width: 130px; float: right; margin-top: 20px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Beeline_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Beeline_Pass" type="text">
+				<button class="EditBlockContentButton" id="Beeline_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Билайн (Москва)</h1>
+				<img src="img/Beeline.svg" style=" width: 130px; float: right; margin-top: 20px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="BeelineMSK_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="BeelineMSK_Pass" type="text">
+				<button class="EditBlockContentButton" id="BeelineMSK_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">SkyNet</h1>
+				<img src="img/SkyNet.svg" style=" width: 90px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="SkyNet_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="SkyNet_Pass" type="text">
+				<button class="EditBlockContentButton" id="SkyNet_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Телекома</h1>
+				<img src="img/Telekoma.svg" style=" width: 130px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Telekoma_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Telekoma_Pass" type="text">
+				<button class="EditBlockContentButton" id="Telekoma_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Аксиома</h1>
+				<img src="img/Axioma.png" style=" width: 130px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Axioma_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Axioma_Pass" type="text">
+				<button class="EditBlockContentButton" id="Axioma_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Е-Телеком</h1>
+				<img src="img/Etel.svg" style=" width: 130px; float: right; margin-top: 20px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Etel_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Etel_Pass" type="text">
+				<button class="EditBlockContentButton" id="Etel_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">IZET</h1>
+				<img src="img/IZET.svg" style=" width: 70px; float: right; margin-top: 10px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="IZET_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="IZET_Pass" type="text">
+				<button class="EditBlockContentButton" id="IZET_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Almatel</h1>
+				<img src="img/Almatel.svg" style=" width: 130px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Almatel_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Almatel_Pass" type="text">
+				<button class="EditBlockContentButton" id="Almatel_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Акадо</h1>
+				<img src="img/Akado.svg" style=" width: 130px; float: right; margin-top: 30px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Akado_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Akado_Pass" type="text">
+				<button class="EditBlockContentButton" id="Akado_Button">Добавить</button>
+			</div>
+		</div>
+		<div class="EditBlock transition">
+			<div class="EditBlockHeader">
+				<h1 class="EditBlockkHeaderText">Марьино.Нет</h1>
+				<img src="img/Maryno.svg" style=" width: 130px; float: right; margin-top: 15px;">
+			</div>
+			<div class="EditBlockContent">
+				<h1 class="EditBlockContentText">Логин:</h1>
+				<input class="EditBlockContentInput" id="Maryno_Log" type="text">
+				<h1 class="EditBlockContentText">Пароль:</h1>
+				<input class="EditBlockContentInput" id="Maryno_Pass" type="text">
+				<button class="EditBlockContentButton" id="Maryno_Button">Добавить</button>
+			</div>
+		</div>
+	</content>
+	<script type="text/javascript" src="script.js"></script>
+</body>
+</html>

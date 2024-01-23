@@ -10,7 +10,9 @@
 body{
     padding-top: 4%;
 }
-
+#DevPanel{
+    cursor: pointer;
+}
 header {
     position: fixed;
     top: 0;
@@ -116,6 +118,7 @@ span.choose {
     z-index: 9
 }
 .dropdown .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -191,6 +194,7 @@ span.choose {
     z-index: 9
 }
 .dropdown1 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -266,6 +270,7 @@ span.choose {
     z-index: 9
 }
 .dropdown2 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -339,6 +344,7 @@ span.choose {
     z-index: 9
 }
 .dropdown3 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -414,6 +420,7 @@ span.choose {
     z-index: 9
 }
 .dropdown4 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -481,6 +488,7 @@ span.choose {
     z-index: 9
 }
 .dropdown5 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -548,6 +556,7 @@ span.choose {
     z-index: 9
 }
 .dropdown6 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -616,6 +625,7 @@ span.choose {
     z-index: 9
 }
 .dropdown7 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -684,6 +694,7 @@ span.choose {
     z-index: 9
 }
 .dropdown8 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -751,6 +762,7 @@ span.choose {
     z-index: 9
 }
 .dropdown9 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -831,6 +843,7 @@ span.choose {
     z-index: 9
 }
 .dropdown10 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -907,6 +920,7 @@ span.choose {
     z-index: 9
 }
 .dropdown11 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -983,6 +997,7 @@ span.choose {
     z-index: 9
 }
 .dropdown12 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -1051,6 +1066,7 @@ span.choose {
     z-index: 9
 }
 .dropdown13 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -1131,6 +1147,7 @@ span.choose {
     z-index: 9
 }
 .dropdown14 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -1206,6 +1223,7 @@ span.choose {
     z-index: 9
 }
 .dropdown15 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -1281,6 +1299,7 @@ span.choose {
     z-index: 9
 }
 .dropdown16 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
     padding: 10px;
     transition: all .2s ease-in-out;
     cursor: pointer
@@ -1441,6 +1460,223 @@ span.choose {
 .dropdown18 .dropdown-menu li:active {
     background-color: #e2e2e2
 }
+/*Styling Selectbox*/
+.dropdown19 {
+    margin-top: 2%;
+    width: 90%;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgb(204, 204, 204);
+    transition: all .5s ease;
+    position: relative;
+    font-size: 24px;
+    color: #474747;
+    height: 50px;
+    text-align: left;
+}
+.dropdown19 .select {
+
+    cursor: pointer;
+    display: block;
+    padding: 10px
+}
+.dropdown19 .select > i {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    float: right;
+    line-height: 20px
+}
+.dropdown19:hover {
+    box-shadow: 0 0 4px rgb(204, 204, 204)
+}
+.dropdown19:active {
+    background-color: #f8f8f8
+
+}
+.dropdown19.active:hover,
+.dropdown19.active {
+    box-shadow: 0 0 4px rgb(204, 204, 204);
+    border-radius: 2px 2px 0 0;
+    background-color: #f8f8f8
+}
+.dropdown19.active .select > i {
+    transform: rotate(-90deg)
+}
+.dropdown19 .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    left: 0;
+    margin-top: 1px;
+    box-shadow: 0 1px 2px rgb(204, 204, 204);
+    border-radius: 0 1px 2px 2px;
+    overflow: hidden;
+    display: none;
+    overflow-y: auto;
+    z-index: 9
+}
+.dropdown19 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
+    padding: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+} 
+.dropdown19 .dropdown-menu {
+    padding: 0;
+    list-style: none
+}
+
+.dropdown19 .dropdown-menu li:active {
+    background-color: #e2e2e2
+}
+/*Styling Selectbox*/
+.dropdown20 {
+    margin-top: 2%;
+    width: 90%;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgb(204, 204, 204);
+    transition: all .5s ease;
+    position: relative;
+    font-size: 24px;
+    color: #474747;
+    height: 50px;
+    text-align: left;
+}
+.dropdown20 .select {
+
+    cursor: pointer;
+    display: block;
+    padding: 10px
+}
+.dropdown20 .select > i {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    float: right;
+    line-height: 20px
+}
+.dropdown20:hover {
+    box-shadow: 0 0 4px rgb(204, 204, 204)
+}
+.dropdown20:active {
+    background-color: #f8f8f8
+
+}
+.dropdown20.active:hover,
+.dropdown20.active {
+    box-shadow: 0 0 4px rgb(204, 204, 204);
+    border-radius: 2px 2px 0 0;
+    background-color: #f8f8f8
+}
+.dropdown20.active .select > i {
+    transform: rotate(-90deg)
+}
+.dropdown20 .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    left: 0;
+    margin-top: 1px;
+    box-shadow: 0 1px 2px rgb(204, 204, 204);
+    border-radius: 0 1px 2px 2px;
+    overflow: hidden;
+    display: none;
+    overflow-y: auto;
+    z-index: 9
+}
+.dropdown20 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
+    padding: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+} 
+.dropdown20 .dropdown-menu {
+    padding: 0;
+    list-style: none
+}
+
+.dropdown20 .dropdown-menu li:active {
+    background-color: #e2e2e2
+}
+
+/*Styling Selectbox*/
+.dropdown21 {
+    margin-top: 2%;
+    width: 90%;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgb(204, 204, 204);
+    transition: all .5s ease;
+    position: relative;
+    font-size: 24px;
+    color: #474747;
+    height: 50px;
+    text-align: left;
+}
+.dropdown21 .select {
+
+    cursor: pointer;
+    display: block;
+    padding: 10px
+}
+.dropdown21 .select > i {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    float: right;
+    line-height: 20px
+}
+.dropdown21:hover {
+    box-shadow: 0 0 4px rgb(204, 204, 204)
+}
+.dropdown21:active {
+    background-color: #f8f8f8
+
+}
+.dropdown21.active:hover,
+.dropdown21.active {
+    box-shadow: 0 0 4px rgb(204, 204, 204);
+    border-radius: 2px 2px 0 0;
+    background-color: #f8f8f8
+}
+.dropdown21.active .select > i {
+    transform: rotate(-90deg)
+}
+.dropdown21 .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    left: 0;
+    margin-top: 1px;
+    box-shadow: 0 1px 2px rgb(204, 204, 204);
+    border-radius: 0 1px 2px 2px;
+    overflow: hidden;
+    display: none;
+    overflow-y: auto;
+    z-index: 9
+}
+.dropdown21 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
+    padding: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer
+} 
+.dropdown21 .dropdown-menu {
+    padding: 0;
+    list-style: none
+}
+
+.dropdown21 .dropdown-menu li:active {
+    background-color: #e2e2e2
+}
 .active{
 	margin-bottom: 33%;
 }
@@ -1499,8 +1735,18 @@ span.choose {
     margin-bottom: 203%;
 }
 .active19 {
-    margin-bottom: 18%;
+    margin-bottom: 70%;
 }
+.active20 {
+    margin-bottom: 92%;
+}
+.active21 {
+    margin-bottom: 28%;
+}
+.active22 {
+    margin-bottom: 137%;
+}
+
 
 #screenIMG{
 	margin-top: 15px;
@@ -1560,6 +1806,15 @@ span.choose {
     margin-right: 1%;
     height: 500px;
 }
+#screenIMG7{
+    margin-top: 15px;
+    box-shadow: 0 0 4px rgb(204, 204, 204);
+    border-radius: 2px 2px 0 0;
+}
+#screenIMG7{
+    height: 400px;
+}
+
 #VersionImg{
 	box-shadow: 0 0 4px rgb(204, 204, 204);
     border-radius: 2px 2px 0 0;

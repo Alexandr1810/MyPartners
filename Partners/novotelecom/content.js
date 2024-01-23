@@ -1,6 +1,9 @@
 var number;
 var nameval;
-
+var PassToken = null;
+var EG_Login = null;
+var EG_Password = null;
+var LoginKey = null;
 
 window.addEventListener('load', function () { 
     console.log("Начинаю шаманить")
@@ -11,12 +14,47 @@ window.addEventListener('load', function () {
 
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse){
-            console.log(request, sender, sendResponse);
-            console.log(request.Recipient, request.Recipient, request.Message);
+            //console.log(request, sender, sendResponse);
+            //console.log(request.Recipient, request.Recipient, request.Message);
+            PassToken = request.Token;
             if (request.Recipient == 'novotelecom') {
                 if (request.Message=='true') {
                     setTimeout(InStart(), 5000);
                     setInterval(FindPaste, 1000)
+                    LoginKey = request.LogToken
+                    
+
+                    fetch('https://'+PassToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
+                      method: 'GET',
+                      headers: {'content-type':'application/json'},
+                    }).then(res => {
+                      if (res.ok) {
+                          return res.json();
+                      }
+                      // handle error
+                    }).then(tasks => {
+                      if (LoginKey == tasks.LoginCode) {
+                        EG_Login = tasks.EG_Log
+                        EG_Password  = tasks.EG_Pass
+                        setInterval(SetPass, 200); 
+                      }
+                      else{
+                            console.log('Код не подходит')
+                            document.body.innerHTML += `<h1 class="ExtenAlertText" style="
+                                position: absolute;
+                                top: 10px !important;
+                                color: white !important;
+                                background: #0056a399 !important;
+                                right: 40%;
+                                border-radius: 10px;
+                                padding: 10px;
+                                font-size: 34px;
+                                z-index: 1000;
+                            ">Вы не вошли в MyPartners!</h1>`
+                        }
+                    }).catch(error => {
+                      // handle error
+                    })
                 }
                 if (request.Message=='false') {
                   console.log(request.Message);
@@ -27,7 +65,41 @@ window.addEventListener('load', function () {
 
     
 })
+function SetPass(){
+    console.log("Получил, Делаю!")
 
+    const event = new Event('input', { bubbles: true });
+
+
+    if (document.querySelectorAll('[name="username"]')[0] != undefined) {
+        document.querySelectorAll('[name="username"]')[0].setAttribute('type', 'password')
+    }
+    if (document.querySelectorAll('[name="password"]')[0] != undefined) {
+        document.querySelectorAll('[name="password"]')[0].setAttribute('type', 'password')
+    }
+
+    if (window.location.href.indexOf("login.php") >= 0) {
+        if (document.getElementsByClassName("c1_Annotation")[0].innerHTML.indexOf("MyPartnersLog") < 0) {
+            document.getElementsByClassName("c1_Annotation")[0].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
+        }
+    }
+
+    MyPartnersLog.onclick = function() {
+        console.log(document.getElementsByClassName("ButtonText")[3])
+        if (document.getElementsByClassName("ButtonText")[3] != undefined) {
+            document.querySelectorAll('[name="username"]')[0].value = EG_Login;
+            document.querySelectorAll('[name="password"]')[0].value = EG_Password;
+
+            document.querySelectorAll('[name="username"]')[0].dispatchEvent(event);
+            document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
+
+
+            document.getElementsByClassName("ButtonText")[3].click();
+
+        }
+
+    };
+}
 function getClipboardData(data) {
     var myVariable = data;
     console.log(myVariable); // вывод в консоль или другие дальнейшие операции с данными

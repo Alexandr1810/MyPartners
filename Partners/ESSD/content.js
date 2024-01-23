@@ -12,6 +12,10 @@ IstochnicList1 = document.getElementsByClassName('fs-checkbox-label');
 FirstBlock = document.getElementById('main-info');
 SessionError = null;
 
+var LoginKey = null;
+
+var PassToken = null;
+
 var ESSD_On_Off = '';
 var OtherMRF_login = 'strijak_ov';
 var OtherMRF_password = 'Poiuyt123!';
@@ -20,7 +24,9 @@ var MoskowObl_login = null;
 var MoskowObl_password = null;
 var OtherMRF_login_FromApi = null;
 var OtherMRF_password_FromApi = null;
-
+if (localStorage.getItem("AutomaticSaveOnStart")=="true"){
+    console.log("TRUE");
+}
 
 
 window.addEventListener('load', function () { 
@@ -33,17 +39,65 @@ window.addEventListener('load', function () {
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse){
             console.log(request, sender, sendResponse);
-            console.log(request.Recipient);
             if (request.Recipient == 'essd') {
                 if (request.Message=='true') {
                     console.log("Хуй");
-                    localStorage.setItem("ESSDlog", request.login);
-                    localStorage.setItem("ESSDpass", request.password);
-                    OtherMRF_login = request.login;
-                    OtherMRF_password = request.password;
-                    ESSD_ON();
-                    setInterval(FindError, 2000);
-                    setInterval(FindPaste, 2000);
+
+                    if (request.login != undefined){
+                        localStorage.setItem("ESSDlog", request.login);
+                    }
+                    if (request.password != undefined){
+                        localStorage.setItem("ESSDpass", request.password);
+                    }
+
+                    passToken = request.Token;
+                    LoginKey = request.LogToken
+                    fetch('https://'+request.Token+'.mockapi.io/MyPartners/EISSD_Pass/1', {
+                      method: 'GET',
+                      headers: {'content-type':'application/json'},
+                    }).then(res => {
+                      if (res.ok) {
+                          return res.json();
+                      }
+                      // handle error
+                    }).then(tasks => {
+                        if (LoginKey == tasks.LoginCode) {
+                            if (localStorage.getItem("ESSDlog") != 'undefined'){
+                                OtherMRF_login = localStorage.getItem("ESSDlog");
+                            }
+                            else{
+                                OtherMRF_login = request.login;
+                            }
+                            if (localStorage.getItem("ESSDpass") != 'undefined'){
+                                OtherMRF_password = localStorage.getItem("ESSDpass");
+                            }
+                            else{
+                                OtherMRF_password = request.password;
+                            }
+
+                            
+                            ESSD_ON();
+                            setInterval(FindError, 2000);
+                            setInterval(FindPaste, 2000);
+                            setInterval(HidePassword, 200);
+                        }
+                        else{
+                            console.log('Код не подходит')
+                            document.body.innerHTML += `<h1 class="ExtenAlertText" style="
+                                position: absolute;
+                                top: 10px !important;
+                                color: white !important;
+                                background: #0056a399 !important;
+                                right: 40%;
+                                border-radius: 10px;
+                                padding: 10px;
+                                font-size: 34px;
+                                z-index: 1000;
+                            ">Вы не вошли в MyPartners!</h1>`
+                          }
+                    }).catch(error => {
+                      // handle error
+                    })
                 }
                 if (request.Message=='false') {
                     console.log("НеХуй");
@@ -57,7 +111,12 @@ window.addEventListener('load', function () {
 
 
 
-
+function HidePassword(){
+    if (LoginInput.length > 0) {
+        LoginInput[0].setAttribute('type', 'password')
+        LoginInput[1].setAttribute('type', 'password')
+    }
+}
 
 function ESSD_ON(){
 
@@ -148,7 +207,7 @@ function ESSD_ON(){
     
 
     //-------------------------------Выбор учетки при входе в партнерку-----------//
-    fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+    fetch('https://'+passToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
       method: 'GET',
       headers: {'content-type':'application/json'},
     }).then(res => {
@@ -170,8 +229,11 @@ function ESSD_ON(){
         MoscowObl.onclick = function() {
             RTcheckbox[0].dispatchEvent(clickEvent);
             for (var i = 0; i < LoginInput.length; i++) {
-                LoginInput[0].value = MoskowObl_login; // подставляем логин и пароль
-                LoginInput[1].value = MoskowObl_password;
+                if (EnterFormButton[0] != undefined){
+                    console.log('EnterFormButton: ', EnterFormButton[0])
+                    LoginInput[0].value = MoskowObl_login; // подставляем логин и пароль
+                    LoginInput[1].value = MoskowObl_password;
+                }
             }
             EnterFormButton[0].dispatchEvent(clickEvent);
 
@@ -182,13 +244,18 @@ function ESSD_ON(){
             for (var i = 0; i < LoginInput.length; i++) {
                 console.log(OtherMRF_login);
                 console.log(OtherMRF_login);
-                if (OtherMRF_login != undefined || OtherMRF_password != undefined) {
+                console.log('EnterFormButton: ', EnterFormButton[0])
+                console.log(OtherMRF_login != undefined && EnterFormButton[0] != undefined || OtherMRF_password != undefined && EnterFormButton[0] != undefined);
+                console.log(OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined);
+                if (OtherMRF_login != undefined && OtherMRF_login != '' && EnterFormButton[0] != undefined || OtherMRF_password != undefined && OtherMRF_password != '' && EnterFormButton[0] != undefined) {
                     LoginInput[0].value = OtherMRF_login; // подставляем логин и пароль
                     LoginInput[1].value = OtherMRF_password; 
+                    console.log('Хуй1');
                 }
-                else{
+                else if (OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_login == '' && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined || OtherMRF_password == '' && EnterFormButton[0] != undefined){
                     LoginInput[0].value = OtherMRF_login_FromApi;
                     LoginInput[1].value = OtherMRF_password_FromApi;
+                    console.log('Хуй2');
                 }
             }
             EnterFormButton[0].dispatchEvent(clickEvent);
@@ -279,7 +346,7 @@ function FindError(){
     }
 
     try { 
-        fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+        fetch('https://'+passToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
           method: 'GET',
           headers: {'content-type':'application/json'},
         }).then(res => {

@@ -1,5 +1,6 @@
 
 var suggestions = document.getElementsByClassName('btn_sup_tariff_mob');
+var LoginKey = null;
 window.addEventListener('load', function () { 
     console.log("Начинаю шаманить")
     chrome.runtime.sendMessage({
@@ -9,12 +10,45 @@ window.addEventListener('load', function () {
 
     chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse){
-            console.log(request, sender, sendResponse);
-            console.log(request.Recipient, request.Recipient, request.Message);
+            //console.log(request, sender, sendResponse);
+            //console.log(request.Recipient, request.Recipient, request.Message);
             if (request.Recipient == 'Tarifnik') {
                 if (request.Message=='true') {
                     console.log("Хуй");
-                    setInterval(GetProviders, 2000);
+
+                    console.log(request.LogToken);
+                    LoginKey = request.LogToken
+
+                    fetch('https://'+request.Token+'.mockapi.io/MyPartners/EISSD_Pass/1', {
+                      method: 'GET',
+                      headers: {'content-type':'application/json'},
+                    }).then(res => {
+                      if (res.ok) {
+                          return res.json();
+                      }
+                      // handle error
+                    }).then(tasks => {
+                      if (LoginKey == tasks.LoginCode) {
+                        setInterval(GetProviders, 2000);
+                      }
+                      else{
+                        console.log('Код не подходит')
+                        document.body.innerHTML += `<h1 class="ExtenAlertText" style="
+                            position: absolute;
+                            top: 10px !important;
+                            color: white !important;
+                            background: #0056a399 !important;
+                            right: 40%;
+                            border-radius: 10px;
+                            padding: 10px;
+                            font-size: 34px;
+                            z-index: 1000;
+                        ">Вы не вошли в MyPartners!</h1>`
+                      }
+                    }).catch(error => {
+                      // handle error
+                    })
+                    
                 }
                 if (request.Message=='false') {
                     console.log("НеХуй");
@@ -131,7 +165,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("54") >= 0){ //Rinet
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Rinet</h3><span>100МБит: 1500 руб. *0,93</span><br><span>1ГБ: 1800 руб. *0,93</span><span>КТВ: 600 руб. *0,93</span><br><span>ЦТВ: 800 руб. *0,93р</span><br><span>Роутер: 325р и Приставка: 465р</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip"><h3 class="Provider">Rinet</h3><span>100МБит: 1500 руб. *0,93</span><br><span>1ГБ: 1800 руб. *0,93</span><br><span>КТВ: 600 руб. *0,93</span><br><span>ЦТВ: 800 руб. *0,93р</span><br><span>Роутер: 325р и Приставка: 465р</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }
@@ -219,7 +253,7 @@ function GetProviders(){
       //console.log(MyProvider);
       }
       else if  (Tester.indexOf("80") >= 0){ //ПАКТ
-      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="background-color: #00000085"><h3 class="Provider">ПАКТ</h3><span>НЕ ПРОДАЕМ</span></div></label');
+      MyProvider = item.innerHTML.replace('rov-logo"></label','rov-logo"><div id="tooltip" style="height: 300px; top: 17%;"><h3 class="Provider">Пакт</h3> <span>Акционное предложение =  1598р</span><br> <span>от 30 до 100мбит = 1786р</span><br> <span>от 300мбит и выше = 1974р</span><br> <span>Абонемент от 30 до 100мбит = 1974р</span><br> <span>Абонемент от 300мбит и выше = 2162р</span><br> <span>Доп пакеты ЦТВ = 855р</span><br> <span>ТелеФония = 1099р</span><br> <span>ОТТ = 235р</span><br> <span>Телевидение = 549р</span></div></label');
       Providers[i].innerHTML = MyProvider;
       //console.log(MyProvider);
       }

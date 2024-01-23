@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz:wght@500&display=swap');
+
+#RegionText{
+    position: absolute;
+    left: 35%;
+    font-weight: 800;
+    font-family:"Calibri", sans-serif;
+}
+
+.navbar-toggler-icon{
+    display: none !important;
+
+}
+#RegionError{
+    background: #1da8da;
+    color: white;
+    font-weight: 700;
+    padding: 6px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+#ChangeAccountBlock{
+    color: #23282c;
+    position: fixed;
+    top: 15px;
+    left: 3%;
+}
+.ChangeAccountHeader{
+    color: #23282c;
+    display: block;
+    padding: 5px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 0px;
+    border-bottom: 2px solid white;
+}
+.ChangeAccount{
+    color: #23282c;
+    display: block;
+    background: white;
+    padding: 5px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.ChangeAccount:hover{
+    color: #23282c;
+    color: white !important;
+    background: #20a8d8;
+    cursor: pointer;
+}
+.СitiesInfo{
+    position: absolute;
+    width: 168px;
+    height: 100%;
+    background: #20a8d8;
+    top: 0;
+    left: 110%;
+    color: white;
+    padding: 4px;
+    border-radius: 5px;
+}
+.СitiesInfoHeader{
+    font-size: 23px;
+    text-align: center;
+}
+.СitiesInfoBody{
+    font-size: 16px;
+}
+
+#NorComСities{
+    display: none;
+}
+#KemerovoСities{
+    display: none;
+}
+#NovokyznezkСities{
+    display: none;
+}
+#SpeedInetСities{
+    display: none;
+}
+#NovosibirskСities{
+    display: none;
+}
+#KrasnoyarskСities{
+    display: none;
+}
+#BarnaulСities{
+    display: none;
+}
+
+#NorComСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 15%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+#KemerovoСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 30%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+#NovokyznezkСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 40%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+#NovosibirskСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 55%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+#KrasnoyarskСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 65%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+#BarnaulСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 80%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}
+
+#SpeedInetСities:before {
+    content: ""; 
+    border: solid transparent;
+    position: absolute;  
+    right: 100%;
+    top: 90%;
+    border-right-color: #20a8d8;
+    border-width: 9px;
+    margin-top: -1px;
+}

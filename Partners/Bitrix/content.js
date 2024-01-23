@@ -4,13 +4,14 @@ var Head = document.querySelectorAll('head');
 var names = null
 var DelLids = 0
 var NedozLids = 0
-var hideSpam = true
-var hideNedozvons = false
 var TodayTime = null
 var CurrentHour = null
 var AllNumbers = []
 var AllFirlds = []
 var ApiNames = null
+var hideSpam,hideNedozvons
+
+
 
 fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/Kanban_Names', {
   method: 'GET',
@@ -32,6 +33,7 @@ var NumbersReshifrator = {
           DomRu: "9039246531",
           DomRu1: "9039229204",
           DomRu2: "9039225026",
+          DomRu3: "9039217263",
           SibSet: "9039225814",
           SibSet1: "9607578786",
           SibSet2: "9039218114",
@@ -84,10 +86,11 @@ window.addEventListener('load', function () {
             if (request.Recipient == 'Bitrix') {
                 if (request.Message=='true') {
                     Head[0].innerHTML += "<style>.crm-kanban-total-price-total2{width:100%;overflow:hidden;display:inline-block;font-size:26px;white-space:nowrap;-ms-text-overflow:ellipsis;text-overflow:ellipsis;padding:0 10px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:white}.crm-kanban-total-price:hover .crm-kanban-total-price-total2{display:inline-block}.crm-kanban-total-price:hover .crm-kanban-total-price-total{display:none} #CopyButton{border-bottom: 1px dashed #2067b0 !important; margin-right: 10px !important;}</style>"
-     
+                    let CardCheck = setInterval(UpdateCard, 1000)
+                    
                     setTimeout(InStart, 6000);
                     setInterval(SetNames, 500);
-                    let CardCheck = setInterval(UpdateCard, 1000)
+                    
                     
                 }
                 if (request.Message=='false') {
@@ -184,20 +187,58 @@ function InStart(){
       </div> 
       </div> </div>`;
     }
-   document.addEventListener("DOMContentLoaded", function () {
-      var scrollbar = document.body.clientWidth - window.innerWidth + 'px';
-      console.log(scrollbar);
-      document.querySelector('[href="#openModal"]').addEventListener('click', function () {
-        document.body.style.overflow = 'hidden';
-        document.querySelector('#openModal').style.marginLeft = scrollbar;
+    try{
+      console.log("HideSpam: ", localStorage.getItem("HideSpam"))
+      console.log("HideNedozvons: ", localStorage.getItem("HideNedozvons"))
+      if (localStorage.getItem("HideSpam") == 'true') {
+        hideSpam = true;
+      } 
+      else if (localStorage.getItem("HideSpam") == 'false') {
+        hideSpam = false;
+      } 
+      if (localStorage.getItem("HideNedozvons") == 'true') {
+        hideNedozvons = true;
+      } 
+      else if (localStorage.getItem("HideNedozvons") == 'false') {
+        hideNedozvons = false;
+      } 
+      
+    }
+    catch(e){
+      console.log(e)
+      hideSpam = true
+      hideNedozvons = false
+    }
+    console.log("hideSpam1: ", hideSpam)
+    console.log("hideNedozvons1: ", hideNedozvons)
+
+    if (hideSpam) {
+      document.getElementById('spamText').style.borderBottom = "none";
+    }
+    else{
+      document.getElementById('spamText').style.borderBottom = "2px solid #737373";
+    }
+    if (hideNedozvons) {
+      document.getElementById('NedovonText').style.borderBottom = "none";
+    }
+    else{
+      document.getElementById('NedovonText').style.borderBottom = "2px solid #737373";
+    }
+
+     document.addEventListener("DOMContentLoaded", function () {
+        var scrollbar = document.body.clientWidth - window.innerWidth + 'px';
+        console.log(scrollbar);
+        document.querySelector('[href="#openModal"]').addEventListener('click', function () {
+          document.body.style.overflow = 'hidden';
+          document.querySelector('#openModal').style.marginLeft = scrollbar;
+        });
+        document.querySelector('[href="#close"]').addEventListener('click', function () {
+          document.body.style.overflow = 'visible';
+          document.querySelector('#openModal').style.marginLeft = '0px';
+        });
       });
-      document.querySelector('[href="#close"]').addEventListener('click', function () {
-        document.body.style.overflow = 'visible';
-        document.querySelector('#openModal').style.marginLeft = '0px';
-      });
-    });
-    document.getElementsByClassName("EditBlockContentButton")[0].onclick = SetName;
-  }
+      document.getElementsByClassName("EditBlockContentButton")[0].onclick = SetName;
+    }
   catch{
     console.log("Страница еще не загружена");
     setTimeout(InStart, 6000);
@@ -254,7 +295,7 @@ function UpdateCard(){
       CopyButtonText = iDocument.getElementById("CopyButton");
       newAlert = iDocument.getElementById("newAlert");
       newAlertError = iDocument.getElementById("newAlertError");
-      iDocument.getElementsByClassName('ui-entity-editor-block-title-text')[9].innerHTML = "Комментарий (Для Партнерки)";
+      iDocument.getElementsByClassName('ui-entity-editor-block-title-text')[8].innerHTML = "Комментарий (Для Партнерки)";
       
 
       
@@ -278,7 +319,7 @@ function UpdateCard(){
             }
 
             try {
-              var city_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[6];
+              var city_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[4];
               console.log("cityblock: ", city_block);
 
               var cityPredText = city_block.childNodes[2].childNodes[1].childNodes[1].innerText;
@@ -288,7 +329,7 @@ function UpdateCard(){
               var cityPredText = "Не заполнено";
             }
             try {
-              var adress_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[8];
+              var adress_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[6];
               console.log("adressblock: ", adress_block);
 
               var adressPredText = adress_block.childNodes[2].childNodes[1].childNodes[1].innerText;
@@ -298,7 +339,7 @@ function UpdateCard(){
               var adressPredText = "Не заполнено";
             }
             try {
-              var PhoneNumber_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[10];
+              var PhoneNumber_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[8];
               console.log("PhoneNumberblock: ", PhoneNumber_block);
 
               var PhoneNumberPredText = PhoneNumber_block.childNodes[2].childNodes[1].childNodes[1].innerText;
@@ -309,7 +350,7 @@ function UpdateCard(){
             }
 
             try {
-              var tarif_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[14];
+              var tarif_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[12];
               console.log("tarifblock: ", tarif_block);
 
               var tarifPredText = tarif_block.childNodes[2].childNodes[1].childNodes[1].innerText;
@@ -320,13 +361,12 @@ function UpdateCard(){
             }
 
             try {
-              var koment_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[18];
-              console.log("komentblock: ", koment_block);
-              console.log("komentPredPredblock: ", koment_block.childNodes[2].childNodes[1]);
-              var komentPredText = koment_block.childNodes[2].childNodes[0].childNodes[0].innerText;
+              var koment_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[17]; 
+              var komentPredText = koment_block.innerText;
               console.log("komentPredText: ", komentPredText);
             }
-            catch {
+            catch(e) {
+              console.log(e)
               var komentPredText = "Не заполнено";
             }
 
@@ -385,6 +425,11 @@ function SetNames(){
   names = document.getElementsByClassName("crm-kanban-item-fields-item-value-name")
   Columns = document.getElementsByClassName("main-kanban-column-title-text-inner")
 
+  if (document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML.indexOf("Спам") < 0) {
+      document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны</div>';
+      AddListener_In_Head();
+  }
+
   if (document.getElementById("user-name").innerText == "Александр Шатохин") {
       document.getElementById("user-name").innerText = "Рыжая Бестия";
       document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
@@ -414,7 +459,7 @@ function SetNames(){
   for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам, дубли и перенесенных из недозвонов
     //console.log("Новый Цикл")
      
-    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0) {
+    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 ) {
         console.log("Найдена пустая завка ", i)
         if (hideSpam) {
           NewCards[i].style.display = "none";
@@ -424,44 +469,53 @@ function SetNames(){
         }
         DelLids++;
     }
-    if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0){
-      TodayTime = NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.replace("сегодня, ", "")
-      TodayTime = TodayTime.split(':')[0]
-      TodayTime = Number(TodayTime)
-      var date = new Date();
-      CurrentHour = date.getHours()
-      //console.log("TodayTime: ", TodayTime, "\n", "CurrentHour: ", CurrentHour)
-    }
+    try{ 
+      if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0){
+        TodayTime = NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.replace("сегодня, ", "")
+        TodayTime = TodayTime.split(':')[0]
+        TodayTime = Number(TodayTime)
+        var date = new Date();
+        CurrentHour = date.getHours()
+        //console.log("TodayTime: ", TodayTime, "\n", "CurrentHour: ", CurrentHour)
+      }
+    
 
-    if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая") {
-        if (hideNedozvons) {
-          NewCards[i].style.display = "none";
-        }
-        else{
-          NewCards[i].style.display = "block";
-          NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
-        }
-        
-        NedozLids++;
-    }
 
-    if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 1 && CurrentHour-TodayTime <= 2) {
-        NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(240 0 0 / 70%);');
-    }
-    if (i == (NewCards.length-1)) {
-      document.getElementsByClassName("main-kanban-column-title-spam-inner")[0].innerText = 'Спам (' + DelLids + ')';
+      if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(".") >= 0 && NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(":") >= 0 && Columns[0].innerHTML == "Новая" ) {
+          if (hideNedozvons) {
+            NewCards[i].style.display = "none";
+          }
+          else{
+            NewCards[i].style.display = "block";
+            NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
+          }
+          
+          NedozLids++;
+      }
 
-      DelLids = 0;
+
+      if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 1 && CurrentHour-TodayTime <= 2) {
+          NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(240 0 0 / 70%);');
+      }
+    }
+    catch(e){
+      console.log(e);
     }
     try{
+      if (i == (NewCards.length-1)) {
+        document.getElementsByClassName("main-kanban-column-title-spam-inner")[0].innerText = 'Спам (' + DelLids + ')';
+
+        DelLids = 0;
+      }
+    
       if (i == (NewCards.length-1)) {
         document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedozLids + ')';
         console.log('NedozLids: ', NedozLids)
         NedozLids = 0;
       }
     }
-    catch{
-      
+    catch(e){
+      console.log(e)
     }
 
 
@@ -492,6 +546,10 @@ function SetNames(){
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu2) {
+
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu3) {
 
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
@@ -808,6 +866,8 @@ function AddListener_In_Head(){
           hideSpam = true;
           document.getElementById('spamText').style.borderBottom = "none";
         }
+        localStorage.setItem("HideSpam", hideSpam);
+
     });
     document.getElementById('NedovonText').addEventListener('click', function (event) {
         console.log("Nedovon");
@@ -819,5 +879,6 @@ function AddListener_In_Head(){
           hideNedozvons = true;
           document.getElementById('NedovonText').style.borderBottom = "none";
         }
+        localStorage.setItem("HideNedozvons", hideNedozvons);
     });
 }

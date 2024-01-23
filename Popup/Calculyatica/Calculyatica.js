@@ -5,6 +5,7 @@ window.addEventListener('load', function () {
 	document.getElementById("RTK_Button").addEventListener("click", CalculateRTK);
 	document.getElementById("RTK_Moskva_Button").addEventListener("click", CalculateRTK_Moskva);
 	document.getElementById("DomRu_Button").addEventListener("click", CalculateDomRu);
+	document.getElementById("EG_Button").addEventListener("click", CalculateEG);
 })
 function SetProvider(Provider){
 	console.log(Provider)
@@ -12,16 +13,25 @@ function SetProvider(Provider){
 		document.getElementById("RTK_Block").style.display = "block";
 		document.getElementById("RTK_Moskva_Block").style.display = "none";
 		document.getElementById("DomRu_Block").style.display = "none";
+		document.getElementById("EG_Block").style.display = "none";
 	}
 	else if (Provider == "RTK_Moskva") {
 		document.getElementById("RTK_Block").style.display = "none";
 		document.getElementById("RTK_Moskva_Block").style.display = "block";
 		document.getElementById("DomRu_Block").style.display = "none";
+		document.getElementById("EG_Block").style.display = "none";
 	}
 	else if (Provider == "DomRu") {
 		document.getElementById("RTK_Block").style.display = "none";
 		document.getElementById("RTK_Moskva_Block").style.display = "none";
 		document.getElementById("DomRu_Block").style.display = "block";
+		document.getElementById("EG_Block").style.display = "none";
+	}
+	else if (Provider == "EG") {
+		document.getElementById("RTK_Block").style.display = "none";
+		document.getElementById("RTK_Moskva_Block").style.display = "none";
+		document.getElementById("DomRu_Block").style.display = "none";
+		document.getElementById("EG_Block").style.display = "block";
 	}
 	else{
 		document.getElementById("RTK_Block").style.display = "none";
@@ -204,5 +214,48 @@ function CalculateDomRu(){
 		document.getElementById("DomRu_Pristavka_Preview_Text").innerText = "";
 		document.getElementById("All_ItogPrice").innerText = "Оплата за заявку: ";
 	}
+	
+} 
+function CalculateEG(){
+	var EG_AP = document.getElementById("EG_AP").value;
+	var EG_AP_Royter = document.getElementById("EG_Royter_Price_Input").value;
+	var EG_AP_Royter_Mounth = document.getElementById("EG_Royter_Mounth_Input").value;
+	var EG_AP_Royter_Count = document.getElementById("EG_Royter_Count_Input").value;
+
+	var EG_AP_Pristavka = document.getElementById("EG_Pristavka_Price_Input").value;
+	var EG_AP_Pristavka_Mounth = document.getElementById("EG_Pristavka_Mounth_Input").value;
+	var EG_AP_Pristavka_Count = document.getElementById("EG_Pristavka_Count_Input").value;
+	console.log(EG_AP)
+	
+	if (document.getElementById('EG_Internet_Checkbox').checked && document.getElementById('EG_TV_Checkbox').checked) {
+		document.getElementById("EG_Internet_Preview_Text").innerText = Math.round((Number(EG_AP)*2.2*0.93)/2) + " руб.";
+		document.getElementById("EG_TV_Preview_Text").innerText = Math.round((Number(EG_AP)*2.2*0.93)/2) + " руб.";
+		document.getElementById("EG_Royter_Preview_Text").innerText = Math.round((Number(EG_AP_Royter)*Number(EG_AP_Royter_Mounth)*0.08*0.93)*Number(EG_AP_Royter_Count)) + " руб.";
+		document.getElementById("EG_Pristavka_Preview_Text").innerText = Math.round((Number(EG_AP_Pristavka)*Number(EG_AP_Pristavka_Mounth)*0.08*0.93)*Number(EG_AP_Pristavka_Count)) + " руб.";
+		document.getElementById("All_ItogPrice").innerText = "Оплата за заявку: " + Math.round(Number(EG_AP)*2.2*0.93) + Math.round((Number(EG_AP_Royter)*Number(EG_AP_Royter_Mounth)*0.08*0.93)*Number(EG_AP_Royter_Count)) + Math.round((Number(EG_AP_Pristavka)*Number(EG_AP_Pristavka_Mounth)*0.08*0.93)*Number(EG_AP_Pristavka_Count)) + " руб.";
+	}
+	if (document.getElementById('EG_Internet_Checkbox').checked == true && document.getElementById('EG_TV_Checkbox').checked == false) {
+		document.getElementById("EG_Internet_Preview_Text").innerText = Math.round(Number(EG_AP)*2.2*0.93) + " руб.";
+		document.getElementById("EG_TV_Preview_Text").innerHTML = "";
+		document.getElementById("EG_Royter_Preview_Text").innerText = Math.round((Number(EG_AP_Royter)*Number(EG_AP_Royter_Mounth)*0.08*0.93)*Number(EG_AP_Pristavka_Count)) + " руб.";
+		document.getElementById("EG_Pristavka_Preview_Text").innerText = "";
+		document.getElementById("All_ItogPrice").innerText = "Оплата за заявку: " + Math.round(Number(EG_AP)*2.2*0.93) + Math.round((Number(EG_AP_Royter)*Number(EG_AP_Royter_Mounth)*0.08*0.93)*Number(EG_AP_Royter_Count)) + " руб.";
+	}
+	if (document.getElementById('EG_Internet_Checkbox').checked == false && document.getElementById('EG_TV_Checkbox').checked == true) {
+		document.getElementById("EG_Internet_Preview_Text").innerHTML = "";
+		document.getElementById("EG_TV_Preview_Text").innerText = "372 руб.";
+		document.getElementById("EG_Royter_Preview_Text").innerText = "";
+		document.getElementById("EG_Pristavka_Preview_Text").innerText = Math.round((Number(EG_AP_Pristavka)*Number(EG_AP_Pristavka_Mounth)*0.08*0.93)*Number(EG_AP_Pristavka_Count)) + " руб.";
+		document.getElementById("All_ItogPrice").innerText = "Оплата за заявку: " + Math.round(Number(EG_AP)*2.2*0.93) + Math.round((Number(EG_AP_Pristavka)*Number(EG_AP_Pristavka_Mounth)*0.08*0.93)*Number(EG_AP_Pristavka_Count)) + " руб.";
+	}
+	if (document.getElementById('EG_Internet_Checkbox').checked == false && document.getElementById('EG_TV_Checkbox').checked == false) {
+		document.getElementById("EG_Internet_Preview_Text").innerHTML = "";
+		document.getElementById("EG_TV_Preview_Text").innerText = "";
+		document.getElementById("EG_Royter_Preview_Text").innerText = "";	
+		document.getElementById("EG_Pristavka_Preview_Text").innerText = "";
+		document.getElementById("All_ItogPrice").innerText = "Оплата за заявку: ";
+	}
+
+
 	
 } 

@@ -81,7 +81,21 @@ function FindPaste(){
 
       fio.value = json.fio;
       contacts.value = number;
-      comment.value = json.Adress + ' ' + json.OtherInfo;
+      if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales MobileВыбор Региона') {
+        comment.value = json.Adress + ' Подключение 315 руб. ' + json.OtherInfo;
+      }
+      else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily ABK Sales MobileВыбор Региона') {
+        comment.value = json.Adress + ' Подключение 100 руб. ' + json.OtherInfo;
+      }
+      else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales Mobile') {
+        comment.value = json.Adress + ' Подключение 315 руб. ' + json.OtherInfo;
+      }
+      else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily ABK Sales Mobile') {
+        comment.value = json.Adress + ' Подключение 100 руб. ' + json.OtherInfo;
+      }
+      else {
+        comment.value = json.Adress + ' Подключение Бесплатно ' + json.OtherInfo;
+      }
       phone.value = number.slice(1);
       nameInput.value = nameval;
       //phone.click();

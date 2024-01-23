@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Lato:wght@900&family=Noto+Sans:wght@900&family=Phudu&family=Ubuntu:wght@700&display=swap');
+
+#MyPartnersLog{
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: #ffffff;
+    font-family: "roboto-bold", arial, sans-serif;
+    border-radius: 5px;
+    height: 32px;
+    width: 80px;
+    font-size: 19px;
+    font-weight: 500;
+    cursor: pointer;
+    top: 0;
+    left: -236px;
+    background: #1ca4ff;
+
+}
+
+#MyPartnersText{
+    position: relative;
+    left: 14px;
+    top: 3px;
+    color: #ffffff;
+}
+#MyPartnersText:hover{
+    top: 2px;
+}
+
+#MyPartnersImg{
+    left: -73px;
+    width: 33%;
+    position: relative;
+    top: 2px;
+    vertical-align: middle;
+}
+
+#MyPartnersLog:hover{
+    
+    top: 1px;
+
+    background: rgb(0 142 237);
+}
