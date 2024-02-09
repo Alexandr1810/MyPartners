@@ -2,6 +2,7 @@ var number;
 var nameval;
 var LoginKey = null;
 var passToken = null;
+var Tarifs = ["Интернет на все 100_450р","Интернет на все 300_550р","Интернет на все 500_650р","Оптимальный (100 Mb/s+IPTV)_500р","Мир кино (100 Mb/s+IPTV)_600р","Всё включено (500 Mb/s+IPTV)_750р","Интернет на все 100_600р","Интернет на все 300_700р","Интернет на все 500_800р","Оптимальный (100 Mb/s+IPTV)_650р","Мир кино (100 Mb/s+IPTV)_750р","Всё включено (500 Mb/s+IPTV)_950р","Интернет на все 100_450р","Интернет на все 300_550р","Интернет на все 500_650р","Оптимальный (100 Mb/s+IPTV)_500р","Мир кино (100 Mb/s+IPTV)_600р","Всё включено (500 Mb/s+IPTV)_750р","Интернет на все 100_450р","Интернет на все 300_650р","Интернет на все 500_750р","Оптимальный (100 Mb/s+IPTV)_500р","Мир кино (100 Mb/s+IPTV)_600р","Всё включено (500 Mb/s+IPTV)_850р","Интернет на все 100_400р","Интернет на все 300_550р","Интернет на все 500_650р","Оптимальный (100 Mb/s+IPTV)_500р","Мир кино (100 Mb/s+IPTV)_600р","Всё включено (500 Mb/s+IPTV)_750р","Интернет_15 Мбит/с_2200р","Интернет_20 Мбит/с_2650р","Интернет_40 Мбит/с_3650р","Интернет, ТВ, Умный домофон (15 Мбит/с+IPTV+УД)_2550р","Интернет, ТВ, Телефония (15 Мбит/с+IPTV+ ГТС)_2600р","Пакет 3400 (ШПД_30 Мбит 3100 руб + IPTV 300 руб)","Интернет, ТВ, Умный домофон (15 Мбит/с+КТВ+УД)_2500р","Интернет, ТВ, Телефония (15 Мбит/с+КТВ+ ГТС)_2550р","Интернет и ТВ (30 Мбит/с+КТВ)_3400р","Интернет_15 Мбит/с_1400р Игарка","Интернет_20 Мбит/с_1700р Игарка","Интернет_50 Мбит/с_2100р Игарка","Интернет и ТВ (20 Мбит/с+IPTV)_2100р Игарка","Смотри онлайн (50 Мбит/с+IPTV)_2400р Игарка"]
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -429,10 +430,13 @@ function InStart(){
       if (СurrentAccount == "Брюзгин Дмитрий Владимирович ") {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Только Норильск, Игарка!</h1>';
       }
-      if (СurrentAccount == "Горбань Карина Васильевна ") {
+      if (СurrentAccount == "Горбань Карина Васильевна " || СurrentAccount == "Шарафиева Полина Артёмовна ") {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText" style="font-size: 18px;left: 12%;">Только Анжеро-Судженск, Белово, Березовский, Грамотеино, Гурьевск,<br> Инской, Кемерово, Ленинск-Кузнецкий, Полысаево, Топки, Юрга!</h1>';
       }
-      if (СurrentAccount == "Волохов Никита Романович " || СurrentAccount == "Кулешов Павел Константинович ") {
+      if (СurrentAccount == "Белов Дмитрий Алексеевич ") {
+        document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText" style="font-size: 20px; left: 12%;">Только Новосибирск, Бердск, Искитим, Обь, Краснообск<br> Регнуть нельзя, отправляй заявку в чат!!</h1>';
+      }
+      if (СurrentAccount == "Князев Александр Денисович " || СurrentAccount == "Попова Милана Денисовна ") {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText" style="font-size: 20px; left: 12%;">Только Новокузнецк, Междуреченск, Осинники, Калтан, Прокопьевск, Киселевск, Мыски!</h1>';
       }
       if (СurrentAccount == "Пешкова Юлия Ивановна ") {
@@ -457,13 +461,13 @@ function InStart(){
         }
       }
       for (var i = 0; i <= RegionNames.Kemerovo.length; i++) {
-        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Kemerovo[i]) >= 0 && СurrentAccount == "Горбань Карина Васильевна ") {
+        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Kemerovo[i]) >= 0 && СurrentAccount == "Горбань Карина Васильевна " || document.getElementById("input-location-house").value.indexOf(RegionNames.Kemerovo[i]) >= 0 && СurrentAccount == "Шарафиева Полина Артёмовна ") {
           IsKemerovo = true
           //console.log("Тригер на: ", RegionNames.SpeedInet[i])
         }
       }
       for (var i = 0; i <= RegionNames.Novokyznetsk.length; i++) {
-        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Novokyznetsk[i]) >= 0 && СurrentAccount == "Волохов Никита Романович " || document.getElementById("input-location-house").value.indexOf(RegionNames.Novokyznetsk[i]) >= 0 && СurrentAccount == "Кулешов Павел Константинович ") {
+        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Novokyznetsk[i]) >= 0 && СurrentAccount == "Князев Александр Денисович " || document.getElementById("input-location-house").value.indexOf(RegionNames.Novokyznetsk[i]) >= 0 && СurrentAccount == "Попова Милана Денисовна ") {
           IsNovokyznetsk = true
           //console.log("Тригер на: ", RegionNames.SpeedInet[i])
         }
@@ -553,16 +557,51 @@ function InStart(){
     catch(e){
       //console.log(e)
     }
-    IsSpeedInet = false;
-    IsNorkom = false;
+    IsSpeedInet = false;  
+    IsNorkom = false; 
     IsKemerovo = false;
-    IsNovokyznetsk = false;
+    IsNovokyznetsk = false; 
     IsKrasnoyarsk = false;
-    IsNovosibirsk = false;
+    IsNovosibirsk = false; 
     IsBarnaul = false;
   }
   catch(e){
     //console.log(e)
+  }
+  try{
+    var wrapper1 = document.getElementsByClassName('multiselect__content-wrapper')[8]
+    var wrapper2 = document.getElementsByClassName('multiselect__content-wrapper')[9]
+    var Pakets = wrapper1.getElementsByClassName('multiselect__element')
+    var Monos = wrapper2.getElementsByClassName('multiselect__element')
+    var AllFields = []
+    AllFields.push.apply(AllFields, Monos);
+    AllFields.push.apply(AllFields, Pakets);
+    var indicator = false;
+    console.log("============================================================================================")
+    for (var i = 0; i < AllFields.length; i++) {
+      for (var j = 0; j < Tarifs.length; j++) {
+        //console.log("Сравниваю", AllFields[i].innerText, " и ", Tarifs[j]+' ')
+        if (AllFields[i].innerText.indexOf(Tarifs[j]) >= 0) {
+          //console.log("Сошлось!")
+          indicator = true;
+        }
+      }
+      if (indicator) {
+        indicator = false
+        AllFields[i].style.display = 'block'
+      }
+      else {
+        
+        console.log("Удалить", AllFields[i].innerText)
+        
+        AllFields[i].style.display = 'none'
+      }
+      
+    }
+    console.log("============================================================================================")
+  }
+  catch(e){
+    console.log(e)
   }
 }
 

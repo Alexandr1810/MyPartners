@@ -136,6 +136,11 @@ $('.dropdown21').click(function () {
         $(this).toggleClass('active22');
         $(this).find('.dropdown-menu').slideToggle(300);
     });
+$('.dropdown22').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active23');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
 
 window.addEventListener('load', function () { 
     document.getElementById("DevPanel").onclick = function(){

@@ -163,9 +163,13 @@ function InStart(){
                 IsMSK = true
                 console.log("IsMSK 2: ", IsMSK)
             }
-            if (document.getElementsByClassName('ng-binding')[2].innerText.indexOf('Москва г,') >= 0) {
+            if (document.getElementsByClassName('ng-binding')[2].innerText.indexOf('МО') >= 0) {
                 IsMSK = true
                 console.log("IsMSK 3: ", IsMSK)
+            }
+            if (document.getElementsByClassName('ng-binding')[2].innerText.indexOf('Москва г,') >= 0) {
+                IsMSK = true
+                console.log("IsMSK 4: ", IsMSK)
             }
             console.log("IsMSK после проверок: ", IsMSK)
             if (IsMSK == false){
@@ -174,7 +178,7 @@ function InStart(){
                     for (var i = 0; i < document.querySelectorAll('[type="submit"]').length; i++) {
                         document.querySelectorAll('[type="submit"]')[i].style.display = 'none'
                     }
-                    document.getElementsByClassName('ng-binding')[0].innerHTML += '<span style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Москва и МО, войдите в Билайн РФ</span>'
+                    document.getElementsByClassName('ng-binding')[0].innerHTML += '<span id="AdrText" style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Москва и МО, войдите в Билайн РФ</span>'
                 }
             }
             if (IsMSK){
@@ -196,9 +200,16 @@ function InStart(){
 
                 }
                 if (document.getElementsByClassName('ng-binding')[0].innerText.indexOf('Вы не можете завети этот адрес') < 0) {
-                    document.getElementsByClassName('ng-binding')[0].innerHTML += '<span style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Билайн РФ, войдите в Москва и МО!</span>'
+                    document.getElementsByClassName('ng-binding')[0].innerHTML += '<span id="AdrText" style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Билайн РФ, войдите в Москва и МО!</span>'
                 }
             }
+        }
+    }
+    else if (document.getElementsByClassName('ng-binding')[0].innerText.indexOf('Новая заявка') < 0) {
+        document.getElementsByClassName('ng-binding')[0].innerHTML = document.getElementsByClassName('ng-binding')[0].innerHTML.replace('<span id="AdrText" style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Билайн РФ, войдите в Москва и МО!</span>', '')
+        document.getElementsByClassName('ng-binding')[0].innerHTML = document.getElementsByClassName('ng-binding')[0].innerHTML.replace('<span id="AdrText" style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Москва и МО, войдите в Билайн РФ</span>', '')
+        for (var i = 0; i < document.querySelectorAll('[type="submit"]').length; i++) {
+            document.querySelectorAll('[type="submit"]')[i].style.display = 'inline-block'
         }
     }
 }

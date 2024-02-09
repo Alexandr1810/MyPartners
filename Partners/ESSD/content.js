@@ -12,7 +12,11 @@ IstochnicList1 = document.getElementsByClassName('fs-checkbox-label');
 FirstBlock = document.getElementById('main-info');
 SessionError = null;
 
+var RosRf_Log = 'nm97' 
+var RosRf_Pass = 'Vra-DJp-QCk-7ts'
+
 var LoginKey = null;
+
 
 var PassToken = null;
 
@@ -24,6 +28,10 @@ var MoskowObl_login = null;
 var MoskowObl_password = null;
 var OtherMRF_login_FromApi = null;
 var OtherMRF_password_FromApi = null;
+
+var d = new Date();
+var Day_Of_Week = d.getDay();
+console.log(Day_Of_Week) 
 if (localStorage.getItem("AutomaticSaveOnStart")=="true"){
     console.log("TRUE");
 }
@@ -221,6 +229,8 @@ function ESSD_ON(){
       MoskowObl_password  = tasks.MoskowOblPass
       OtherMRF_login_FromApi = tasks.OtherMrfLog
       OtherMRF_password_FromApi = tasks.OtherMrfPass
+      RosRf_Log = tasks.RosRF_Log
+      RosRf_Pass = tasks.RosRF_Pass
     }).catch(error => {
       // handle error
     })
@@ -245,17 +255,25 @@ function ESSD_ON(){
                 console.log(OtherMRF_login);
                 console.log(OtherMRF_login);
                 console.log('EnterFormButton: ', EnterFormButton[0])
-                console.log(OtherMRF_login != undefined && EnterFormButton[0] != undefined || OtherMRF_password != undefined && EnterFormButton[0] != undefined);
-                console.log(OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined);
-                if (OtherMRF_login != undefined && OtherMRF_login != '' && EnterFormButton[0] != undefined || OtherMRF_password != undefined && OtherMRF_password != '' && EnterFormButton[0] != undefined) {
-                    LoginInput[0].value = OtherMRF_login; // подставляем логин и пароль
-                    LoginInput[1].value = OtherMRF_password; 
+                if (Day_Of_Week == 6 || Day_Of_Week == 0) {
+                    LoginInput[0].value = RosRf_Log; // подставляем логин и пароль
+                    LoginInput[1].value = RosRf_Pass; 
                     console.log('Хуй1');
+                    console.log("RosRf")
                 }
-                else if (OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_login == '' && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined || OtherMRF_password == '' && EnterFormButton[0] != undefined){
-                    LoginInput[0].value = OtherMRF_login_FromApi;
-                    LoginInput[1].value = OtherMRF_password_FromApi;
-                    console.log('Хуй2');
+                else{
+                    if (OtherMRF_login != undefined && OtherMRF_login != '' && EnterFormButton[0] != undefined || OtherMRF_password != undefined && OtherMRF_password != '' && EnterFormButton[0] != undefined) {
+                        LoginInput[0].value = OtherMRF_login; // подставляем логин и пароль
+                        LoginInput[1].value = OtherMRF_password; 
+                        console.log('Хуй1');
+                        console.log("OtherMRF")
+                    }
+                    else if (OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_login == '' && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined || OtherMRF_password == '' && EnterFormButton[0] != undefined){
+                        LoginInput[0].value = OtherMRF_login_FromApi;
+                        LoginInput[1].value = OtherMRF_password_FromApi;
+                        console.log('Хуй2');
+                        console.log("OtherMRF_FromApi")
+                    }
                 }
             }
             EnterFormButton[0].dispatchEvent(clickEvent);
@@ -304,19 +322,16 @@ try {
 */
 
 }
-// При загрузке станицы удаляем все МРы кроме центра если учетка Попова(Центр)
+
+// Прикончить Москву если учетка Попова
 window.addEventListener('load', function () { 
     try { 
-        console.log("1");
         if (Profile[1].innerText == "Попов Дмитрий Владимирович") {
-            console.log("2");
-            for (var i = 0; i < MyComboTree.length; i++) {
-                if (i != 6) {
-                    MyComboTree[i].style.display = "none";
-                    console.log("4");
-                }
+            document.getElementsByClassName('top-logo')[0].innerHTML += '<span id="MovedText" style="position: absolute;right: 30%;color: white;">На эту учетку можно заводить заявки только в Субботу и Воскресенье!</span>'
+            if (Day_Of_Week != 6 && Day_Of_Week != 0) {
+                document.getElementsByClassName('logout')[0].click()
             }
-                
+            MyComboTree[2].style.display = "none";
         }
     } catch (e) {
         console.log(e);
@@ -367,20 +382,30 @@ function FindError(){
 
             document.getElementById("login").value = MoskowObl_login; // подставляем логин и пароль
             document.getElementById("passw").value = MoskowObl_password;
+
             
             document.getElementsByClassName('btn-type-1_ib')[8].dispatchEvent(clickEvent);
 
         };
         
         OtherMRFErr.onclick = function() {
-
-            if (OtherMRF_login != undefined || OtherMRF_password != undefined || OtherMRF_login != null || OtherMRF_password != null) {
-                document.getElementById("login").value = OtherMRF_login; // подставляем логин и пароль
-                document.getElementById("passw").value = OtherMRF_password; 
+            if (Day_Of_Week == 6 || Day_Of_Week == 0) {
+                document.getElementById("login").value = RosRf_Log; // подставляем логин и пароль
+                document.getElementById("passw").value = RosRf_Pass; 
+                console.log("RosRf")
             }
-            else{
-                document.getElementById("login").value = OtherMRF_login_FromApi;
-                document.getElementById("passw").value = OtherMRF_password_FromApi;
+
+            else {
+                if (OtherMRF_login != undefined || OtherMRF_password != undefined || OtherMRF_login != null || OtherMRF_password != null) {
+                    document.getElementById("login").value = OtherMRF_login; // подставляем логин и пароль
+                    document.getElementById("passw").value = OtherMRF_password; 
+                    console.log("OtherMRF")
+                }
+                else{
+                    document.getElementById("login").value = OtherMRF_login_FromApi;
+                    document.getElementById("passw").value = OtherMRF_password_FromApi;
+                    console.log("OtherMRF_FromApi")
+                }
             }
             document.getElementsByClassName('btn-type-1_ib')[8].dispatchEvent(clickEvent);
      

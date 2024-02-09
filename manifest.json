@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "MyPartners",
     "description": "Помощь в работе с партнерскими программами различных Провайдеров",
-    "version": "17.1",
+    "version": "18.0",
     "author": "Rothaarige_Bestia",
     "action": {
         "default_popup": "Popup/LogIn/LogIn.html",

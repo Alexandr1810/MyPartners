@@ -3,6 +3,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   let url = chrome.runtime.getURL("MainPage/index.html");
   let tab = await chrome.tabs.create({ url });
 });
+
+
 var TokenAndUser = '26/qzz79qlepr8oxwmk'
 var Pssword_Token = '656de619bcc5618d3c242ec1'
 var BotToken = '6772388598:AAGgg0BDIwVE7jAbzxi4WjL7dw_aL8kgnaU'

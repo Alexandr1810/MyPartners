@@ -33,16 +33,16 @@ window.addEventListener('load', function () {
                       }
                       else{
                         console.log('Код не подходит')
-                        document.body.innerHTML += `<h1 class="ExtenAlertText" style="
-                            position: absolute;
-                            top: 10px !important;
-                            color: white !important;
-                            background: #0056a399 !important;
-                            right: 40%;
-                            border-radius: 10px;
-                            padding: 10px;
-                            font-size: 34px;
-                            z-index: 1000;
+                        document.getElementById("menu").innerHTML += `<h1 class="ExtenAlertText" style="
+                                position: absolute;
+                                top: 10px !important;
+                                color: white !important;
+                                background: #0056a399 !important;
+                                right: -410%;
+                                border-radius: 10px;
+                                padding: 10px;
+                                font-size: 34px;
+                                z-index: 1000;
                         ">Вы не вошли в MyPartners!</h1>`
                       }
                     }).catch(error => {

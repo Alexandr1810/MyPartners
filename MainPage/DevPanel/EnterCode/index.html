@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Ежедневный отчет</title>
-	<link rel="icon" href="img/Otchet.svg" type="image/x-icon">
+	<title>Ежедневный код</title>
+	<link rel="icon" href="img/code.png" type="image/x-icon">
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<style type="text/css">
@@ -19,14 +19,14 @@
 	</header>
 	<content>
 		<div id="ContentHead">
-			<h1>Формирование ежедневного отчета</h1>
+			<h1>Отправка eжедневного Кода</h1>
 		</div>
 		<div id="ContentBlock">
-			<h3>Ваш ID:</h3>
-			<input type="text" id="UserId" placeholder="7020">
-			<h3>Дата отчета в формате ГГГГ-ММ-ДД:</h3>
-			<input type="text" id="UserDate" placeholder="2024-01-18"><br><br>
-			<button id="SendForm">Сформировать</button><br><br>
+			<h1 id="TimeText">Код сгенерирован </h1>
+			<div id="KeyBlock">
+				<h2 id="KeyText">Текущий код: </h2>
+			</div>
+			<h1 id="SendCode_a" class="transition">Сгенерировать Код</h1>
 		</div>
 		<div id="OthetBlock">
 			<p id="OtchetText"></p>

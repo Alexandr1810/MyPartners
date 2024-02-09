@@ -81,6 +81,7 @@ function FindPaste(){
 
       fio.value = json.fio;
       contacts.value = number;
+      
       if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales MobileВыбор Региона') {
         comment.value = json.Adress + ' Подключение 315 руб. ' + json.OtherInfo;
       }

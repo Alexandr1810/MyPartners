@@ -36,6 +36,25 @@ EISSD_Button.onclick = function() {
 		setTimeout(function(){ document.getElementsByClassName('ErrorAlert')[0].style.display = 'none'; }, 2000);
 	})
 }
+EISSD_RosRf_Button.onclick = function() {
+	fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+	    method: 'PUT', // or PATCH
+	    headers: {'content-type':'application/json'},
+	    body: JSON.stringify({RosRF_Log: document.getElementById('EISSD_RosRf_Log').value, RosRF_Pass: document.getElementById('EISSD_RosRf_Pass').value})
+	}).then(res => {
+    if (res.ok) {
+        return res.json();
+    }
+	// handle error
+	}).then(task => {
+		console.log(task)
+		document.getElementsByClassName('SuccessAlert')[0].style.display = 'block';
+		setTimeout(function(){ document.getElementsByClassName('SuccessAlert')[0].style.display = 'none'; }, 2000);
+	}).catch(error => {
+		document.getElementsByClassName('ErrorAlert')[0].style.display = 'block';
+		setTimeout(function(){ document.getElementsByClassName('ErrorAlert')[0].style.display = 'none'; }, 2000);
+	})
+}
 EISSD_MSK_Button.onclick = function() {
 	fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
 	    method: 'PUT', // or PATCH

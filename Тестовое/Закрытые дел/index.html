@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Закрытие дел</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var DealLink = "https://speedinet.bitrix24.ru/crm/deal/details/2805540/?any=details%2F2805540%2F";
+		var	DealId = DealLink.split('/')[6];
+
+		const options = {
+		  method: 'POST',
+		  headers: {
+		    cookie: 'qmb=0.',
+		    'Content-Type': 'application/json',
+		    'User-Agent': 'insomnia/8.5.1'
+		  },
+		  body: '{"filter":{"OWNER_TYPE_ID":"2","OWNER_ID":"'+DealId+'","SUBJECT":"Доработать клиента","STATUS":"1"}}'
+		};
+
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.activity.list', options)
+		  .then(response => response.json())
+		  .then(response => {
+			console.log(response.result)
+			for (var i = 0; i < response.result.length; i++) {
+				console.log(response.result[i].ID)
+				const options = {
+				  method: 'POST',
+				  headers: {
+				    cookie: 'qmb=0.',
+				    'Content-Type': 'application/json',
+				    'User-Agent': 'insomnia/8.5.1'
+				  },
+				  body: '{"id":"'+response.result[i].ID+'"}'
+				};
+
+				fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.activity.delete', options)
+				  .then(response => response.json())
+				  .then(response => console.log(response))
+				  .catch(err => console.error(err));
+				}
+		  })
+		  .catch(err => console.error(err));
+	</script>
+</body>
+</html>

@@ -9,7 +9,8 @@ var CurrentHour = null
 var AllNumbers = []
 var AllFirlds = []
 var ApiNames = null
-var hideSpam = true,hideNedozvons
+var hideSpam;
+var hideNedozvons;
 var ApiToken = '11010000 10100101 11010001 10000011 11010000 10111001' //2чный код
 var AllDealsArr = null;
 var AllDealsArrInLastMonth = null;
@@ -21,6 +22,9 @@ var MultiBrend = ["2gis","2gis_smartnet","speed-net","2gis-spec","2gis-geo","2gi
 var IsMulti = false;
 var PasswordToken = null;
 var LoginKey = null;
+var AllNewsCount = 0;
+var AllNews = [];
+var NedovonList = [];
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -71,8 +75,6 @@ function GetAllDeals1(){
       GetAllDeals2()
     })
     .catch(err => console.error(err));
-
-
 }
 function GetAllDeals2(){
 
@@ -106,8 +108,6 @@ function GetAllDeals2(){
         console.log("AllDealsArr: ", AllDealsArr)
         GetAllDeals3()
       });
-
-
 }
 function GetAllDeals3(){
   console.log("Начало шаманства c API3!")
@@ -130,8 +130,6 @@ function GetAllDeals3(){
       GetAllDeals4()
     })
     .catch(err => console.error(err));
-
-
 }
 function GetAllDeals4(){
   console.log("Начало шаманства c API4!")
@@ -162,6 +160,104 @@ function GetAllDeals4(){
         console.log("AllOPPORTUNITY in GetAllDeals4", AllOPPORTUNITY)
         AllDealsArrInLastMonth = AllOPPORTUNITY;
         console.log("AllDealsArrInLastMonth: ", AllDealsArrInLastMonth)
+        console.log(document.getElementById("user-name").innerText)
+        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Артём Зиманов") {
+          GetAllNewsCount()
+        }
+      });
+}
+function GetAllNewsCount(){
+  console.log("Начало шаманства c API5!")
+  const options = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"NEW"},"start":"0","select":["ASSIGNED_BY_ID","TITLE"]}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/'+ApiToken+'/crm.deal.list', options)
+    .then(response => response.json())
+    .then(response => {
+      AllNewsCount  = response.total
+      console.log("AllNewsCoun: ", AllNewsCount)
+      GetAllNews()
+    })
+    .catch(err => console.error(err));
+}
+function GetAllNews(){
+  console.log("Начало шаманства c API6!")
+  const fetchPromises = [];
+    for (var i = 0; i < AllNewsCount; i+=50) {
+      const options = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.5.1'
+        },
+        body: '{"filter":{"STAGE_ID":"NEW"},"start":"'+i+'","select":["ASSIGNED_BY_ID","TITLE"]}'
+      };
+
+      fetchPromises.push(
+        fetch('https://speedinet.bitrix24.ru/rest/'+ApiToken+'/crm.deal.list', options)
+          .then(response => response.json())
+          .catch(err => {
+            console.error('Error fetching data:', err);
+            return null;
+          })
+      );
+    }
+
+    Promise.all(fetchPromises) 
+      .then(AllOPPORTUNITY => {
+        console.log("AllOPPORTUNITY: ", AllOPPORTUNITY)
+        for (var i = 0; i < AllOPPORTUNITY.length; i++) {
+          for (var j = 0; j < AllOPPORTUNITY[i].result.length; j++) {
+            AllNews.push(AllOPPORTUNITY[i].result[j])
+          }
+        }
+        console.log("AllNews: ", AllNews)
+        console.log("AllNews.length: ", AllNews.length)
+
+        SearchNedozvons()
+      });
+}
+function SearchNedozvons(){
+  console.log("Начало шаманства c API7!")
+  const fetchPromises = [];
+    for (var i = 0; i < AllNews.length; i++) {
+      const options = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.5.1'
+        },
+        body: '{"entityTypeId":2,"filter":{"OWNER_ID":"'+AllNews[i].ID+'","STAGE_ID":"UC_0SAOJL"},"select":["OWNER_ID","STAGE_ID","CREATED_TIME"]}'
+      };
+
+      fetchPromises.push(
+        fetch('https://speedinet.bitrix24.ru/rest/'+ApiToken+'/crm.stagehistory.list', options)
+          .then(response => response.json())
+          .catch(err => {
+            console.error('Error fetching data:', err);
+            return null;
+          })
+      );
+    }
+
+    Promise.all(fetchPromises) 
+      .then(AllOPPORTUNITY => {
+        console.log("AllOPPORTUNITY 7: ", AllOPPORTUNITY)
+        for (var i = 0; i < AllOPPORTUNITY.length; i++) {
+          if(AllOPPORTUNITY[i].total > 0){
+            NedovonList.push(AllOPPORTUNITY[i].result.items[0].OWNER_ID)
+          }
+        }
+        console.log("NedovonList: ", NedovonList)
       });
 }
 
@@ -172,13 +268,17 @@ function GetAllDeals4(){
 var NumbersReshifrator = {
           SpeedInet: "9039236742",
           SpeedNet: "9039225718",
+          SpeedNet1: "9039215718",
           PerSet: "9039248205",
+          Pakt: "9039248452",
           DomRu: "9039246531",
           DomRu1: "9039229204",
           DomRu2: "9039225026",
           DomRu3: "9039217263",
           DomRu4: "9039244751",
           DomRu5: "9039217524",
+          DomRu6: "9039221839",
+          DomRu7: "9039866171",
           SibSet: "9039225814",
           SibSet1: "9607578786",
           SibSet2: "9039218114",
@@ -200,6 +300,7 @@ var NumbersReshifrator = {
           YfaNet: "9039218756",
           Centra: "9039224301",
           Etel: "9039224301",
+          Etel1: "9039865920",
           SmartNet: "9039247531"
       }
 
@@ -505,7 +606,7 @@ function Calculation_Of_Payment_From_CurrentMonth(AllUsers, userID, StageId){
   }
 }
 
-
+/*
 function UpdatePasswordInApi(){
   fetch('https://'+PasswordToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
       method: 'PUT', // or PATCH
@@ -522,6 +623,7 @@ function UpdatePasswordInApi(){
     console.log(error)
   })
 }
+*/
 
 window.addEventListener('load', function () { 
     console.log("Начинаю шаманить")
@@ -556,6 +658,7 @@ window.addEventListener('load', function () {
                         Apidd = tasks.LoginDate
                         if (Number(Apidd) < dd || Number(Apidd) > dd) {
                           console.log('Код просрочен')
+                          /*
                           const SendKeyToChat = {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
@@ -568,16 +671,16 @@ window.addEventListener('load', function () {
                               console.log('Обновляю пароль в Api')
                               UpdatePasswordInApi()
                             })
-                            .catch(err => console.error(err));
+                            .catch(err => console.error(err));*/
                         }
                         console.log("PasswordToken: ", PasswordToken)
                         GetAllDeals1();
                         setTimeout(InStart, 6000);
-                        setInterval(SetNames, 500);
+                        setInterval(SetNames, 500); 
                       }
                       else{
                         console.log('Код не подходит')
-                        document.body.innerHTML += `<h1 class="ExtenAlertText" style="
+                        document.getElementById("header-inner").innerHTML += `<h1 class="ExtenAlertText" style="
                           position: absolute;
                           top: 10px !important;
                           color: white !important;
@@ -591,6 +694,7 @@ window.addEventListener('load', function () {
                         console.log(dd)
                         if (Number(Apidd) < dd || Number(Apidd) > dd) {
                             console.log('Код просрочен')
+                            /*
                             const SendKeyToChat = {
                               method: 'POST',
                               headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
@@ -603,7 +707,7 @@ window.addEventListener('load', function () {
                                 console.log('Обновляю пароль в Api')
                                 UpdatePasswordInApi()
                               })
-                              .catch(err => console.error(err));
+                              .catch(err => console.error(err));*/
                           }
                       }
                     }).catch(error => {
@@ -647,6 +751,7 @@ window.addEventListener('load', function () {
                         Apidd = tasks.LoginDate
                         if (Number(Apidd) < dd || Number(Apidd) > dd) {
                           console.log('Код просрочен')
+                          /*
                           const SendKeyToChat = {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
@@ -659,7 +764,7 @@ window.addEventListener('load', function () {
                               console.log('Обновляю пароль в Api')
                               UpdatePasswordInApi()
                             })
-                            .catch(err => console.error(err));
+                            .catch(err => console.error(err));*/
                         }
                       }
                       else{
@@ -745,7 +850,7 @@ function GetPrice(){
   var Price = document.getElementsByClassName('crm-kanban-total-price-total');
   var Price1 = document.getElementsByClassName('crm-kanban-total-price');
     if(Columns[0].innerHTML == "Новая"){
-      for (var i = 0; i < Price.length; ++i) {
+      for (var i = 0; i < Price.length; i++) {
         var item = Price[i];  
         ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.145
         ItogPrice = Math.round(ItogPrice);
@@ -758,7 +863,7 @@ function GetPrice(){
       }
     }
     else if(Columns[0].innerHTML == "Текущий месяц"){
-      for (var i = 2; i < Price.length; ++i) {
+      for (var i = 2; i < Price.length; i++) {
         var item = Price[i];  
         ItogPrice = parseInt(item.innerHTML.replace('&nbsp;','').replace('&nbsp;','').replace(' руб.',''))*0.145
         ItogPrice = Math.round(ItogPrice);
@@ -837,17 +942,19 @@ function SetPriceIntrval(){
 
 
 function InStart(){
+  console.log("AllNews: ", AllNews)
   try{
+
     GetAllDealsInCurrentMounth();
     var Tester = document.getElementsByClassName('crm-kanban-total-price-total');
     GetPrice();
     
-    if (document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия") {
-        document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны</div>';
+    if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Артём Зиманов") {
+        document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div>';
       }
       else{
-        document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div>';
+        document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div>';
       }
       AddListener_In_Head();
     }
@@ -950,6 +1057,7 @@ function UpdateCard(){
     //console.log(iframe);
     
     var ButtonCollage = iDocument.getElementsByClassName("ui-entity-editor-header-title")[0];
+    var EventCollage = iDocument.getElementsByClassName("crm-entity-stream-planned-label")[0];
     const iframeHead = iDocument.querySelectorAll("head")[0];
     //console.log(ButtonCollage);
 
@@ -975,14 +1083,58 @@ function UpdateCard(){
           else if (iDocumentName.innerHTML == "Рыжая Сука") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-
+          else if (iDocumentName.innerHTML == "Пятиклассница💙") {
+            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
         }
 
       }
 
+    if (EventCollage.innerHTML.indexOf("Закрыть Доработку") < 0) {
+      EventCollage.innerHTML += '<a id="CloseRevision">Закрыть Доработку</a>';
+      CloseRevisionText = iDocument.getElementById("CloseRevision");
+      iDocument.querySelector("#CloseRevision").addEventListener("click", e => {
+          var DealLink = window.location.href;
+          var DealId = DealLink.split('/')[6];
+
+          const options = {
+            method: 'POST',
+            headers: {
+              cookie: 'qmb=0.',
+              'Content-Type': 'application/json',
+              'User-Agent': 'insomnia/8.5.1'
+            },
+            body: '{"filter":{"OWNER_TYPE_ID":"2","OWNER_ID":"'+DealId+'","SUBJECT":"Доработать клиента","STATUS":"1"}}'
+          };
+
+          fetch('https://speedinet.bitrix24.ru/rest/'+ApiToken+'/crm.activity.list', options)
+            .then(response => response.json())
+            .then(response => {
+            console.log(response.result)
+            for (var i = 0; i < response.result.length; i++) {
+              console.log(response.result[i].ID)
+              const options = {
+                method: 'POST',
+                headers: {
+                  cookie: 'qmb=0.',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'insomnia/8.5.1'
+                },
+                body: '{"id":"'+response.result[i].ID+'"}'
+              };
+
+              fetch('https://speedinet.bitrix24.ru/rest/'+ApiToken+'/crm.activity.delete', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+              }
+            })
+            .catch(err => console.error(err));
+            });
+    }
 
     if (ButtonCollage.innerHTML.indexOf("Скопировать") < 0) {
-      iframeHead.innerHTML += "<style>#CopyButton{border-bottom:1px dashed #2067b0;margin-left:10px}#CopyButton:hover{border-bottom:1px dashed #eef2f4; cursor: pointer;}.crm-widget-employee-name{font-weight: 500;}</style>"
+      iframeHead.innerHTML += "<style>#CopyButton{border-bottom:1px dashed #2067b0;margin-left:10px}#CopyButton:hover{border-bottom:1px dashed #eef2f4; cursor: pointer;}#CloseRevision{color: white !important; font-weight: 600 !important; border-bottom: 1px dashed #ffffff; margin-left: 10px;}#CloseRevision:hover{border-bottom:1px dashed #9dcf00; cursor: pointer;}.crm-widget-employee-name{font-weight: 500;}</style>"
       ButtonCollage.innerHTML += '<a id="CopyButton">Скопировать</a><a style="margin-left: 10px;color: white;background-color: rgb(63, 205, 74);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlert">Успешно скопированно!</a><a style="margin-left: 10px;color: white;background-color: rgb(205 63 63);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlertError">Ошибка при Копировании!</a><a style="float: right; vertical-align: middle; border: 1px solid #eaeaea; border-radius: 10px; cursor: pointer;" id="CodyIcon"><img src="https://www.kody.su/favicon.ico" style="vertical-align: middle; height: 17px; border: medium none; padding: 4px;"></a><div class="Cody"></div>';
       CopyButtonText = iDocument.getElementById("CopyButton");
       newAlert = iDocument.getElementById("newAlert");
@@ -1059,7 +1211,7 @@ function UpdateCard(){
             }
             catch(e) {
               console.log(e)
-              var komentPredText = "Не заполнено";
+              var komentPredText = " ";
             }
 
             ItemsArr.fio = fioPredText;
@@ -1111,19 +1263,19 @@ function AddAlertError(){
   newAlertError.style.display = 'none';
 }
 
-function SetNames(){
+function SetNames(){ 
   NewCards = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
   AllCards = document.getElementsByClassName('main-kanban-item');
   names = document.getElementsByClassName("crm-kanban-item-fields-item-value-name")
   Columns = document.getElementsByClassName("main-kanban-column-title-text-inner")
 
-  if (document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия") {
-          document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div><div style="margin-left: 3%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны</div>';
+  if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Рыжая Бестия"  || document.getElementById("user-name").innerText =="Артём Зиманов") {
+          document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div>';
           AddListener_In_Head();
       }
       else{
-          document.getElementsByClassName("main-kanban-column-title-info")[0].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText">Спам</div>';
+          document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div>';
       }
   }
   
@@ -1157,14 +1309,23 @@ function SetNames(){
   for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам, дубли и перенесенных из недозвонов
     //console.log("Новый Цикл")
      
-    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 ) {
+    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" && NewCards[i].innerHTML.toLowerCase().indexOf("тест") < 0 || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 ) {
         console.log("Найдена пустая завка ", i)
-        if (hideSpam) {
-          NewCards[i].style.display = "none";
-        }
-        else{
-          NewCards[i].style.display = "block";
-        }
+        console.log()
+        const options = {
+          method: 'POST',
+          headers: {
+            cookie: 'qmb=0.',
+            'Content-Type': 'application/json',
+            'User-Agent': 'insomnia/8.6.0'
+          },
+          body: '{"id":"'+NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+'","fields":{"UF_CRM_1694601072":"5702","STAGE_ID":"UC_93XIL7"}}'
+        };
+
+        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+          .then(response => response.json())
+          .then(response => console.log(response))
+          .catch(err => console.error(err));
         console.log(NewCards[i])
         DelLids++;
     }
@@ -1179,9 +1340,9 @@ function SetNames(){
       }
     
 
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия") {
-        if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(".") >= 0 && NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(":") >= 0 && Columns[0].innerHTML == "Новая" ) {
-            if (hideNedozvons) {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Артём Зиманов") {
+        /*if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(".") >= 0 && NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(":") >= 0 && Columns[0].innerHTML == "Новая" ) {
+            if (hideNedozvons) { //Трахать сюда
               NewCards[i].style.display = "none";
             }
             else{
@@ -1190,6 +1351,17 @@ function SetNames(){
             }
             
             NedozLids++;
+        }*/
+        for (var k = 0; k < NedovonList.length; k++) {
+          if (NewCards[i].innerHTML.indexOf(NedovonList[k]) >= 0 && Columns[0].innerHTML == "Новая") {
+            if (hideNedozvons) { //Трахать сюда
+              NewCards[i].style.display = "none";
+            }
+            else{
+              NewCards[i].style.display = "block";
+              NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
+            }
+          }
         }
       }
 
@@ -1206,9 +1378,9 @@ function SetNames(){
 
         DelLids = 0;
       }
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Артём Зиманов") {
         if (i == (NewCards.length-1)) {
-          document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedozLids + ')';
+          document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedovonList.length + ')';
           console.log('NedozLids: ', NedozLids)
           NedozLids = 0;
         }
@@ -1230,11 +1402,17 @@ function SetNames(){
         if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.indexOf("Билайн АТС") >= 0) {
           //AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '')
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.SpeedInet) {
-            console.log("Входящий SpeedInet");
+            //console.log("Входящий SpeedInet");
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий SpeedInet";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.SpeedNet) {
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Speed-net";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.SpeedNet1) {
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Speed-net";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.Pakt) {
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Пакт";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.PerSet) {
 
@@ -1261,6 +1439,14 @@ function SetNames(){
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu5) {
+
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu6) {
+
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
+          }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.DomRu7) {
 
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
           }
@@ -1348,6 +1534,10 @@ function SetNames(){
 
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Е-Телеком";
           }
+          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.Etel1) {
+
+            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Е-Телеком";
+          }
           if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == NumbersReshifrator.SmartNet) {
 
             AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий SmartNet";
@@ -1401,7 +1591,9 @@ function SetNames(){
         if (names[i].innerHTML == "Рыжая Сука") {
           names[i].setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-
+        if (names[i].innerHTML == "Пятиклассница💙") {
+          names[i].setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
         //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
       }
 
@@ -1567,7 +1759,7 @@ function SetName(){
       })
     }
 function AddListener_In_Head(){
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия") {
+  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Марк Плющ" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Артём Зиманов") {
       document.getElementById('spamText').addEventListener('click', function (event) {
           console.log("Spam");
           if (hideSpam) {

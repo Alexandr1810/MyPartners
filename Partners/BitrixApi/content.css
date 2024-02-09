@@ -1,4 +1,6 @@
-
+.main-kanban-column:hover {
+    z-index: 0 !important;
+}
 
 .crm-kanban-item-fields-item-value-user:hover #CustomDiv{
     display: block;
