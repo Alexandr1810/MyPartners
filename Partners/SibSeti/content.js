@@ -48,7 +48,9 @@ AccauntPasswords = {
     NovokyznezkLog1: "",
     NovokyznezkPass1: "",
     BarnaulLog1: "",
-    BarnaulPass1: ""
+    BarnaulPass1: "",
+    NorComLog1: "",
+    NorComPass1: ""
   }
 
 function ShowNorKom() {
@@ -87,6 +89,28 @@ window.addEventListener('load', function () {
                       }
                       // handle error
                     }).then(tasks => {
+                      AccauntPasswords.NorComLog = tasks.NorComLog
+                      AccauntPasswords.NorComPass  = tasks.NorComPass
+                      AccauntPasswords.KemerovoLog = tasks.KemerovoLog
+                      AccauntPasswords.KemerovoPass = tasks.KemerovoPass
+                      AccauntPasswords.NovokyznezkLog = tasks.NovokyznezkLog
+                      AccauntPasswords.NovokyznezkPass  = tasks.NovokyznezkPass
+                      AccauntPasswords.SpeedInetLog = tasks.SpeedInetLog
+                      AccauntPasswords.SpeedInetPass = tasks.SpeedInetPass
+                      AccauntPasswords.NovosibirskLog = tasks.NovosibirskLog
+                      AccauntPasswords.NovosibirskPass = tasks.NovosibirskPass
+                      AccauntPasswords.KrasnoyarskLog = tasks.KrasnoyarskLog
+                      AccauntPasswords.KrasnoyarskPass = tasks.KrasnoyarskPass
+                      AccauntPasswords.BarnaulLog = tasks.BarnaulLog
+                      AccauntPasswords.BarnaulPass = tasks.BarnaulPass
+                      AccauntPasswords.BarnaulLog = tasks.BarnaulLog
+                      AccauntPasswords.BarnaulPass = tasks.BarnaulPass
+                      AccauntPasswords.NovokyznezkLog1 = tasks.NovokyznezkLog1
+                      AccauntPasswords.NovokyznezkPass1 = tasks.NovokyznezkPass1
+                      AccauntPasswords.BarnaulLog1 = tasks.BarnaulLog1
+                      AccauntPasswords.BarnaulPass1 = tasks.BarnaulPass1
+                      AccauntPasswords.NorComLog1 = tasks.NorComLog1
+                      AccauntPasswords.NorComPass1 = tasks.NorComPass1
                       if (LoginKey == tasks.LoginCode) {
                         GetPasswords();
                         setInterval(InStart, 500); 
@@ -205,6 +229,7 @@ function GetPasswords(){
 
 
   //-------------------------------Выбор учетки при входе в партнерку-----------//
+  /*
     fetch('https://'+passToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
       method: 'GET',
       headers: {'content-type':'application/json'},
@@ -235,17 +260,25 @@ function GetPasswords(){
       AccauntPasswords.NovokyznezkPass1 = tasks.NovokyznezkPass1
       AccauntPasswords.BarnaulLog1 = tasks.BarnaulLog1
       AccauntPasswords.BarnaulPass1 = tasks.BarnaulPass1
+      AccauntPasswords.NorComLog1 = tasks.NorComLog1
+      AccauntPasswords.NorComPass1 = tasks.NorComPass1
     }).catch(error => {
       // handle error
     })
+    */
 
 
     try { 
         ChangeNorCom.onclick = function() {
           if (document.getElementsByClassName("btn")[0] != undefined) {
-            document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.NorComLog;
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.NorComPass;
-
+            if (randomIndex1 < 50) {
+              document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.NorComLog;
+              document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.NorComPass;
+            }
+            else{
+              document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.NorComLog1;
+              document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.NorComPass1;
+            }
             document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
             document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
 
@@ -427,7 +460,7 @@ function InStart(){
       if (СurrentAccount == "SPEEDINET ") {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Все регионы кроме Норильска, УЧЕТКА ЗАКРЫТА!!!</h1>';
       }
-      if (СurrentAccount == "Брюзгин Дмитрий Владимирович ") {
+      if (СurrentAccount == "Брюзгин Дмитрий Владимирович " || СurrentAccount == "Ерисова Ирина Ивановна ") {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Только Норильск, Игарка!</h1>';
       }
       if (СurrentAccount == "Горбань Карина Васильевна " || СurrentAccount == "Шарафиева Полина Артёмовна ") {
@@ -455,7 +488,7 @@ function InStart(){
         }
       }
       for (var i = 0; i <= (RegionNames.Norkom.length); i++) {
-        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Norkom[i]) >= 0 && СurrentAccount == "Брюзгин Дмитрий Владимирович ") {
+        if (document.getElementById("input-location-house").value.indexOf(RegionNames.Norkom[i]) >= 0 && СurrentAccount == "Брюзгин Дмитрий Владимирович " || document.getElementById("input-location-house").value.indexOf(RegionNames.Norkom[i]) >= 0 && СurrentAccount == "Ерисова Ирина Ивановна ") {
           IsNorkom = true
           //console.log("Тригер на: ", RegionNames.SpeedInet[i])
         }

@@ -17,8 +17,23 @@
 	height:200px;
 	
 }
-
-
+#spamText{
+  display:  none; 
+}
+.main-kanban-column-title-add-column{
+  display: none;
+}
+.main-kanban-column-title-text-inner{
+  overflow: visible !important;
+}
+#RestartNedozvons{
+    -webkit-transition: -webkit-transform .4s ease-in-out;
+    transition: transform .4s ease-in-out;
+}
+#RestartNedozvons:hover {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
 .main-kanban-column-title-spam-inner{
     margin-top: 8px;
     font-weight: 700;

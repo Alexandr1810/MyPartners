@@ -1,5 +1,6 @@
 var number;
 var nameval;
+var Hide_SendCode_Button = true;
 var Citys = ["красноярск", "иркутск", "абакан", "канск", "братск", "черногорск", "минусинск", "железногорск", "зеленогорск", "саяногорск", "новокузнецк", "киселевск", "прокопьевск"]
 
 
@@ -19,6 +20,7 @@ window.addEventListener('load', function () {
                     setTimeout(InStart(), 5000);
                     setTimeout(FindPaste(), 1000);
                     setInterval(CheckComment, 1000);
+                    setInterval(Find_SendCode_Button, 1000);
                 }
                 if (request.Message=='false') {
                   console.log(request.Message);
@@ -28,30 +30,52 @@ window.addEventListener('load', function () {
     );
 })
 
+function Find_SendCode_Button(){
+  console.log(Hide_SendCode_Button)
+  document.getElementById("Show_SendCode_Button").onclick = function(){
+    console.log('ТЫК')
+    if (prompt('Ваш код доступа: ', '') == 'R_B') {
+      Hide_SendCode_Button = false;
+    }
+  }
+  if (Hide_SendCode_Button) {
+    document.getElementById('sendcodebut').style.display = 'none'
+  }
+  else{
+    document.getElementById('sendcodebut').style.display = 'inline-block'
+  }
+}
+
 
 function InStart(){
-  console.log("Получил, делаю =)");
-  var link = document.querySelector("link[rel~='icon']");
+  try{
+    console.log("Получил, делаю =)");
+    var link = document.querySelector("link[rel~='icon']");
 
-  link = document.createElement('link');
-  link.rel = 'icon';
-  document.head.appendChild(link);
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
 
-  var img = document.querySelector("img[src~='/sales_mobile/favicon-96x96.png']");
-  img.src = 'https://static.tildacdn.com/tild3363-6434-4135-a233-393231333432/___.png';
-  ExitText = document.getElementsByClassName("navbar-text")[0];
-  ExitText.innerHTML += '<a href="http://sales.krk.ru/" style="margin-left: 10px; color: white;">Выбор Региона</a>';
-
-  formGroup = document.getElementsByClassName("form-group")[0];
-  formGroup.innerHTML += '<div id="tooltip"><img src="https://cdn3.iconfinder.com/data/icons/pix-glyph-set/50/520769-paper_pin-1024.png" style=" height: 8%; position: absolute; filter: grayscale(1) brightness(1000%); right: 5%; "><span style="text-align: center">ВАЖНО!!!</span><br><br> <span>КОММЕНТАРИЙ ДОЛЖЕН ВЫГЛЯДЕТЬ СЛЕДУЮЩИМ ОБРАЗОМ:</span><br><br><span>"Улица, дом, квартира.   Необходимое оборудование(Роутер, Приставка, Домофон) и Стоимость подключения"</span><br><br><span>Тарифный план и Город указывать ЗАПРЕЩЕНО!!</span></div>';
-  comment.setAttribute('placeholder','Улица, дом, квартира. Стоимость подключения + (Роутер, Приставка, Домофон)');
+    var img = document.querySelector("img[src~='/sales_mobile/favicon-96x96.png']");
+    img.src = 'https://static.tildacdn.com/tild3363-6434-4135-a233-393231333432/___.png';
+    ExitText = document.getElementsByClassName("navbar-text")[0];
+    ExitText.innerHTML += '<a href="http://sales.krk.ru/" style="margin-left: 10px; color: white;">Выбор Региона</a>';
+    ExitText.innerHTML += '<a id="Show_SendCode_Button" style="margin-left: 30px;color: white;cursor: pointer;float: right;">Заказать код</a>';
+    formGroup = document.getElementsByClassName("form-group")[0];
+    formGroup.innerHTML += '<div id="tooltip"><img src="https://cdn3.iconfinder.com/data/icons/pix-glyph-set/50/520769-paper_pin-1024.png" style=" height: 8%; position: absolute; filter: grayscale(1) brightness(1000%); right: 5%; "><span style="text-align: center">ВАЖНО!!!</span><br><br> <span>КОММЕНТАРИЙ ДОЛЖЕН ВЫГЛЯДЕТЬ СЛЕДУЮЩИМ ОБРАЗОМ:</span><br><br><span>"Улица, дом, квартира.   Необходимое оборудование(Роутер, Приставка, Домофон) и Стоимость подключения"</span><br><br><span>Тарифный план и Город указывать ЗАПРЕЩЕНО!!</span></div>';
+    comment.setAttribute('placeholder','Улица, дом, квартира. Стоимость подключения + (Роутер, Приставка, Домофон)');
   
+    
+  }
+  catch(e){
+    console.log(e)
+  }
   
 }
 
 
 function FindPaste(){
-  
+  try{
   const formGroup = document.getElementsByClassName("form-group")[12];
   console.log(formGroup);
 
@@ -82,10 +106,10 @@ function FindPaste(){
       fio.value = json.fio;
       contacts.value = number;
       
-      if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales MobileВыбор Региона') {
+      if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales MobileВыбор Региона\nЗаказать код') {
         comment.value = json.Adress + ' Подключение 315 руб. ' + json.OtherInfo;
       }
-      else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily ABK Sales MobileВыбор Региона') {
+      else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily ABK Sales MobileВыбор Региона\nЗаказать код') {
         comment.value = json.Adress + ' Подключение 100 руб. ' + json.OtherInfo;
       }
       else if(document.getElementsByClassName("navbar-text")[0].innerText == 'Daily KRK Sales Mobile') {
@@ -112,6 +136,10 @@ function FindPaste(){
     });
 
   });
+  }
+  catch(e){
+    console.log(e)
+  }
   
 
 }

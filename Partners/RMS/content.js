@@ -4,6 +4,8 @@ var nameval = null;
 var AbName = null;
 var AbSername = null;
 var AbPatronymic = null;
+var isAdmin;
+var isAdmin1 = false;
 
 
 window.addEventListener('load', function () { 
@@ -40,6 +42,43 @@ function FindPaste(){
   var aTags = document.getElementsByTagName("span");
   var searchText = "Создать договор";
   var found;
+
+  for (let index = 0; index < document.querySelectorAll('div').length; index++) {
+    if (document.querySelectorAll('div')[index].innerHTML.indexOf('Двойной договор')>=0) {
+        console.log(document.querySelectorAll('div')[index])
+        if (!isAdmin) {
+          isAdmin  = confirm("Двойной договор! Заявку назначить нельзя. Абоненту перезвонят. ОБЯЗАТЕЛЬНО предупреди клиента чтобы создал новый договор и не соглашался на переоформление.")
+          isAdmin  = confirm("Двойной договор! Заявку назначить нельзя. Абоненту перезвонят. ОБЯЗАТЕЛЬНО предупреди клиента чтобы создал новый договор и не соглашался на переоформление.")
+        }
+    }
+    if (document.body.innerHTML.indexOf('Будет создан договор')>=0) {
+        console.log(document.querySelectorAll('div')[index])
+        if (!isAdmin1) {
+          if (document.querySelector('[data-qa="Text"]').innerHTML.indexOf('AlertBlock')<0) {
+            document.querySelector('[data-qa="Text"]').innerHTML += `<div id="AlertBlock" style="position: fixed;top: 10px;right: 18px;border-radius: 10px;padding: 10px;border: 2px solid gray;width: 400px;background: white;z-index: 9999;"><p style="
+  float: none;
+  font-size: 18px;
+  font-weight: 600;
+  ">Будь внимателен!</p><br>
+            <p style="float: left;">По регламенту, если с заявкой никто не работает 48<br>часов, её может перехватить любой другой канал</p>
+            <br><br>
+            <p style="float: left;">Важно назначать заявки сразу и отслеживать, в случае,<br>если по ним дата подключения свыше 48 часов</p>
+            <br><br>
+            <p style="float: left;">Все заявки, по которым подключение больше 2-х дней -<br>обязательно нужно писать комментарий. По какой <br> причине (Нет свободных слотов/желание абонента и т.д)</p>
+            <br><br><br>
+            <p style="float: left;">При Двойном Договоре заявку назначить нельзя.<br> Абоненту перезвонят. ОБЯЗАТЕЛЬНО предупреди</p>
+            <p style="float: left;">Клиента чтобы создал новый договор и не соглашался <br>на переоформление.</p>
+            </div>`
+          }
+          isAdmin1 = true;
+          document.getElementById('AlertBlock').style.display = 'block'
+        }
+    }
+    else{
+      document.getElementById('AlertBlock').style.display = 'none'
+      isAdmin1 = false;
+    }
+  }
 
   //console.log("FirstPage: ",FirstPage)
   //console.log("SecondPage: ",SecondPage)

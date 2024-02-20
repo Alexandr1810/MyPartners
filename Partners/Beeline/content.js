@@ -199,7 +199,7 @@ function InStart(){
                     document.querySelectorAll('[type="submit"]')[i].style.display = 'none'
 
                 }
-                if (document.getElementsByClassName('ng-binding')[0].innerText.indexOf('Вы не можете завети этот адрес') < 0) {
+                if (document.getElementsByClassName('ng-bindinНеаg')[0].innerText.indexOf('Вы не можете завети этот адрес') < 0) {
                     document.getElementsByClassName('ng-binding')[0].innerHTML += '<span id="AdrText" style="color: red;margin-left: 10px;font-weight: 700;font-size: 19px;">Вы не можете завети этот адрес в учетку Билайн РФ, войдите в Москва и МО!</span>'
                 }
             }
