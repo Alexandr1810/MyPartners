@@ -12,6 +12,10 @@ IstochnicList1 = document.getElementsByClassName('fs-checkbox-label');
 FirstBlock = document.getElementById('main-info');
 SessionError = null;
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 var RosRf_Log = 'nm97' 
 var RosRf_Pass = 'Vra-DJp-QCk-7ts'
 
@@ -29,9 +33,22 @@ var MoskowObl_password = null;
 var OtherMRF_login_FromApi = null;
 var OtherMRF_password_FromApi = null;
 
+var OtherMRF_login_FromApi_1 = null;
+var OtherMRF_password_FromApi_1 = null;
+
+var OtherMRF_login_FromApi_2 = null;
+var OtherMRF_password_FromApi_2 = null;
+
+var randomIndex1 = getRandomInt(3)
+console.log(randomIndex1)
+
 var d = new Date();
-var Day_Of_Week = d.getDay();
-console.log(Day_Of_Week) 
+var Day_Of_Week = d.getUTCDay();
+var Hour_Of_Day = d.getUTCHours()+7;
+console.log('d: ', d)
+console.log('Day_Of_Week:', Day_Of_Week) 
+console.log('Hour_Of_Day:', Hour_Of_Day)
+
 if (localStorage.getItem("AutomaticSaveOnStart")=="true"){
     console.log("TRUE");
 }
@@ -229,6 +246,12 @@ function ESSD_ON(){
       MoskowObl_password  = tasks.MoskowOblPass
       OtherMRF_login_FromApi = tasks.OtherMrfLog
       OtherMRF_password_FromApi = tasks.OtherMrfPass
+
+      OtherMRF_login_FromApi_1 = tasks.OtherMrfLog1
+      OtherMRF_password_FromApi_1 = tasks.OtherMrfPass1
+
+      OtherMRF_login_FromApi_2 = tasks.OtherMrfLog2
+      OtherMRF_password_FromApi_2 = tasks.OtherMrfPass2
       RosRf_Log = tasks.RosRF_Log
       RosRf_Pass = tasks.RosRF_Pass
     }).catch(error => {
@@ -250,33 +273,84 @@ function ESSD_ON(){
         };
         
         OtherMRF.onclick = function() {
-            RTcheckbox[0].dispatchEvent(clickEvent);
+            //RTcheckbox[0].dispatchEvent(clickEvent);
             for (var i = 0; i < LoginInput.length; i++) {
                 console.log(OtherMRF_login);
                 console.log(OtherMRF_login);
                 console.log('EnterFormButton: ', EnterFormButton[0])
-                if (Day_Of_Week == 6 || Day_Of_Week == 0) {
+                if (Hour_Of_Day >= 24 && Hour_Of_Day < 30 || Day_Of_Week == 6 || Day_Of_Week == 0) {
+                    RTcheckbox[0].dispatchEvent(clickEvent);
                     LoginInput[0].value = RosRf_Log; // подставляем логин и пароль
                     LoginInput[1].value = RosRf_Pass; 
                     console.log('Хуй1');
                     console.log("RosRf")
+                    EnterFormButton[0].dispatchEvent(clickEvent);   
                 }
                 else{
                     if (OtherMRF_login != undefined && OtherMRF_login != '' && EnterFormButton[0] != undefined || OtherMRF_password != undefined && OtherMRF_password != '' && EnterFormButton[0] != undefined) {
+                        RTcheckbox[0].dispatchEvent(clickEvent);
                         LoginInput[0].value = OtherMRF_login; // подставляем логин и пароль
                         LoginInput[1].value = OtherMRF_password; 
                         console.log('Хуй1');
                         console.log("OtherMRF")
+                        EnterFormButton[0].dispatchEvent(clickEvent);   
                     }
                     else if (OtherMRF_login == undefined && EnterFormButton[0] != undefined || OtherMRF_login == '' && EnterFormButton[0] != undefined || OtherMRF_password == undefined && EnterFormButton[0] != undefined || OtherMRF_password == '' && EnterFormButton[0] != undefined){
                         LoginInput[0].value = OtherMRF_login_FromApi;
                         LoginInput[1].value = OtherMRF_password_FromApi;
+                        EnterFormButton[0].dispatchEvent(clickEvent);
+                        if (document.getElementsByClassName("auth-page__header")[0].innerHTML.indexOf(alert) < 0) {
+                            document.getElementsByClassName("auth-page__header")[0].innerHTML += '<div class="alert" style="position: absolute; top: 10%; right: 6%; width: 15%; font-size: 23px; padding: 14px; border-radius: 10px; background: #445469; color: white; font-weight: 500; box-shadow: 0px 0px 5px 0px #445469;"><span>Первая учетка занята, попробую вторую...</span></div>'
+                        }
+                        else{
+                            document.getElementsByClassName("alert")[0].innerText = "Первая учетка занята, попробую вторую..."
+                        }
+
+                        setTimeout(function(){
+                            
+                            LoginInput[0].value = OtherMRF_login_FromApi_1;
+                            LoginInput[1].value = OtherMRF_password_FromApi_1;
+                            EnterFormButton[0].dispatchEvent(clickEvent);
+                            document.getElementsByClassName("alert")[1].style.display = 'none'
+                            document.getElementsByClassName("alert")[0].innerText = "Там тоже занято, подождите, у меня есть еще одна!"
+                            //document.getElementsByClassName("auth-page__header")[0].innerHTML += '<div id="alert2" style="position: absolute; top: 10%; right: 6%; width: 15%; font-size: 23px; padding: 14px; border-radius: 10px; background: #445469; color: white; font-weight: 500; box-shadow: 0px 0px 5px 0px #445469;"><span>Там тоже занято, подождите, у меня есть еще одна!</span></div>'
+                            
+                            setTimeout(function(){
+                                
+                                LoginInput[0].value = OtherMRF_login_FromApi_2;
+                                LoginInput[1].value = OtherMRF_password_FromApi_2;
+                                EnterFormButton[0].dispatchEvent(clickEvent);
+                                document.getElementsByClassName("alert")[0].innerText = "И тут занято! Сейчас выкину кого нибудь!"
+                                //document.getElementsByClassName("auth-page__header")[0].innerHTML += '<div id="alert3" style="position: absolute; top: 10%; right: 6%; width: 15%; font-size: 23px; padding: 14px; border-radius: 10px; background: #445469; color: white; font-weight: 500; box-shadow: 0px 0px 5px 0px #445469;"><span>И тут занято! Сейчас выкину кого нибудь!</span></div>'
+                                setTimeout(function(){
+                                    RTcheckbox[0].dispatchEvent(clickEvent);
+                                    if (randomIndex1 == 0) {
+                                        LoginInput[0].value = OtherMRF_login_FromApi;
+                                        LoginInput[1].value = OtherMRF_password_FromApi;
+                                    }
+                                    if (randomIndex1 == 1) {
+                                        LoginInput[0].value = OtherMRF_login_FromApi_1;
+                                        LoginInput[1].value = OtherMRF_password_FromApi_1;
+                                    }
+                                    if (randomIndex1 == 2) {
+                                        LoginInput[0].value = OtherMRF_login_FromApi_2;
+                                        LoginInput[1].value = OtherMRF_password_FromApi_2;
+                                    }
+
+                                    EnterFormButton[0].dispatchEvent(clickEvent);
+                                    document.getElementsByClassName("alert")[0].innerText = "И тут занято! Сейчас выкину кого нибудь!"
+                                    //document.getElementsByClassName("auth-page__header")[0].innerHTML += '<div id="alert3" style="position: absolute; top: 10%; right: 6%; width: 15%; font-size: 23px; padding: 14px; border-radius: 10px; background: #445469; color: white; font-weight: 500; box-shadow: 0px 0px 5px 0px #445469;"><span>И тут занято! Сейчас выкину кого нибудь!</span></div>'
+                                }, 2000)
+                            }, 2000)
+
+                        }, 2000)
+                        
                         console.log('Хуй2');
                         console.log("OtherMRF_FromApi")
                     }
                 }
             }
-            EnterFormButton[0].dispatchEvent(clickEvent);
+            
             
         };
 
@@ -323,12 +397,12 @@ try {
 
 }
 
-// Прикончить Москву если учетка Попова
+// Выходим из Попова если время не подходит 
 window.addEventListener('load', function () { 
     try { 
         if (Profile[1].innerText == "Попов Дмитрий Владимирович") {
-            document.getElementsByClassName('top-logo')[0].innerHTML += '<span id="MovedText" style="position: absolute;right: 30%;color: white;">На эту учетку можно заводить заявки только в Субботу и Воскресенье!</span>'
-            if (Day_Of_Week != 6 && Day_Of_Week != 0) {
+            document.getElementsByClassName('top-logo')[0].innerHTML += '<span id="MovedText" style="position: absolute;right: 30%;color: white;">На эту учетку можно заводить заявки только в Субботу, Воскресенье и Ночью!</span>'
+            if (Hour_Of_Day >= 7 &&  Hour_Of_Day < 24 && Day_Of_Week != 6 && Day_Of_Week != 0) {
                 document.getElementsByClassName('logout')[0].click()
             }
             MyComboTree[2].style.display = "none";
@@ -375,6 +449,12 @@ function FindError(){
           MoskowObl_password  = tasks.MoskowOblPass
           OtherMRF_login_FromApi = tasks.OtherMrfLog
           OtherMRF_password_FromApi = tasks.OtherMrfPass
+
+          OtherMRF_login_FromApi_1 = tasks.OtherMrfLog1
+          OtherMRF_password_FromApi_1 = tasks.OtherMrfPass1
+
+          OtherMRF_login_FromApi_2 = tasks.OtherMrfLog2
+          OtherMRF_password_FromApi_2 = tasks.OtherMrfPass2
         }).catch(error => {
           // handle error
         })
@@ -389,7 +469,7 @@ function FindError(){
         };
         
         OtherMRFErr.onclick = function() {
-            if (Day_Of_Week == 6 || Day_Of_Week == 0) {
+            if (Hour_Of_Day >= 24 && Hour_Of_Day < 30 || Day_Of_Week == 6 || Day_Of_Week == 0) {
                 document.getElementById("login").value = RosRf_Log; // подставляем логин и пароль
                 document.getElementById("passw").value = RosRf_Pass; 
                 console.log("RosRf")

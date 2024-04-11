@@ -26,6 +26,9 @@ var AllNewsCount = 0;
 var AllNews = [];
 var NedovonList = [];
 var Calculation_All_Users = false;
+var NewsMonobrendsHide = true;
+var NewsMonobrends = ['R_B']
+var NewsMonobrendsIsklychenia = ['R_B']
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -165,7 +168,7 @@ function GetAllDeals4(){
         AllDealsArrInLastMonth = AllOPPORTUNITY;
         console.log("AllDealsArrInLastMonth: ", AllDealsArrInLastMonth)
         console.log(document.getElementById("user-name").innerText)
-        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
           //setTimeout(GetAllNewsCount, 5000);
         }
       });
@@ -708,7 +711,7 @@ window.addEventListener('load', function () {
             //console.log(request.Recipient, request.Recipient, request.Message, request.BigCard);
             if (request.Recipient == 'Bitrix') {
                 if (request.Message=='true') {
-                    Head[0].innerHTML += "<style>.crm-kanban-total-price-total2{width:100%;overflow:hidden;display:inline-block;font-size:26px;white-space:nowrap;-ms-text-overflow:ellipsis;text-overflow:ellipsis;padding:0 10px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:white}.crm-kanban-total-price:hover .crm-kanban-total-price-total2{display:inline-block}.crm-kanban-total-price:hover .crm-kanban-total-price-total{display:none} #CopyButton{border-bottom: 1px dashed #2067b0 !important; margin-right: 10px !important;}</style>"
+                    Head[0].innerHTML += "<style>.SpamIMG{background-size: 17px 16px;background: none !important;} .user-block{max-width: 500px;} .user-name {text-overflow: clip;} .crm-kanban-total-price-total2{width:100%;overflow:hidden;display:inline-block;font-size:26px;white-space:nowrap;-ms-text-overflow:ellipsis;text-overflow:ellipsis;padding:0 10px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:white}.crm-kanban-total-price:hover .crm-kanban-total-price-total2{display:inline-block}.crm-kanban-total-price:hover .crm-kanban-total-price-total{display:none} #CopyButton{border-bottom: 1px dashed #2067b0 !important; margin-right: 10px !important;}</style>"
                     let CardCheck = setInterval(UpdateCard, 1000)
                     PasswordToken = request.PassToken;
                     LoginKey = request.LogToken
@@ -746,7 +749,14 @@ window.addEventListener('load', function () {
                         console.log("PasswordToken: ", PasswordToken)
                         setTimeout(GetAllDeals1, 5000);
                         setTimeout(InStart, 6000);
-                        setInterval(SetNames, 500); 
+                        setInterval(SetNames, 500);
+                        for (var k = 0; k < tasks.Pidorasi.length; k++) {
+                          if (document.getElementById("user-name").innerText == tasks.Pidorasi[k]) {
+                            setInterval(CutPidorasov, 80); 
+                          }
+                        }
+                         
+                        
                       }
                       else{
                         console.log('Код не подходит')
@@ -1020,7 +1030,7 @@ function InStart(){
     GetPrice();
     
     if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
         document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div><div id="RestartNedozvonsDiv" style="height: 12px; margin-left: 1%; position: relative; top: 8px; left: -111%; border-bottom: none;"><img style="height: 12px;" id="RestartNedozvons" src="https://www.pngarts.com/files/2/Restart-Transparent-Image.png"></div>';
       }
       else{
@@ -1152,35 +1162,46 @@ function UpdateCard(){
 
       iDocumentName = iDocument.getElementsByClassName('crm-widget-employee-name')[0];
 
+
+      
+
       NamesInApiCol = 0;
       for (var j = 0; j < ApiNames.length; j++) {
         if (iDocumentName.innerHTML == ApiNames[j].OldName) {
           iDocumentName.innerHTML = ApiNames[j].NewName;
 
 
-          if (iDocumentName.innerHTML == "Чертова Рыжая Бестия") {
+          if (iDocumentName.innerHTML == "Александр Шатохин!") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #1e1d1d 3%, #e10000 10%, #b38500 26%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Татьяна Бабич!") {
-            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #902aff 0%, #5d29d2 7%, #2932ad 25%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-          }
-          else if (iDocumentName.innerHTML == "MAXIMU$") {
-            iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-          }
-          else if (iDocumentName.innerHTML == "Татьяна Платонова") {
+          else if (iDocumentName.innerHTML == "Татьяна Платонова!") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Рыжая Сука") {
+          else if (iDocumentName.innerHTML == "Дмитрий Рязанов!") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Пятиклассница💙") {
+          else if (iDocumentName.innerHTML == "Данил Плотников!") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Антон Чепчик") {
-            iDocumentName.setAttribute('style', 'font-weight: 700; background: #745445; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          else if (iDocumentName.innerHTML == "Антон Чепиков!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Никита Соседов!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #c700ff -8%, #4300ff 16%, #7c00ff -14%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Никита Верещагин!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #ff0000 0%, #ff9200 5%, #d1db17 11%, #62e300 14%, #0095ff 18%, #0008ff 26%, #7300ff 33%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Никита Колганов!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #dea909 84px, #b4b4b3 39px, #e9bd36 121px); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Вячеслав Шаляев!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #00c2d4 13%, #FF69B4 11%, #00c2d4 31%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          else if (iDocumentName.innerHTML == "Владислав Супрун!") {
+            iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #fb3c9b 13%, #f1489d 11%, #FF69B4 31%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
         }
-
       }
 
     if (EventCollage.innerHTML.indexOf("Закрыть Дела") < 0) {
@@ -1346,7 +1367,7 @@ function UpdateCard(){
     
   } catch (e) {
     //console.log("Нет открытой карты");
-    //console.log(e);
+    console.log(e);
   }
 }
 
@@ -1357,14 +1378,27 @@ function AddAlertError(){
   newAlertError.style.display = 'none';
 }
 
-function SetNames(){ 
+function SetNames(){ //основное тело программы
+  try{
+    document.getElementsByClassName('popup-window-overlay')[0].style.display = 'none'
+    console.log("Удалил: ", document.getElementsByClassName('popup-window-overlay')[0])
+  }
+  catch(e){
+    console.log(e)
+  }
   NewCards = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
+  NewCardsForMonobrends = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
   AllCards = document.getElementsByClassName('main-kanban-item');
   names = document.getElementsByClassName("crm-kanban-item-fields-item-value-name")
   Columns = document.getElementsByClassName("main-kanban-column-title-text-inner")
 
+
+  if(randomIndex1 > 0 && randomIndex1 <= 10)
+  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ") {
+    document.getElementsByClassName("logo-text")[0].innerText='Прокладка'
+  }
   if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
           document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div><div id="RestartNedozvonsDiv" style="height: 12px; margin-left: 1%; position: relative; top: 8px; left: -111%; border-bottom: none;"><img style="height: 12px;" id="RestartNedozvons" src="https://www.pngarts.com/files/2/Restart-Transparent-Image.png"></div>';
           
           AddListener_In_Head();
@@ -1376,7 +1410,7 @@ function SetNames(){
   
 
   if (document.getElementById("user-name").innerText == "Александр Шатохин") {
-      document.getElementById("user-name").innerText = "Рыжая Бестия";
+      document.getElementById("user-name").innerText = "Чертова Рыжая Бестия";
       document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
   }
 
@@ -1386,7 +1420,7 @@ function SetNames(){
   }
   try{
     for (var i = 0; i <= Columns.length; i++) {
-      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Рыжая Бестия") {
+      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Чертова Рыжая Бестия") {
         Columns[i].innerHTML = "Мусорка"
       }
       if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Павел Андреевич") {
@@ -1401,13 +1435,62 @@ function SetNames(){
   catch {
   }
   //console.log("Работаю", NewCards.length)
+
+
+  
+
   for (var i = 0; i <= (NewCards.length-1); i++) { // Проверка карточек на спам, дубли и перенесенных из недозвонов
-    //console.log("Новый Цикл")
-     
-    if (NewCards[i].innerHTML.indexOf("Номер") < 0 && Columns[0].innerHTML == "Новая" && NewCards[i].innerHTML.toLowerCase().indexOf("тест") < 0 || NewCards[i].innerHTML.indexOf("WilliamBUH") >= 0 || NewCards[i].innerHTML.indexOf("https://botocx.ru/") >= 0 || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("Laguna Street") >= 0 || NewCards[i].innerHTML.indexOf("5556660606") >= 0 || NewCards[i].innerHTML.indexOf("qeNtfPNC") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 ) {
+
+    
+
+    if (Columns[0].innerHTML == "Новая" && (NewCards[i].innerHTML.indexOf("Номер") < 0 || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("74953747869") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 )) {
         console.log("Найдена пустая завка ", i)
-        console.log()
-        const options = {
+
+        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+          if(NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].innerHTML.indexOf('SpamIMG') < 0){
+            NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].innerHTML += '<span id="'+NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+'" data-type="im" class="crm-kanban-item-contact-im crm-kanban-item-contact-im-disabled SpamIMG" style="background-size: 17px 16px;font-weight: 600;color: red;font-size: 12px;border: 2px solid red;padding-right: 4px;padding-left: 4px;padding-top: 0px;height: 18px;width: 28px;">spam</span>'
+          }
+          Dealid = NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]
+          NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].getElementsByClassName('SpamIMG')[0].addEventListener('click', function (e) {
+            console.log("Удаляю: ", this.id)
+            this.style.display = 'none'
+            this.parentNode.parentNode.parentNode.parentNode.style.display = 'none'
+
+            const options = {
+              method: 'POST',
+              headers: {
+              cookie: 'qmb=0.',
+                'Content-Type': 'application/json',
+                'User-Agent': 'insomnia/8.6.0'
+              },
+              body: '{"id":"'+this.id+'","fields":{"UF_CRM_1694601072":"5702","STAGE_ID":"UC_93XIL7"}}'
+              };
+
+              fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', options)
+                .then(response => response.json())
+                .then(response => {
+                  console.log(response);
+                  const SendSpam = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+                    body: '{"chat_id":"1395354115","text":"Заявка '+this.id+' удалена как спам Агентом '+document.getElementById('user-block').getAttribute('data-user-id')+'"}'
+                  };
+
+                  fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendSpam)
+                    .then(response => response.json())
+                    .then(response => console.log(response))
+                    .catch(err => console.error(err));
+                })
+                .catch(err => console.error(err));
+          });
+        }
+        else{
+          NewCards[i].parentNode.removeChild(NewCards[i]);
+        }
+        
+
+
+        /*const options = {
           method: 'POST',
           headers: {
             cookie: 'qmb=0.',
@@ -1417,14 +1500,15 @@ function SetNames(){
           body: '{"id":"'+NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+'","fields":{"UF_CRM_1694601072":"5702","STAGE_ID":"UC_93XIL7"}}'
         };
 
-        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+        fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', options)
           .then(response => response.json())
           .then(response => console.log(response))
-          .catch(err => console.error(err));
-        console.log(NewCards[i])
-        DelLids++;
-        NewCards[i].parentNode.removeChild(NewCards[i]);
+          .catch(err => console.error(err));*/
+        console.log(NewCards[i]) 
+        //DelLids++;
+        
     }
+
     try{
       if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0){
         TodayTime = NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.replace("сегодня, ", "")
@@ -1436,7 +1520,7 @@ function SetNames(){
       }
     
 
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
         /*if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(".") >= 0 && NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(":") >= 0 && Columns[0].innerHTML == "Новая" ) {
             if (hideNedozvons) { //Трахать сюда
               NewCards[i].style.display = "none";
@@ -1474,7 +1558,7 @@ function SetNames(){
 
         DelLids = 0;
       }
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
         if (i == (NewCards.length-1)) {
           document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedovonList.length + ')';
           //console.log('NedozLids: ', NedozLids)
@@ -1488,7 +1572,46 @@ function SetNames(){
 
 
   }
-
+  try{
+    if (document.getElementById("user-name").innerText != "Марк Плющ" || document.getElementById("user-name").innerText != "Никита Верещагин") {
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.gis, 'SpeedInet');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Pakt, 'Пакт');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SpeedNet, 'Speed-Net');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SpeedNet1, 'Speed-Net');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu1, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.PerSet, 'Певые Сети');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SibSet, 'СибСети');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu2, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu3, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu4, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.IgraServise, 'Игра Сервис');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu5, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu6, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.DomRu7, 'ДомРу');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.EG1, 'ЭГ');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.EG2, 'ЭГ');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Axioma, 'Axioma');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Orion1, 'Орион');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Orion2, 'Орион');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.NorCom1, 'НорКом');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.NorCom2, 'НорКом');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Telecoma1, 'Телекома');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Telecoma2, 'Телекома');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.TwoCom, '2КОМ');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Izet, 'АйЗет');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.CheTel, 'Череповец Телеком');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.NowgorodTel, 'Новгород Телеком');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.YarKom, 'ЯрКом');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Centra, 'Центра');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Etel1, 'E-Телеком');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Etel2, 'E-Телеком');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.YfaNet, 'Уфа-Нет');
+      document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SkyNet, 'SkyNet');
+    }
+  }
+  catch(e){
+    //console.log('e', e)
+  }
   for (var i = 0; i <= (AllCards.length-1); i++){
     getNumberFromCard(AllCards[i])
     //console.log("Промежуточний срез по массиву: ");
@@ -1630,7 +1753,7 @@ function SetNames(){
   
   AllNumbers.length=0
   AllFirlds.length=0
-
+  
 
 
   for (var i = 0; i <= (names.length-1); i++) { //Смена имени
@@ -1639,7 +1762,7 @@ function SetNames(){
       if (names[i].innerHTML == ApiNames[j].OldName && names[i].parentNode.innerHTML.indexOf("Это имя видят только пользователи") < 0) {
         names[i].innerHTML = ApiNames[j].NewName;
 
-        var div = document.createElement('div');
+        /*var div = document.createElement('div');
         div.style.background = '#ebebeb';
         div.style.height = '104px';
         div.style.padding = '5px';
@@ -1652,29 +1775,40 @@ function SetNames(){
 
         span.textContent = 'Это имя видят только пользователи расширения MyPartners. Что бы кастомизировать свое имя нажмите на кисточку справа от строки поиска.';
         div.appendChild(span);
-        names[i].parentNode.appendChild(div);
-        if (names[i].innerHTML == "Чертова Рыжая Бестия") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        names[i].parentNode.appendChild(div);*/
+        if (names[i].innerHTML == "Александр Шатохин!") {
+          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight:700; background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-        if (names[i].innerHTML == "Татьяна Бабич!") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #902aff 9%, #5d29d2 64%, #2932ad 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "MAXIMU$") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #d3881e 13%, #c89321 43%, #d27d27 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Татьяна Платонова") {
+        if (names[i].innerHTML == "Татьяна Платонова!") {
           names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-        if (names[i].innerHTML == "Рыжая Сука") {
+        if (names[i].innerHTML == "Дмитрий Рязанов!") {
           names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-        if (names[i].innerHTML == "Пятиклассница💙") {
+        if (names[i].innerHTML == "Даниил Плотников!") {
           names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-        if (names[i].innerHTML == "Антон Чепчик") {
-          names[i].setAttribute('style', 'font-weight: 700; background: #745445; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        if (names[i].innerHTML == "Антон Чепиков!") {
+          names[i].setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
         }
-
+        if (names[i].innerHTML == "Никита Соседов!") {
+          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #c700ff 13%, #4300ff 67%, #7c00ff 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Никита Верещагин!") {
+          names[i].setAttribute('style', 'font-weight: 700; background: linear-gradient(90deg, #ff0000 -8%, #ff9200 20%, #d1db17 35%, #62e300 62%, #0095ff 80%, #0008ff 90%, #7300ff 101%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Вячеслав Шаляев!") {
+          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Владислав Супрун!") {
+          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #fb3c9b 31%, #f1489d 38%, #FF69B4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Павел Обухов!") {
+          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #3374b7 13%, #004893 67%, #3374b7 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+        }
+        if (names[i].innerHTML == "Вячеслав Нечай!") {
+          names[i].setAttribute('style', 'font-family: sans-serif; font-size: 10px; margin-left: 2px; font-weight: 300; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-stroke: 3px transparent; color: #fff; letter-spacing: 4px; animation: background 4s infinite alternate;');
+        }
         //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
       }
 
@@ -1700,7 +1834,7 @@ function getNumberFromCard(card){
       }
     }
     catch(e){
-      console.log(e)
+      //console.log(e)
     }
   }
   
@@ -1847,14 +1981,14 @@ function AddListener_In_Head(){
     NedovonList = [];
     GetAllNewsCount()
   });
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
     AllNewsCount = 0;
     AllNews = [];
     NedovonList = [];
     GetAllNewsCount()
   }
   
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов") {
+  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
       document.getElementById('spamText').addEventListener('click', function (event) {
           console.log("Spam");
           if (hideSpam) {
@@ -1887,6 +2021,72 @@ function AddListener_In_Head(){
       localStorage.setItem("HideSpam", hideSpam);
     }
 }
+function CutPidorasov(){ //Обрезание пидорасов
+  try{
+    IsMonobrendInSpisok = false;
+    IsMonobrendInIsklychenia = false;
+    for (var i = 0; i <= (NewCards.length-1); i++) { //Каждые 200мс проверяет карточки в Новых
+      console.log("NewCardsForMonobrends[i].innerText: ", NewCardsForMonobrends[i].innerText)
+      console.log("NewCardsForMonobrends[i].innerText speedinet.ru: ", NewCardsForMonobrends[i].innerText.indexOf("speedinet.ru") < 0)
+      console.log("NewCardsForMonobrends[i].innerText - Входящий: ", NewCardsForMonobrends[i].innerText.indexOf("- Входящий") < 0)
+      console.log("NewCardsForMonobrends[i].innerText per-set.ru: ", NewCardsForMonobrends[i].innerText.indexOf("per-set.ru") < 0)
+      console.log("NewCardsForMonobrends[i].innerText входящий вызов: ", NewCardsForMonobrends[i].innerText.indexOf("входящий вызов") < 0)
+      // Проверка карточек на Монобренд
+      if (Columns[0].innerHTML == "Новая" && (NewCardsForMonobrends[i].innerText.indexOf("speedinet.ru") < 0 && NewCardsForMonobrends[i].innerText.indexOf("- Входящий") < 0 && NewCardsForMonobrends[i].innerText.indexOf("per-set.ru") < 0)){
+        console.log("Нашел Монобренд!")
+        for (var j = 0; j < NewsMonobrends.length; j++) { //Проверяем спрятана ли уже карточка
+          console.log("Проверяю монобренд "+NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+" в списке")
+          console.log("NewsMonobrends: ", NewsMonobrends)
+          console.log("Сравниваю: ", NewsMonobrends[j], " и ", NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6])
+          if (NewsMonobrends[j] == NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]){
+            IsMonobrendInSpisok = true;
+            console.log("Монобренд есть в массиве")
+          }
+        }
+        for (var j = 0; j < NewsMonobrendsIsklychenia.length; j++) { //Проверяем показана ли уже карточка
+          console.log("Проверяю монобренд в исключениях"+NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+" в списке")
+          console.log("NewsMonobrendsIsklychenia: ", NewsMonobrendsIsklychenia)
+          console.log("Сравниваю исключения: ", NewsMonobrendsIsklychenia[j], " и ", NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6])
+          if (NewsMonobrendsIsklychenia[j] == NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]){
+            IsMonobrendInIsklychenia = true;
+            console.log("Монобренд есть в массиве исключений")
+          }
+        }
+        if (!IsMonobrendInSpisok && !IsMonobrendInIsklychenia){ //Прячем карту если она еще девочка
+            console.log("Монобренда нет в списке!")
+
+            NewCardsForMonobrends[i].style.display = 'none';
+            NewsMonobrends.push(NewCardsForMonobrends[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]);
+            console.log("Добавил номер в массив")
+            IsMonobrendInSpisok = false;
+            setTimeout(CutPidorasovTime, 3000)
+        }
+        if (IsMonobrendInIsklychenia) { //Показываем карту если прошло 3сек
+          NewCardsForMonobrends[i].style.display = 'block';
+          IsMonobrendInSpisok = false
+        }
+      }
+      else{
+        console.log("Не трогаю заявку") //Не трогаем карту если это Мультибренд
+        NewCardsForMonobrends[i].style.display = 'block';
+      }
+
+    }
+  }
+  catch(e){
+    console.log("При обрезании пидорасов произошло ошибка: ", e)
+  }
+}
+
+function CutPidorasovTime(){
+  console.log("Время вышло, добавляю в исключения")
+  
+  for (var j = 0; j < NewsMonobrends.length; j++) {
+    NewsMonobrendsIsklychenia.push(NewsMonobrends[j])
+  }
+  NewsMonobrends = ['R_B']
+
+}
 
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.code === "Space")
@@ -1899,3 +2099,19 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
+function SetOtvetstnenniy(Dealid, Otvid){
+  const SetOtv = {
+  method: 'POST',
+  headers: {
+  cookie: 'qmb=0.',
+    'Content-Type': 'application/json',
+    'User-Agent': 'insomnia/8.6.1'
+  },
+  body: '{"id":"'+Dealid+'","fields":{"ASSIGNED_BY_ID":"'+Otvid+'"}}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtv)
+      .then(response => response.json())
+      .then(response => console.log(response))
+      .catch(err => console.error(err));
+}

@@ -39,6 +39,7 @@ header h1 {
 }
 
 content{
+    box-shadow: -2px -2px 20px #0024ff;
     background: white;
     width: 50%;
     display: block;
@@ -73,6 +74,20 @@ button:hover {
     color: #209ce5;
     background: #ffffff;
     border: 2px solid #4bb2ee;
+}
+.UserButton{
+    height: 27px;
+    margin-left: 10px;
+    width: auto;
+    font-size: 17px;
+    color: #474747;
+}
+.UserButton:hover{
+    color: #209ce5;
+}
+
+#SendFormInTG{
+    margin-left: 10px;
 }
 
 #OtchetText{

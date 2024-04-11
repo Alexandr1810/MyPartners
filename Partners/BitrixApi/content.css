@@ -20,6 +20,9 @@
 #spamText{
   display:  none; 
 }
+.user-name {
+  text-overflow: none;
+}
 .main-kanban-column-title-add-column{
   display: none;
 }
@@ -38,6 +41,9 @@
     margin-top: 8px;
     font-weight: 700;
     font-size: 12px;
+}
+.SpamIMG{
+ 
 }
 
 #EditName_Block{
@@ -283,4 +289,15 @@ h1{
 #NedovonText{
   border-bottom: none;
   cursor: pointer;
+}
+@keyframes background {
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: 125px;
+  }
+  200% {
+    background-position: 0px;
+  }
 }
