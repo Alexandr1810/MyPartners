@@ -102,7 +102,7 @@
     border: solid transparent;
     position: absolute;  
     right: 100%;
-    top: 15%;
+    top: 30%;
     border-right-color: #20a8d8;
     border-width: 9px;
     margin-top: -1px;
@@ -152,7 +152,7 @@
     border: solid transparent;
     position: absolute;  
     right: 100%;
-    top: 80%;
+    top: 60%;
     border-right-color: #20a8d8;
     border-width: 9px;
     margin-top: -1px;
@@ -163,8 +163,72 @@
     border: solid transparent;
     position: absolute;  
     right: 100%;
-    top: 90%;
+    top: 85%;
     border-right-color: #20a8d8;
     border-width: 9px;
     margin-top: -1px;
+}
+
+
+
+.form-group .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 0%;
+    left: 85%;
+    width: 74%;
+    background-color: rgb(101 106 111);
+
+}
+
+.form-group .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #20a8d8 transparent transparent;
+}
+.form-group:hover .tooltiptext1 {
+    visibility: visible;
+}
+
+.col-md-6 .tooltiptext2 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 25%;
+    width: 50%;
+    left: -52%;
+    background-color: rgb(101 106 111);
+
+}
+
+.col-md-6 .tooltiptext2::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* To the right of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #20a8d8;
+}
+.col-md-6:hover .tooltiptext2 {
+    visibility: visible;
 }

@@ -3,42 +3,41 @@
 #MyPartnersLog{
     position: relative;
     display: inline-block;
-    text-decoration: none;
-    color: #ffffff;
-    font-family: "roboto-bold", arial, sans-serif;
-    border-radius: 5px;
-    height: 32px;
-    font-size: 19px;
+    color: rgb(255, 255, 255);
+    font-family: roboto-bold, arial, sans-serif;
+    height: 30px;
+    font-size: 20px;
     font-weight: 500;
     cursor: pointer;
-
-    top: 25px;
-    width: 119%;
-    left: 20px;
-    background: #1ca4ff;
+    top: 61px;
+    width: 70%;
+    left: 29px;
+    text-decoration: none;
+    border-radius: 5px;
+    background: rgb(28, 164, 255);
 
 }
 
 #MyPartnersText{
     position: relative;
-    left: 18px;
-    top: 1px;
-    color: #ffffff;
+    left: 16px;
+    top: 2px;
+    color: rgb(255, 255, 255);
 }
 #MyPartnersText:hover{
-    top: 0px;
+    top: 1px;
 }
 
 #MyPartnersImg{
     position: relative;
     vertical-align: middle;
     top: 0px;
-    width: 24%;
-    left: -127px;
+    width: 37%;
+    left: -81px;
 }
 
 #MyPartnersLog:hover{
-    top: 26px;
+    top: 62px;
     background: rgb(0 142 237);
 }
 
@@ -77,4 +76,35 @@
 #MyPartnersLogMSK:hover{
     top: -6px;
     background: rgb(0 142 237);
+}
+
+.ng-pristine .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 0%;
+    left: 85%;
+    width: 74%;
+    background-color: rgb(121 122 128 / 84%);
+
+}
+
+.ng-pristine .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgb(255 201 4) transparent transparent;
+}
+.ng-pristine:hover .tooltiptext1 {
+    visibility: visible;
 }

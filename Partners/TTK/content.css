@@ -41,3 +41,33 @@
     top: -254px;
     background: rgb(0 142 237);
 }
+
+.control-wrapper .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: -51%;
+    width: 30%;
+    left: 41%;
+    background-color: rgb(170 170 170);
+}
+
+.control-wrapper .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #F6921E transparent transparent;
+}
+.control-wrapper:hover .tooltiptext1 {
+    visibility: visible;
+}

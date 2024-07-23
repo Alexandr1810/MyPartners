@@ -91,29 +91,46 @@ function InStart(){
             document.getElementsByTagName('div')[14].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
         }
     }
+    try{
+        MyPartnersLog.onclick = function() {
+            console.log(document.querySelectorAll('[role="button"]')[0])
+            if (document.querySelectorAll('[role="button"]')[0] != undefined) {
+                document.querySelectorAll('[name="login"]')[0].value = SkyNet_Login;
+                document.querySelectorAll('[name="password"]')[0].value = SkyNet_Password;
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[role="button"]')[0])
-        if (document.querySelectorAll('[role="button"]')[0] != undefined) {
-            document.querySelectorAll('[name="login"]')[0].value = SkyNet_Login;
-            document.querySelectorAll('[name="password"]')[0].value = SkyNet_Password;
-
-            document.querySelectorAll('[name="login"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[name="login"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
 
 
-            document.querySelectorAll('[role="button"]')[0].click();
+                document.querySelectorAll('[role="button"]')[0].click();
 
-            document.querySelectorAll('[name="login"]')[0].value = 'Логин';
-            document.querySelectorAll('[name="password"]')[0].value = 'Пароль';
+                document.querySelectorAll('[name="login"]')[0].value = 'Логин';
+                document.querySelectorAll('[name="password"]')[0].value = 'Пароль';
 
-            document.querySelectorAll('[name="login"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[name="login"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
 
-            document.querySelectorAll('[role="button"]')[0].click();
+                document.querySelectorAll('[role="button"]')[0].click();
 
+            }
+        };
+    }
+    catch(e){
+
+    }
+    try{
+        if (document.getElementsByTagName("span")[11].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByTagName("div")[5].innerText == 'Создание заявки') {
+            document.getElementsByTagName("span")[11].innerHTML += '<span class="tooltiptext1" style="">Мы самостоятельно ставим СЗ в график подключений. Нужно согласовать с клиентом.</span>'
+            document.getElementsByTagName("span")[15].innerHTML += '<span class="tooltiptext1" style="top: 45%;">Контактный и дополнительный телефон можно писать как «7», так и с «+7», так и со второй цифры - все настраивается под нужный формат.</span>'
+            document.getElementsByTagName("span")[19].innerHTML += '<span class="tooltiptext1" style="top: 61%;">Записать ФИО нужно без лишних пробелов и ошибок.</span>'
+            document.getElementsByTagName("span")[21].innerHTML += '<span class="tooltiptext1" style="top: 61%;">Записать ФИО нужно без лишних пробелов и ошибок.</span>'
+            document.getElementsByTagName("section")[11].innerHTML += '<span class="tooltiptext2" style="top: 126%;">Указываем особенности подключения и дополнительную информацию по ТП.<br>Пример: пакет с цтв за 1300р (абонемент на 4 мес) + роутер под выкуп за 5000р. подключение бесплатно. #гарантия, просят 22.04 в 11:00.</span>'
+            //document.getElementsByTagName("span")[11].innerHTML += '<span class="tooltiptext1" style="">Указываем особенности подключения и дополнительную информацию по ТП.<br>Пример: пакет с цтв за 1300р (абонемент на 4 мес) + роутер под выкуп за 5000р. подключение бесплатно. #гарантия, просят 22.04 в 11:00.</span>'
         }
-    };
+    }
+    catch(e){
+
+    }
 }
 
 

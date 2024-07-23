@@ -45,6 +45,70 @@
 .SpamIMG{
  
 }
+.ui-toolbar .ui-toolbar-star{
+  display: none !important;
+}
+
+.BeryButt{
+  border: 1px solid #888d8f;
+  padding: 9px;
+  padding-top: 5px;
+  padding-bottom: 9px;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+.BeryButtText{
+  color: white !important;
+  font-size: 16px !important;
+}
+
+#BeryButt_InQueue {
+  box-shadow: rgb(255, 0, 0) 0px 0px 4px 0px inset;
+  animation: shadow-animation1 2s infinite alternate;
+  transition: box-shadow 0.3s;
+}
+
+#BeryButt_InQueue:hover {
+  box-shadow: none;
+}
+
+@keyframes shadow-animation1 {
+  0% {
+    box-shadow: rgb(255, 0, 0) 0px 0px 4px 0px inset
+  }
+  100% {
+    box-shadow: rgb(255, 0, 0) 0px 0px 0px 0px inset;
+  }
+}
+
+#BeryButt_OutQueue {
+  box-shadow: rgb(46, 184, 0) 0px 0px 3px 0px inset;
+  animation: shadow-animation 2s infinite alternate;
+  transition: box-shadow 0.3s;
+}
+
+#BeryButt_InQueue:hover {
+  box-shadow: none;
+}
+
+@keyframes shadow-animation {
+  0% {
+    box-shadow: rgb(46, 184, 0) 0px 0px 3px 0px inset;
+  }
+  100% {
+    box-shadow: rgb(46, 184, 0) 0px 0px 0px 0px inset;
+  }
+}
+
+@keyframes shadow-animation {
+  0% {
+    box-shadow: rgb(46, 184, 0) 0px 0px 3px 0px inset;
+  }
+  100% {
+    box-shadow: rgb(46, 184, 0) 0px 0px 0px 0px inset;
+  }
+}
 
 #EditName_Block{
     background: rgb(192 192 192 / 27%);
@@ -289,6 +353,32 @@ h1{
 #NedovonText{
   border-bottom: none;
   cursor: pointer;
+}
+.im-phone-call-title-text{
+  display: none;
+}
+#MoreDealsAlert{
+    position: fixed;
+    top: 3%;
+    left: 8.3%;
+    background: #ff2700;
+    z-index: 1000;
+    box-shadow: 0px 0px 2px 3px #ff2700;
+    width: 9%;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+#MoreDealsAlert ::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* Внизу подсказка */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #d3d3d3 transparent transparent transparent;
 }
 @keyframes background {
   0% {

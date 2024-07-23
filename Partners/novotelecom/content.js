@@ -84,21 +84,40 @@ function SetPass(){
         }
     }
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.getElementsByClassName("ButtonText")[3])
-        if (document.getElementsByClassName("ButtonText")[3] != undefined) {
-            document.querySelectorAll('[name="username"]')[0].value = EG_Login;
-            document.querySelectorAll('[name="password"]')[0].value = EG_Password;
+    try{
+      MyPartnersLog.onclick = function() {
+          console.log(document.getElementsByClassName("ButtonText")[3])
+          if (document.getElementsByClassName("ButtonText")[3] != undefined) {
+              document.querySelectorAll('[name="username"]')[0].value = EG_Login;
+              document.querySelectorAll('[name="password"]')[0].value = EG_Password;
 
-            document.querySelectorAll('[name="username"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
+              document.querySelectorAll('[name="username"]')[0].dispatchEvent(event);
+              document.querySelectorAll('[name="password"]')[0].dispatchEvent(event);
 
 
-            document.getElementsByClassName("ButtonText")[3].click();
+              document.getElementsByClassName("ButtonText")[3].click();
 
-        }
+          }
 
-    };
+      };
+    }
+    catch(e){
+
+    }
+    try{
+      if (document.getElementsByClassName("col-12")[1].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByClassName("card-header")[0].innerText == 'Заявка на подключение') {
+          document.getElementsByClassName("col-12")[1].innerHTML += '<span class="tooltiptext1" style="">ФИО вписываем без лишних пробелов и без ошибок.<br>Пример:  Шатохин Иван Павлович.</span>'
+          document.getElementsByClassName("col-12")[2].innerHTML += '<span class="tooltiptext1" style="top: -69%;">Вписываем со второй цифра без пробелов и тире.<br>Пример: 9332660125.</span>'
+          document.getElementsByClassName("col-12")[3].innerHTML += '<span class="tooltiptext1" style="top: -66%;">Название населенного пункта вписываем вручную и выбираем из выпадающего списка.</span>'
+          document.getElementsByClassName("col-12")[4].innerHTML += '<span class="tooltiptext1" style="top: -122%;">Название улицы указываем в том же формате, что и указано в файле с территорией покрытия.<br>Пример: Физкультурная ул. Красный пр-кт. Цветочная (снт Бытовик) ул.</span>'
+          document.getElementsByClassName("col-12")[5].innerHTML += '<span class="tooltiptext1" style="width: 121%; left: -126%; top: -110%;">Указываем только целочисленные значения. <br>Если номер дома с корпусом, дробью или буквой - номер корпуса указываем в поле «Корпус».</span>'
+          document.getElementsByClassName("col-12")[8].innerHTML += '<span class="tooltiptext1" style="width: 55%;left: -58%;top: -49%;">Прописываем конфигурацию ТП, обязательно название ТП, АП, оборудование, модель, стоимость его аренды/рассрочки (срок рассрочки)/выкупа и дополнительную информацию.</span>'
+          
+      }
+    }
+    catch(e){
+      console.log(e)
+    }
 }
 function getClipboardData(data) {
     var myVariable = data;

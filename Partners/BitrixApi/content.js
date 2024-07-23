@@ -29,6 +29,73 @@ var Calculation_All_Users = false;
 var NewsMonobrendsHide = true;
 var NewsMonobrends = ['R_B']
 var NewsMonobrendsIsklychenia = ['R_B']
+var WhiteList;
+var RemoveDisable_FromBery = true;
+var currentdate = new Date();
+var SearchNedozvons_IsTrue = false;
+var IsListen = false;
+
+var CurrentHour = currentdate.getHours();
+var CurrentMinutes = currentdate.getMinutes();
+var ApiHour;
+var ApiMinutes;
+
+var Deal_id_FromCallCard;
+var repeatedRequests = [];
+var DublicateMatrix = [];
+var DublicateMatrixFinal = [];
+var DealId_To_Send = '';
+
+//Матрицы для сбора инфы про новым, работе и недозвонам для удаления Дубликатов
+var Deals_For_Check = [];
+var repeatedRequests = [];
+var New_Deals_For_Choice = [];
+
+// Списки для выбора заявки из новых
+  //Вспомогательные
+var ButtonOn;
+var AllNews_ForBery = []
+var NedovonList_For_Bery = []
+var ExpensiveTrafik = ['domru-site', 'domrusob', 'seodomru', 'domru-site-nomer', 'domru.site2']
+var AllNewDeals_InNew = [] // Все новые сделки, которые еще не были в недозвонах
+var RandInex;
+
+  //Основные
+var AllNewCalls_InNew = [] // все новые звонки, которые еще не были в недозвонах
+var NewDeals_InNew = [] // все новые заявки, которые еще не были в недозвонах
+
+var ExpensiveCall_InNew = [] //  все новые звонки,  с дорогим трафиком
+var NotExpensiveCall_InNew = [] //  все новые звонки,  с не дорогим трафиком
+
+ //Недозвоны
+var Today_NedozvonDeals_InNew = [] // звонки и заявки рандомно сегодняшнего дня из недозвонов
+var Early_NedozvonDeals_InNew = [] // звонки и заявки рандомно предыдущих дней дней
+
+let Script_For_Interviewing_New;
+
+const phonePattern = /Звонок от (\+[\d\s-]+), поступил/;
+
+function startInterval() {
+    Script_For_Interviewing_New = setInterval(Interviewing_New, 15000); // Вызываем функцию каждые 15 секунд
+}
+
+function stopInterval() {
+    clearInterval(Script_For_Interviewing_New); // Прерываем интервал
+}
+
+
+var BeryButtState = "R_B" 
+/*Варианты BeryButtState:
+  "R_B" - Нулевое положение при старте страницы
+  "Bery" - Взять заявку
+  "InQueue" - Выйти из очереди
+  "OutQueue" - В очередь
+*/
+/* 
+    Прости Господи за такой костыль. Мне не нужно было использовать столько запросов к API.
+    Я искуплю вину чистым кодом. 
+    Аминь. 
+*/
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -168,9 +235,7 @@ function GetAllDeals4(){
         AllDealsArrInLastMonth = AllOPPORTUNITY;
         console.log("AllDealsArrInLastMonth: ", AllDealsArrInLastMonth)
         console.log(document.getElementById("user-name").innerText)
-        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
-          //setTimeout(GetAllNewsCount, 5000);
-        }
+        
       });
 }
 function GetAllNewsCount(){
@@ -228,7 +293,7 @@ function GetAllNews(){
         }
         console.log("AllNews: ", AllNews)
         console.log("AllNews.length: ", AllNews.length)
-        setTimeout(SearchNedozvons, 2000);
+        setTimeout(SearchNedozvons, 3000);
       });
 }
 function SearchNedozvons(){
@@ -260,9 +325,16 @@ function SearchNedozvons(){
         console.log("AllOPPORTUNITY 7: ", AllOPPORTUNITY)
         for (var i = 0; i < AllOPPORTUNITY.length; i++) {
           if(AllOPPORTUNITY[i].total > 0){
+
             NedovonList.push(AllOPPORTUNITY[i].result.items[0].OWNER_ID)
           }
         }
+        console.log("AllNews: ", AllNews)
+        console.log("NedovonList:", NedovonList)
+        if (((AllNews.length-NedovonList.length) >= 5) || AllNews >= 19) {
+            document.getElementById("MoreDealsAlert").style.display = "block";
+        }
+        
         console.log("NedovonList: ", NedovonList)
       });
 }
@@ -727,8 +799,42 @@ window.addEventListener('load', function () {
                     }).then(tasks => {
                       if (LoginKey == tasks.LoginCode) {
                         console.log('Код подходит')
+                        WhiteList = tasks.WhiteList;
                         ApiToken = request.Token;
                         Apidd = tasks.LoginDate
+                        ButtonOn = tasks.ButtonOn;
+                        ButtonOn = true;
+                        ApiHour = tasks.DublicateLastTime_H;
+                        ApiMinutes = tasks.DublicateLastTime_M;
+
+                        console.log("CurrentHour:", CurrentHour)
+                        console.log("CurrentMinutes:", CurrentMinutes)
+                        console.log("ApiHour:", ApiHour)
+                        console.log("ApiMinutes:", ApiMinutes)
+                        /*if ( (CurrentHour == ApiHour && CurrentMinutes - ApiMinutes >= 2) || CurrentHour != ApiHour ) {
+                          console.log("Запускаю проверку дубликатов")
+                          
+                          fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', {
+                            method: 'PUT', // or PATCH
+                            headers: {'content-type':'application/json'},
+                            body: JSON.stringify({DublicateLastTime_H: CurrentHour,DublicateLastTime_M: CurrentMinutes})
+                          }).then(res => {
+                            if (res.ok) {
+                                return res.json();
+                            }
+                            // handle error
+                          }).then(task => { 
+                            setTimeout(Get_New_Deals, 6000);
+                            //
+                          }).catch(error => {
+                            // handle error
+                          })
+                        }
+                        else{ */
+                          console.log("Не проверяю дубли, открываю кнопки")
+                          RemoveDisable_FromBery = true
+                        /*}*/
+
                         if (Number(Apidd) < dd || Number(Apidd) > dd) {
                           console.log('Код просрочен')
                           /*
@@ -747,9 +853,21 @@ window.addEventListener('load', function () {
                             .catch(err => console.error(err));*/
                         }
                         console.log("PasswordToken: ", PasswordToken)
+                        if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                            document.getElementById("user-name").innerText = "Чертова Рыжая Бестия";
+                            document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+                        }
+
+                        if (document.getElementById("user-name").innerText == "Павел Обухов") {
+                            document.getElementById("user-name").innerText = "Павел Андреевич";
+                            //document.getElementById("user-name").setAttribute('style', 'background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+                        }
+                        Queue_Start_Script()
                         setTimeout(GetAllDeals1, 5000);
                         setTimeout(InStart, 6000);
                         setInterval(SetNames, 500);
+                        setInterval(ReplaceAlerts, 100);
+                        
                         for (var k = 0; k < tasks.Pidorasi.length; k++) {
                           if (document.getElementById("user-name").innerText == tasks.Pidorasi[k]) {
                             setInterval(CutPidorasov, 80); 
@@ -793,7 +911,7 @@ window.addEventListener('load', function () {
                     }).catch(error => {
                       // handle error
                     })
-                    
+                    /*
 
                     fetch('https://'+PasswordToken+'.mockapi.io/MyPartners/Kanban_Names', {
                       method: 'GET',
@@ -809,6 +927,7 @@ window.addEventListener('load', function () {
                     }).catch(error => {
                       // handle error
                     })
+                    */
                     
                 }
                 if (request.Message=='false') {
@@ -1022,22 +1141,28 @@ function SetPriceIntrval(){
 
 
 function InStart(){
-  console.log("AllNews: ", AllNews)
+  try{
+    if (!IsListen) {
+      AddListener_In_Head()
+    }
+  }
+  catch(e){
+    console.log(e)
+  }
+  
   try{
 
     GetAllDealsInCurrentMounth();
     var Tester = document.getElementsByClassName('crm-kanban-total-price-total');
     GetPrice();
     
-    if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+    if (Columns[0].innerHTML == "Новая" && document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("spamText") < 0 && Agent_In_WhiteList) {
+      if (Agent_In_WhiteList) {
         document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div><div id="RestartNedozvonsDiv" style="height: 12px; margin-left: 1%; position: relative; top: 8px; left: -111%; border-bottom: none;"><img style="height: 12px;" id="RestartNedozvons" src="https://www.pngarts.com/files/2/Restart-Transparent-Image.png"></div>';
       }
-      else{
-        document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div>';
-      }
-      AddListener_In_Head();
+      
     }
+    /*
     if (document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML.indexOf("Изменение имени в Битрикс24") < 0) {
       document.getElementsByClassName("ui-toolbar-right-buttons")[0].innerHTML += `<div id="EditName_Block"><a style="font-size: 25px;" href="#openModal">🖋</a></div>  
       <div id="openModal" class="modal"> 
@@ -1065,6 +1190,7 @@ function InStart(){
       </div> 
       </div> </div>`;
     }
+    */
     try{
       console.log("HideSpam: ", localStorage.getItem("HideSpam"))
       console.log("HideNedozvons: ", localStorage.getItem("HideNedozvons"))
@@ -1102,8 +1228,8 @@ function InStart(){
     else{
       document.getElementById('NedovonText').style.borderBottom = "2px solid #737373";
     }
-
-     document.addEventListener("DOMContentLoaded", function () {
+      /*
+      document.addEventListener("DOMContentLoaded", function () {
         var scrollbar = document.body.clientWidth - window.innerWidth + 'px';
         console.log(scrollbar);
         document.querySelector('[href="#openModal"]').addEventListener('click', function () {
@@ -1116,7 +1242,9 @@ function InStart(){
         });
       });
       document.getElementsByClassName("EditBlockContentButton")[0].onclick = SetName;
-    }
+      */
+  }
+
 
   catch{
     console.log("Не могу найти новые!");
@@ -1127,7 +1255,7 @@ function InStart(){
 
 
 function UpdateCard(){
-  
+
   try {
       const iframe = document.getElementsByClassName("side-panel-iframe")[0];
       const iWindow = iframe.contentWindow;
@@ -1135,6 +1263,36 @@ function UpdateCard(){
       var NamesInApiCol = 0
       var PhoneIstochnic = null;
       var AnaliticIstochnic = null;
+
+      try{
+        if (window.location.href.indexOf("?BeryDeal") >= 0) {
+          console.log("Сделка по кнопке беру")
+          console.log("Сохраненный ID: ", localStorage.getItem("BeryDeal"))
+          console.log("Текущий ID: ", window.location.href.split('/', 10)[6])
+          if (localStorage.getItem("BeryDeal") != null) {
+            if (localStorage.getItem("BeryDeal") != window.location.href.split('/', 10)[6]) {
+              console.log("toolbar_deal_details_"+window.location.href.split('/', 10)[6]+"_call")
+              console.log(iDocument.getElementById("toolbar_deal_details_"+window.location.href.split('/', 10)[6]+"_call"))
+              iDocument.getElementById("toolbar_deal_details_"+window.location.href.split('/', 10)[6]+"_call").click()
+              console.log("Звоню по сделке")
+              localStorage.setItem("BeryDeal", window.location.href.split('/', 10)[6]);
+            }
+            else{
+              console.log("Не звоню по сделке")
+
+            }
+          }
+          else{
+            iDocument.getElementById("toolbar_deal_details_5262814_call").click()
+            console.log("Звоню по сделке")
+            localStorage.setItem("BeryDeal", window.location.href.split('/', 10)[6]);
+          }
+        }
+        
+      }
+      catch(e){
+        console.error(e)
+      }
       
       //console.log(iframe);
       
@@ -1166,44 +1324,39 @@ function UpdateCard(){
       
 
       NamesInApiCol = 0;
-      for (var j = 0; j < ApiNames.length; j++) {
-        if (iDocumentName.innerHTML == ApiNames[j].OldName) {
-          iDocumentName.innerHTML = ApiNames[j].NewName;
 
-
-          if (iDocumentName.innerHTML == "Александр Шатохин!") {
+          if (iDocumentName.innerHTML == "Александр Шатохин") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #1e1d1d 3%, #e10000 10%, #b38500 26%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Татьяна Платонова!") {
+          else if (iDocumentName.innerHTML == "Татьяна Платонова") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Дмитрий Рязанов!") {
+          else if (iDocumentName.innerHTML == "Дмитрий Рязанов") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Данил Плотников!") {
+          else if (iDocumentName.innerHTML == "Данил Плотников") {
             iDocumentName.setAttribute('style', 'background: linear-gradient(90deg, #2d2de3 3%, #0065e1 13%, #0033b3 8%); font-weight:700; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Антон Чепиков!") {
+          else if (iDocumentName.innerHTML == "Антон Чепиков") {
             iDocumentName.setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Никита Соседов!") {
+          else if (iDocumentName.innerHTML == "Никита Соседов") {
             iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #c700ff -8%, #4300ff 16%, #7c00ff -14%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Никита Верещагин!") {
+          else if (iDocumentName.innerHTML == "Никита Верещагин") {
             iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #ff0000 0%, #ff9200 5%, #d1db17 11%, #62e300 14%, #0095ff 18%, #0008ff 26%, #7300ff 33%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Никита Колганов!") {
+          else if (iDocumentName.innerHTML == "Никита Колганов") {
             iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #dea909 84px, #b4b4b3 39px, #e9bd36 121px); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Вячеслав Шаляев!") {
+          else if (iDocumentName.innerHTML == "Вячеслав Шаляев") {
             iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #00c2d4 13%, #FF69B4 11%, #00c2d4 31%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          else if (iDocumentName.innerHTML == "Владислав Супрун!") {
+          else if (iDocumentName.innerHTML == "Владислав Супрун") {
             iDocumentName.setAttribute('style', 'font-weight: 700;background: linear-gradient(90deg, #fb3c9b 13%, #f1489d 11%, #FF69B4 31%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-        }
-      }
-
+        
+      
     if (EventCollage.innerHTML.indexOf("Закрыть Дела") < 0) {
       EventCollage.innerHTML += '<a id="CloseRevision">Закрыть Дела</a>';
       CloseRevisionText = iDocument.getElementById("CloseRevision");
@@ -1261,11 +1414,13 @@ function UpdateCard(){
 
 
       iDocument.querySelector("#CopyButton").addEventListener("click", e => {
+
             //alert("Clicked!");
             var SaveButton = iDocument.getElementsByClassName('ui-btn-success')[1];
             console.log(SaveButton);
             SaveButton.click();
             setTimeout(function(){
+
             try {
               var fio_block = iDocument.getElementsByClassName("ui-entity-editor-content-block")[2];
               console.log("fioblock: ", fio_block);
@@ -1364,10 +1519,9 @@ function UpdateCard(){
         });
     }
     
-    
   } catch (e) {
     //console.log("Нет открытой карты");
-    console.log(e);
+    //console.log(e);
   }
 }
 
@@ -1379,45 +1533,121 @@ function AddAlertError(){
 }
 
 function SetNames(){ //основное тело программы
+  
+  
+  try{
+    getCallCard()
+  }
+  catch(e){
+    console.log(e)
+  }
   try{
     document.getElementsByClassName('popup-window-overlay')[0].style.display = 'none'
     console.log("Удалил: ", document.getElementsByClassName('popup-window-overlay')[0])
   }
   catch(e){
-    console.log(e)
+    //console.log(e)
   }
-  NewCards = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
-  NewCardsForMonobrends = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
+  try{
+    NewCards = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
+  }
+  catch(e){
+    console.log()
+  }
+  try{
+    NewCardsForMonobrends = document.getElementsByClassName('main-kanban-column-items')[0].getElementsByClassName('main-kanban-item');
+  }
+  catch(e){
+  }
   AllCards = document.getElementsByClassName('main-kanban-item');
   names = document.getElementsByClassName("crm-kanban-item-fields-item-value-name")
   Columns = document.getElementsByClassName("main-kanban-column-title-text-inner")
+
+  Agent_In_WhiteList = false; 
+  for (var i = 0; i < WhiteList.length; i++) {
+    if (document.getElementById("user-name").innerText == WhiteList[i]) {
+      Agent_In_WhiteList = true;
+    }
+  }
+  if (Agent_In_WhiteList && ButtonOn) {
+    console.log("Агент в белом списке")
+  }
+  else if(!Agent_In_WhiteList && document.getElementsByClassName("main-kanban-column-title-info")[0].innerText.indexOf('Новая') >= 0 && ButtonOn){
+    try{
+      document.getElementsByClassName("main-kanban-column")[0].style.display = 'none'
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
+  
+  if (document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML.indexOf("Взять заявку") < 0 && document.getElementsByClassName("ui-btn-text")[1].innerText == 'ЗАЯВКИ' && ButtonOn) {
+    document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<div id="MoreDealsAlert" style="display: none;">Слишком много новых обращений, срочно возьми заявку!</div><button id="BeryButt" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >Взять заявку</h1></button>'
+    document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<button id="BeryButt_InQueue" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >Выйти из очереди</h1></button>'
+    document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<button id="BeryButt_OutQueue" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >В очередь</h1></button>'
+
+    document.getElementById("BeryButt").addEventListener("click", e => {
+      Bery_OnClick()
+    });
+    document.getElementById("BeryButt_InQueue").addEventListener("click", e => {
+      Bery_InQueue_OnClick()
+    });
+    document.getElementById("BeryButt_OutQueue").addEventListener("click", e => {
+      Bery_OutQueue_OnClick()
+    });
+    GetAllNewsCount()
+
+
+  }
+  try{
+    if (BeryButtState == "Bery") {
+      document.getElementById("BeryButt").style.display = 'inline-block'
+      document.getElementById("BeryButt_InQueue").style.display = 'none'
+      document.getElementById("BeryButt_OutQueue").style.display = 'none'
+    }
+    if (BeryButtState == "InQueue") {
+      document.getElementById("BeryButt").style.display = 'none'
+      document.getElementById("BeryButt_InQueue").style.display = 'inline-block'
+      document.getElementById("BeryButt_OutQueue").style.display = 'none'
+    }
+    if (BeryButtState == "OutQueue") {
+      document.getElementById("BeryButt").style.display = 'none'
+      document.getElementById("BeryButt_InQueue").style.display = 'none'
+      document.getElementById("BeryButt_OutQueue").style.display = 'inline-block'
+    }
+    if (RemoveDisable_FromBery) {
+      try{
+        document.getElementById("BeryButt").removeAttribute('disabled');
+      }
+      catch(e){
+        console.log("Кнопки Взять Заявку нет!")
+      }
+      try{
+        document.getElementById("BeryButt_InQueue").removeAttribute('disabled');
+      }
+      catch(e){
+        console.log("Кнопки Выйти из очереди нет!")
+      }
+      try{
+        document.getElementById("BeryButt_OutQueue").removeAttribute('disabled');
+      }
+      catch(e){
+        console.log("Кнопки В очередь нет!")
+      }
+    }
+  }
+  catch(e){
+
+  }
 
 
   if(randomIndex1 > 0 && randomIndex1 <= 10)
   if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ") {
     document.getElementsByClassName("logo-text")[0].innerText='Прокладка'
   }
-  if (document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML.indexOf("Спам") < 0 && Columns[0].innerHTML == "Новая") {
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
-          document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div><div style="margin-left: 3%;position: relative;left: -112%;" class="main-kanban-column-title-spam-inner" id="NedovonText">Недозвоны (' + NedovonList.length + ')</div><div id="RestartNedozvonsDiv" style="height: 12px; margin-left: 1%; position: relative; top: 8px; left: -111%; border-bottom: none;"><img style="height: 12px;" id="RestartNedozvons" src="https://www.pngarts.com/files/2/Restart-Transparent-Image.png"></div>';
-          
-          AddListener_In_Head();
-      }
-      else{
-          document.getElementsByClassName("main-kanban-column-title-info")[1].innerHTML += '<div class="main-kanban-column-title-spam-inner" id="spamText" style="position: relative;left: -114%;">Спам</div>';
-      }
-  }
+
+
   
-
-  if (document.getElementById("user-name").innerText == "Александр Шатохин") {
-      document.getElementById("user-name").innerText = "Чертова Рыжая Бестия";
-      document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-  }
-
-  if (document.getElementById("user-name").innerText == "Павел Обухов") {
-      document.getElementById("user-name").innerText = "Павел Андреевич";
-      //document.getElementById("user-name").setAttribute('style', 'background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-  }
   try{
     for (var i = 0; i <= Columns.length; i++) {
       if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Чертова Рыжая Бестия") {
@@ -1443,46 +1673,66 @@ function SetNames(){ //основное тело программы
 
     
 
-    if (Columns[0].innerHTML == "Новая" && (NewCards[i].innerHTML.indexOf("Номер") < 0 || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("74953747869") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 )) {
+    if (Columns[0].innerHTML == "Новая" && (NewCards[i].innerHTML.indexOf("Номер") < 0 || NewCards[i].innerHTML.indexOf("INSIDE") >= 0 || NewCards[i].innerHTML.indexOf("74953747869") >= 0 || NewCards[i].innerHTML.indexOf("MUQUARI") >= 0 || NewCards[i].innerHTML.indexOf("MUQARI") >= 0 || NewCards[i].innerHTML.indexOf("jenay") >= 0 || NewCards[i].innerHTML.indexOf("Заявка на расчет для частного дома") >= 0 || NewCards[i].innerHTML.indexOf("TIGLACK") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, есть базы") >= 0 || NewCards[i].innerHTML.indexOf("Здравствуйте, если Вы используете базы для поиска новых Клиентов") >= 0 )) {
         console.log("Найдена пустая завка ", i)
 
-        if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+        if (Agent_In_WhiteList) {
           if(NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].innerHTML.indexOf('SpamIMG') < 0){
             NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].innerHTML += '<span id="'+NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+'" data-type="im" class="crm-kanban-item-contact-im crm-kanban-item-contact-im-disabled SpamIMG" style="background-size: 17px 16px;font-weight: 600;color: red;font-size: 12px;border: 2px solid red;padding-right: 4px;padding-left: 4px;padding-top: 0px;height: 18px;width: 28px;">spam</span>'
+          
+            Dealid = NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]
+            NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].getElementsByClassName('SpamIMG')[0].addEventListener('click', function (e) {
+              console.log("Удаляю: ", this.id)
+              this.style.display = 'none'
+              this.parentNode.parentNode.parentNode.parentNode.style.display = 'none'
+
+              const options = {
+                method: 'POST',
+                headers: {
+                cookie: 'qmb=0.',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'insomnia/8.6.0'
+                },
+                body: '{"id":"'+this.id+'","fields":{"UF_CRM_1694601072":"5702","STAGE_ID":"UC_93XIL7"}}'
+                };
+
+                fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', options)
+                  .then(response => response.json())
+                  .then(response => {
+                    console.log(response);
+                    const SendSpam = {
+                      method: 'POST',
+                      headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+                      body: '{"chat_id":"1395354115","text":"Заявка '+this.id+' удалена как спам Агентом '+document.getElementById('user-block').getAttribute('data-user-id')+'"}'
+                    };
+
+                    fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendSpam)
+                      .then(response => response.json())
+                      .then(response => {
+                        console.log(response);
+                        const SetOtvetstnenniy1 = {
+                          method: 'POST',
+                          headers: {
+                            cookie: 'qmb=0.',
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'insomnia/8.6.1'
+                          },
+                          body: '{"id":"'+this.id+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+                        };
+
+                        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy1)
+                          .then(response => response.json())
+                          .then(response => {
+                            console.log(response)
+                            
+                          })
+                          .catch(err => console.error(err));
+                      })
+                      .catch(err => console.error(err));
+                  })
+                  .catch(err => console.error(err));
+            });
           }
-          Dealid = NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]
-          NewCards[i].getElementsByClassName('crm-kanban-item-connect')[0].getElementsByClassName('SpamIMG')[0].addEventListener('click', function (e) {
-            console.log("Удаляю: ", this.id)
-            this.style.display = 'none'
-            this.parentNode.parentNode.parentNode.parentNode.style.display = 'none'
-
-            const options = {
-              method: 'POST',
-              headers: {
-              cookie: 'qmb=0.',
-                'Content-Type': 'application/json',
-                'User-Agent': 'insomnia/8.6.0'
-              },
-              body: '{"id":"'+this.id+'","fields":{"UF_CRM_1694601072":"5702","STAGE_ID":"UC_93XIL7"}}'
-              };
-
-              fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', options)
-                .then(response => response.json())
-                .then(response => {
-                  console.log(response);
-                  const SendSpam = {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
-                    body: '{"chat_id":"1395354115","text":"Заявка '+this.id+' удалена как спам Агентом '+document.getElementById('user-block').getAttribute('data-user-id')+'"}'
-                  };
-
-                  fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendSpam)
-                    .then(response => response.json())
-                    .then(response => console.log(response))
-                    .catch(err => console.error(err));
-                })
-                .catch(err => console.error(err));
-          });
         }
         else{
           NewCards[i].parentNode.removeChild(NewCards[i]);
@@ -1520,7 +1770,7 @@ function SetNames(){ //основное тело программы
       }
     
 
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+      if (Agent_In_WhiteList) {
         /*if (NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сегодня") >= 0 && CurrentHour-TodayTime >= 3 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("вчера") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("ноябр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("декабр") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("январ") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("феврал") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("март") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("апрел") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("мая") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июня") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("июля") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("август") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("сентяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf("октяб") >= 0 && Columns[0].innerHTML == "Новая" || NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(".") >= 0 && NewCards[i].getElementsByClassName('crm-kanban-item-date')[0].innerHTML.indexOf(":") >= 0 && Columns[0].innerHTML == "Новая" ) {
             if (hideNedozvons) { //Трахать сюда
               NewCards[i].style.display = "none";
@@ -1558,7 +1808,7 @@ function SetNames(){ //основное тело программы
 
         DelLids = 0;
       }
-      if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+      if (Agent_In_WhiteList) {
         if (i == (NewCards.length-1)) {
           document.getElementsByClassName("main-kanban-column-title-spam-inner")[1].innerText = 'Недозвоны (' + NedovonList.length + ')';
           //console.log('NedozLids: ', NedozLids)
@@ -1573,7 +1823,7 @@ function SetNames(){ //основное тело программы
 
   }
   try{
-    if (document.getElementById("user-name").innerText != "Марк Плющ" || document.getElementById("user-name").innerText != "Никита Верещагин") {
+    
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.gis, 'SpeedInet');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Pakt, 'Пакт');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SpeedNet, 'Speed-Net');
@@ -1607,15 +1857,17 @@ function SetNames(){ //основное тело программы
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Etel2, 'E-Телеком');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.YfaNet, 'Уфа-Нет');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SkyNet, 'SkyNet');
-    }
+
+
   }
   catch(e){
     //console.log('e', e)
   }
+  
   for (var i = 0; i <= (AllCards.length-1); i++){
     getNumberFromCard(AllCards[i])
     //console.log("Промежуточний срез по массиву: ");
-
+    /*
     if (AllCards[i].innerHTML.indexOf("Билайн АТС") >= 0){
       for (var j = 0; j < AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value').length; j++){
         if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.indexOf("Билайн АТС") >= 0) {
@@ -1747,7 +1999,9 @@ function SetNames(){ //основное тело программы
       }
       //NewCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[0]
     }
+    */
   }
+  
   //console.log("Отправляю в функцию: ", AllNumbers)
   FoundDublicate(AllFields, AllNumbers)
   
@@ -1755,65 +2009,61 @@ function SetNames(){ //основное тело программы
   AllFirlds.length=0
   
 
+  if (document.getElementById("user-name").innerText != "Михаил Ерисов" || document.getElementById("user-name").innerText != "Дмитрий Полховский") {
+    for (var i = 0; i <= (names.length-1); i++) { //Смена имени
+      //Новый Код
+      
 
-  for (var i = 0; i <= (names.length-1); i++) { //Смена имени
-    //Новый Код
-    for (var j = 0; j < ApiNames.length; j++) {
-      if (names[i].innerHTML == ApiNames[j].OldName && names[i].parentNode.innerHTML.indexOf("Это имя видят только пользователи") < 0) {
-        names[i].innerHTML = ApiNames[j].NewName;
+          /*var div = document.createElement('div');
+          div.style.background = '#ebebeb';
+          div.style.height = '104px';
+          div.style.padding = '5px';
+          div.style.borderRadius = '4px';
+          div.style.color = '#3e444a';
+          div.id = 'CustomDiv';
 
-        /*var div = document.createElement('div');
-        div.style.background = '#ebebeb';
-        div.style.height = '104px';
-        div.style.padding = '5px';
-        div.style.borderRadius = '4px';
-        div.style.color = '#3e444a';
-        div.id = 'CustomDiv';
+          var span = document.createElement('span');
+          span.style.whiteSpace = 'normal';
 
-        var span = document.createElement('span');
-        span.style.whiteSpace = 'normal';
-
-        span.textContent = 'Это имя видят только пользователи расширения MyPartners. Что бы кастомизировать свое имя нажмите на кисточку справа от строки поиска.';
-        div.appendChild(span);
-        names[i].parentNode.appendChild(div);*/
-        if (names[i].innerHTML == "Александр Шатохин!") {
-          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight:700; background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Татьяна Платонова!") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Дмитрий Рязанов!") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Даниил Плотников!") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Антон Чепиков!") {
-          names[i].setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Никита Соседов!") {
-          names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #c700ff 13%, #4300ff 67%, #7c00ff 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Никита Верещагин!") {
-          names[i].setAttribute('style', 'font-weight: 700; background: linear-gradient(90deg, #ff0000 -8%, #ff9200 20%, #d1db17 35%, #62e300 62%, #0095ff 80%, #0008ff 90%, #7300ff 101%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Вячеслав Шаляев!") {
-          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Владислав Супрун!") {
-          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #fb3c9b 31%, #f1489d 38%, #FF69B4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Павел Обухов!") {
-          names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #3374b7 13%, #004893 67%, #3374b7 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-        }
-        if (names[i].innerHTML == "Вячеслав Нечай!") {
-          names[i].setAttribute('style', 'font-family: sans-serif; font-size: 10px; margin-left: 2px; font-weight: 300; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-stroke: 3px transparent; color: #fff; letter-spacing: 4px; animation: background 4s infinite alternate;');
-        }
-        //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
-      }
+          span.textContent = 'Это имя видят только пользователи расширения MyPartners. Что бы кастомизировать свое имя нажмите на кисточку справа от строки поиска.';
+          div.appendChild(span);
+          names[i].parentNode.appendChild(div);*/
+          if (names[i].innerHTML == "Александр Шатохин") {
+            names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight:700; background: linear-gradient(90deg, #1e1d1d 13%, #e10000 67%, #b38500 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Татьяна Платонова") {
+            names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #d28c00 9%, #d24754 64%, #e55715 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Дмитрий Рязанов") {
+            names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Даниил Плотников") {
+            names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #2d2de3 13%, #0065e1 67%, #0033b3 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Антон Чепиков") {
+            names[i].setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Никита Соседов") {
+            names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #c700ff 13%, #4300ff 67%, #7c00ff 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Никита Верещагин") {
+            names[i].setAttribute('style', 'font-weight: 700; background: linear-gradient(90deg, #ff0000 -8%, #ff9200 20%, #d1db17 35%, #62e300 62%, #0095ff 80%, #0008ff 90%, #7300ff 101%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Вячеслав Шаляев") {
+            names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Владислав Супрун") {
+            names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #fb3c9b 31%, #f1489d 38%, #FF69B4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Павел Обухов") {
+            names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #3374b7 13%, #004893 67%, #3374b7 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+          }
+          if (names[i].innerHTML == "Вячеслав Нечай") {
+            names[i].setAttribute('style', 'font-family: sans-serif; font-size: 10px; margin-left: 2px; font-weight: 300; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-stroke: 3px transparent; color: #fff; letter-spacing: 4px; animation: background 4s infinite alternate;');
+          }
+          //names[i].parentNode.innerHTML += '<div style="background: #ebebeb;height: 46px;border-radius: 4px;color: #343b43;"><span>Это имя видят только пользователь расширения MyPartners, если вы хотите кастомизировать свое имя, обратитесь к Разработчику @Rothaarige_Bestia</span></div>';
 
     }
-
   }
   
 }
@@ -1878,7 +2128,7 @@ function FoundDublicate(elements, numbers){
 
 
 }
-
+/*
 function SetName(){
       var IsReset = false;
       var ResetId = null
@@ -1973,22 +2223,22 @@ function SetName(){
         // handle error
       })
     }
+*/
 function AddListener_In_Head(){
-  document.getElementById('RestartNedozvonsDiv').addEventListener('click', function (e) {
-    console.log("Делается 0")
-    AllNewsCount = 0;
-    AllNews = [];
-    NedovonList = [];
-    GetAllNewsCount()
-  });
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
-    AllNewsCount = 0;
-    AllNews = [];
-    NedovonList = [];
-    GetAllNewsCount()
+  try{
+    document.getElementById('RestartNedozvonsDiv').addEventListener('click', function (e) {
+      console.log("Делается 0")
+      AllNewsCount = 0;
+      AllNews = [];
+      NedovonList = [];
+      GetAllNewsCount()
+    });
+    IsListen = true
   }
-  
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ" || document.getElementById("user-name").innerText =="Артём Зиманов" || document.getElementById("user-name").innerText =="Никита Колганов" || document.getElementById("user-name").innerText =="Владислав Супрун") {
+  catch(e){
+    console.log(e)
+  }
+    if (Agent_In_WhiteList) {
       document.getElementById('spamText').addEventListener('click', function (event) {
           console.log("Spam");
           if (hideSpam) {
@@ -2021,6 +2271,7 @@ function AddListener_In_Head(){
       localStorage.setItem("HideSpam", hideSpam);
     }
 }
+
 function CutPidorasov(){ //Обрезание пидорасов
   try{
     IsMonobrendInSpisok = false;
@@ -2088,6 +2339,51 @@ function CutPidorasovTime(){
 
 }
 
+function ReplaceAlerts(){
+  DealAlerts = document.getElementsByClassName("ui-notification-manager-browser-balloon");
+  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ") {
+    for (var i = 0; i < DealAlerts.length; i++) {
+      //console.log(DealAlerts[i].innerText) 
+      //console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0)
+      //console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0)
+      //console.log(DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)
+      //console.log(DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
+      //console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
+      //console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0))
+
+      if (DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 || DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)) {
+        
+        
+      }
+      else{
+        //DealAlerts[i].parentNode.removeChild(DealAlerts[i]);
+        DealAlerts[i].style.display = "none";
+      }
+    }
+  }
+  else{
+    for (var i = 0; i < DealAlerts.length; i++) {
+      console.log(DealAlerts[i].innerText) 
+      console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0)
+      console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0)
+      console.log(DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)
+      console.log(DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
+      console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
+      console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0))
+
+      if (DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 || DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)) {
+        
+        //DealAlerts[i].style.display = "none";
+        //DealAlerts[i].parentNode.removeChild(DealAlerts[i]);
+      }
+      else{
+        
+      }
+    }
+  }
+
+}
+
 document.addEventListener("keydown", function(event) {
     if (event.ctrlKey && event.code === "Space")
     {  
@@ -2114,4 +2410,1436 @@ function SetOtvetstnenniy(Dealid, Otvid){
       .then(response => response.json())
       .then(response => console.log(response))
       .catch(err => console.error(err));
+}
+function extractAfter9(str) {
+  const index = str.indexOf("9");
+  if (index !== -1) {
+    return str.slice(index + 1);
+  } else {
+    return "";
+  }
+}
+
+function Interviewing_New(){
+  const options = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"NEW"},"start":"0"}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response)
+      console.log("----------------------------------------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("-------------Проверка Очереди-----------")
+      console.log("----------------------------------------")
+      if (response.total == 0) {
+        console.log("-------Новых нет, молчу в тряпочку------")
+      }
+      else{
+        fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue', {
+          method: 'GET',
+          headers: {'content-type':'application/json'},
+        }).then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+              // handle error
+        }).then(Queue => {
+          console.log(Queue)
+          if (Queue[0].AgentId == document.getElementById("user-block").innerText) {
+            console.log("Прерываем интервал")
+            stopInterval()
+            console.log("Переводим ему в работу заявку")
+            for (var i = 0; i < Queue.length; i++) {
+              if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
+                fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue/'+Queue[i].id, {
+                  method: 'DELETE',
+                }).then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  }
+                  // handle error
+                }).then(task => {
+                  BeryButtState = "OutQueue"
+                  Bery_OnClick()
+                }).catch(error => {
+                    // handle error
+                })
+              }
+            }
+            
+          }
+          else{
+            console.log("Ничего не делаем, ждем дальше.")
+          }
+                
+        }).catch(error => {
+              // handle error
+        })
+      }
+    })
+    .catch(err => console.error(err));
+}
+function Bery_InQueue_OnClick(){
+  console.log("Жмак 1!")
+  fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue', {
+    method: 'GET',
+    headers: {'content-type':'application/json'},
+  }).then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+        // handle error
+  }).then(Queue => {
+    console.log(Queue)
+    for (var i = 0; i < Queue.length; i++) {
+      if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
+        fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue/'+Queue[i].id, {
+          method: 'DELETE',
+        }).then(res => {
+          if (res.ok) {
+            return res.json();
+          }
+          // handle error
+        }).then(task => {
+          BeryButtState = "OutQueue"
+          stopInterval()
+        }).catch(error => {
+            // handle error
+        })
+      }
+    }
+          
+  }).catch(error => {
+        // handle error
+  })
+  
+}
+function Bery_OutQueue_OnClick(){
+  console.log("Жмак 2!")
+
+
+  const newAgentToQueue = {
+    AgentId: document.getElementById("user-block").innerText
+  };
+
+  fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue/', {
+    method: 'POST',
+    headers: {'content-type':'application/json'},
+    // Send your data in the request body as JSON
+    body: JSON.stringify(newAgentToQueue)
+  }).then(res => {
+    if (res.ok) {
+        return res.json();
+    }
+    // handle error
+  }).then(task => {
+    BeryButtState = "InQueue"
+    startInterval()
+  }).catch(error => {
+    // handle error
+  })
+  
+}
+
+function Queue_Start_Script(){
+  const options = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"NEW"},"start":"0"}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response)
+      console.log("Начало работы с очередью")
+
+      fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue', {
+        method: 'GET',
+        headers: {'content-type':'application/json'},
+      }).then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        // handle error
+      }).then(Queue => {
+          console.log(Queue)
+          if (response.total == 0 && Queue.length > 0) {
+            for (var i = 0; i < Queue.length; i++) {
+              if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
+                BeryButtState = "InQueue"
+                console.log("Меняем кнопку на  «Выйти из очереди»")
+                //  Запускаем в интервале 15сек Скрипт опроса новых
+                console.log("Запускаем в интервале 15сек Скрипт опроса новых")
+                startInterval()
+
+              }
+            }
+            if(BeryButtState != "InQueue"){
+              BeryButtState = "OutQueue"
+              console.log("Меняем кнопку на  «В очередь»")
+            }
+
+          }
+          else if (response.total > Queue.length) {
+            BeryButtState = "Bery"
+            console.log("Нахуй очищаем очередь и меняем кнопку на «Взять заявку»")
+            for (var i = 0; i <= Queue.length; i++) {
+              fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue/'+Queue[i].id, {
+                method: 'DELETE',
+              }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                // handle error
+              }).then(task => {
+                // Do something with deleted task
+              }).catch(error => {
+                // handle error
+              })
+            }
+          }
+          else if (response.total <= Queue.length) {
+            for (var i = 0; i < Queue.length; i++) {
+              if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
+                BeryButtState = "InQueue"
+                console.log("Меняем кнопку на  «Выйти из очереди»")
+                //  Запускаем в интервале 15сек Скрипт опроса новых
+                console.log("Запускаем в интервале 15сек Скрипт опроса новых")
+                startInterval()
+
+              }
+            }
+            if(BeryButtState != "InQueue"){
+              BeryButtState = "OutQueue"
+              console.log("Меняем кнопку на  «В очередь»")
+            }
+          }
+      }).catch(error => {
+        // handle error
+      })
+    })
+    .catch(err => console.error(err));
+}
+// Функция сортировки по DATE_CREATE
+function sortByDate(a, b) {
+  return new Date(a[0].DATE_CREATE) - new Date(b[0].DATE_CREATE);
+}
+
+
+
+function Bery_OnClick(){
+  console.log("Жмак 0!")
+
+  const options = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"PREPARATION","ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"},"start":"0"}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+    .then(response => response.json())
+    .then(response => { 
+      console.log(response)
+      if (response.total == 0) {
+        Bery_GetNews()
+      }
+      else{
+        alert("У тебя уже есть заявка в работе, разберись с ней!")
+      }
+
+    })
+    .catch(err => console.error(err));
+}
+function Bery_GetNews(){
+  
+  document.getElementById("BeryButt").setAttribute('disabled', 'disabled');
+
+  const Get_News = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"NEW"},"start":"0"}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_News)
+    .then(response => response.json())
+    .then(response => {
+      console.log("response1", response)
+      if (response.total == 0) {
+        alert("В новых нет заявок")
+      }
+      for (let index = 0; index < response.result.length; index++) {
+          AllNews_ForBery.push([response.result[index]])
+
+          console.log("Новая заявка для списка:", AllNews_ForBery[index][0])
+      }
+      if (response.total > 49) {
+        const Get_News2 = {
+          method: 'POST',
+          headers: {
+            cookie: 'qmb=0.',
+            'Content-Type': 'application/json',
+            'User-Agent': 'insomnia/8.5.1'
+          },
+          body: '{"filter":{"STAGE_ID":"NEW"},"start":"51"}'
+        };
+
+        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_News2)
+          .then(response1 => response1.json())
+          .then(response1 => {
+            for (let index = 0; index < response.result.length; index++) {
+              AllNews_ForBery.push([response.result[index]])
+
+              console.log("Новая заявка для списка:", AllNews_ForBery[index])
+            }
+            console.log("Список новых:", AllNews_ForBery)
+          })
+          .catch(err => console.log("err2: ", err));
+      }
+      else{
+        // Применяем сортировку
+        AllNews_ForBery.sort(sortByDate);
+        console.log("Список новых для кнопки беру:", AllNews_ForBery)
+        SearchNedozvons_In_BeryList();
+      }
+    })
+    .catch(err => console.log("err1: ", err));
+
+}
+
+function SearchNedozvons_In_BeryList(){
+    const fetchPromises = [];
+    for (var i = 0; i < AllNews_ForBery.length; i++) {
+      const options = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.5.1'
+        },
+        body: '{"entityTypeId":2,"filter":{"OWNER_ID":"'+AllNews_ForBery[i][0].ID+'","STAGE_ID":"UC_0SAOJL"},"select":["OWNER_ID","STAGE_ID","CREATED_TIME"]}'
+      };
+
+      fetchPromises.push(
+        fetch('https://speedinet.bitrix24.ru/rest/26/bs0iid7hvmniht0z/crm.stagehistory.list', options)
+          .then(response => response.json())
+          .catch(err => {
+            console.error('Error fetching data:', err);
+            return null;
+          })
+      );
+    }
+
+    Promise.all(fetchPromises) 
+      .then(AllOPPORTUNITY => {
+        
+        for (var i = 0; i < AllOPPORTUNITY.length; i++) {
+          console.log(AllOPPORTUNITY)
+          if(AllOPPORTUNITY[i].total > 0){
+            NedovonList_For_Bery.push(AllOPPORTUNITY[i].result.items[0].OWNER_ID)
+          }
+        }
+        console.log("NedovonList_For_Bery: ", NedovonList_For_Bery)
+
+
+        for (var i = 0; i < AllNews_ForBery.length; i++) {
+          for (var j = 0; j < NedovonList_For_Bery.length; j++) {
+            if (AllNews_ForBery[i][0].ID == NedovonList_For_Bery[j]) {
+              NedovonList_For_Bery[j] = AllNews_ForBery[i][0];
+            }
+          }
+        }
+
+        console.log("NedovonList_For_Bery после обновления: ", NedovonList_For_Bery)
+        Sort_NedozvonsAndNews_Of_DateCraete()
+        
+
+      });
+      
+    
+}
+
+function Sort_NedozvonsAndNews_Of_DateCraete(){
+  let currentDate_For_Bery = new Date(); // текущая дата
+
+  NedovonList_For_Bery.forEach(NedovonList_For_Bery => {
+    let dealDate = new Date(NedovonList_For_Bery.DATE_CREATE);
+    if (dealDate.getDate() === currentDate_For_Bery.getDate() && dealDate.getMonth() === currentDate_For_Bery.getMonth() && dealDate.getFullYear() === currentDate_For_Bery.getFullYear()) {
+      Today_NedozvonDeals_InNew.push(NedovonList_For_Bery);
+    } else if (dealDate < currentDate_For_Bery) {
+      Early_NedozvonDeals_InNew.push(NedovonList_For_Bery);
+    }
+  });
+
+  console.log("Звонки и заявки сегодняшнего дня из недозвонов: ", Today_NedozvonDeals_InNew);
+  console.log("Звонки и заявки предыдущих дней из недозвонов: ", Early_NedozvonDeals_InNew);
+
+  var IsNedozvon_Indicator = false
+  for (var i = 0; i < AllNews_ForBery.length; i++) {
+    for (var j = 0; j < NedovonList_For_Bery.length; j++) {
+      console.log("Проверяю сделку " + AllNews_ForBery[i][0].ID + " на недозвон")
+      if (AllNews_ForBery[i][0].ID == NedovonList_For_Bery[j].ID) {
+        IsNedozvon_Indicator = true
+      }
+    }
+    if (IsNedozvon_Indicator == false) {
+      console.log("Сделка " + AllNews_ForBery[i][0].ID + " Не была в недозвонах")
+
+      AllNewDeals_InNew.push(AllNews_ForBery[i][0]);
+    }
+    else{
+      console.log("Сделка " + AllNews_ForBery[i][0].ID + " Была в недозвонах") 
+
+      IsNedozvon_Indicator = false
+    }
+  }
+
+  console.log("Все новые сделки, которые не были в недозвонах: ", AllNewDeals_InNew)
+
+  for (var i = 0; i < AllNewDeals_InNew.length; i++) {
+    if (AllNewDeals_InNew[i].TITLE.indexOf("вызов") >= 0 || AllNewDeals_InNew[i].TITLE.indexOf("звонок") >= 0) {
+      AllNewCalls_InNew.push(AllNewDeals_InNew[i])
+    }
+    else{
+      NewDeals_InNew.push(AllNewDeals_InNew[i])
+    }
+  }
+  console.log("Все новые звонки, которые не были в недозвонах: ", AllNewCalls_InNew)
+  console.log("Все новые заявки, которые не были в недозвонах: ", NewDeals_InNew)
+
+  SearchDeals_With_ExpensiveTrafic_And_NotExpensiveTrafic()
+
+
+}
+
+function SearchDeals_With_ExpensiveTrafic_And_NotExpensiveTrafic(){
+  for (var i = 0; i < AllNewCalls_InNew.length; i++) {
+    for (var j = 0; j < ExpensiveTrafik.length; j++) {
+      console.log("-----------------------------------------------------------")
+      console.log("AllNewCalls_InNew[i].UTM_SOURCE : " + AllNewCalls_InNew[i].UTM_SOURCE)
+      console.log("ExpensiveTrafik[j] : ", ExpensiveTrafik[j])
+      console.log("-----------------------------------------------------------")
+
+      if (AllNewCalls_InNew[i].UTM_SOURCE == ExpensiveTrafik[j]) {
+        ExpensiveCall_InNew.push(AllNewCalls_InNew[i])
+        console.log("Добавляю в дорогие")
+      }
+      else{
+        NotExpensiveCall_InNew_Indicator = false;
+        for (var k = 0; k < NotExpensiveCall_InNew.length; k++) {
+          if (NotExpensiveCall_InNew[k].ID == AllNewCalls_InNew[i].ID) {
+            NotExpensiveCall_InNew_Indicator = true
+          }
+        }
+        if (NotExpensiveCall_InNew_Indicator == false) {
+          NotExpensiveCall_InNew.push(AllNewCalls_InNew[i])
+          console.log("Добавляю в Дешевые")
+        }
+        else{
+          NotExpensiveCall_InNew_Indicator = false;
+        }
+      }
+    }
+  }
+
+  console.log("Все новые звонки с дорогим трафиком до сортировки: ", ExpensiveCall_InNew)
+  console.log("Все новые звонки с недорогим трафиком до сортировки: ", NotExpensiveCall_InNew)
+
+  ExpensiveCall_InNew_TEMP = ExpensiveCall_InNew;
+  NotExpensiveCall_InNew_TEMP = NotExpensiveCall_InNew;
+  ExpensiveCall_InNew = [];
+  NotExpensiveCall_InNew = [];
+
+  console.log("Все новые звонки с дорогим трафиком TEMP: ", ExpensiveCall_InNew_TEMP)
+  console.log("Все новые звонки с недорогим трафиком TEMP: ", NotExpensiveCall_InNew_TEMP)
+
+  const fetchPromises = [];
+  for (var i = 0; i < ExpensiveCall_InNew_TEMP.length; i++) {
+    console.log("Получаю дела по сделке: ", ExpensiveCall_InNew_TEMP[i]);
+      const options = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.5.1'
+        },
+        body: '{"filter":{"OWNER_TYPE_ID":"2","OWNER_ID":"'+ExpensiveCall_InNew_TEMP[i].ID+'"}}'
+      };
+
+      fetchPromises.push(
+        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.activity.list', options)
+          .then(response => response.json())
+          .catch(err => {
+            console.error('Error fetching data:', err);
+            return null;
+          })
+      );
+  }
+
+  Promise.all(fetchPromises) 
+    .then(AllOPPORTUNITY => {
+        console.log("AllOPPORTUNITY1: ", AllOPPORTUNITY)
+        for (var j = 0; j < AllOPPORTUNITY.length; j++) {
+          if (AllOPPORTUNITY[j].total > 0) {
+            for (var k = 0; k < ExpensiveCall_InNew_TEMP.length; k++) {
+              if (AllOPPORTUNITY[j].result[0].OWNER_ID == ExpensiveCall_InNew_TEMP[k].ID) {
+                ExpensiveCall_InNew.push(ExpensiveCall_InNew_TEMP[k])
+              }
+            }
+          }
+        }
+        const fetchPromises1 = [];
+
+        for (var i = 0; i < NotExpensiveCall_InNew_TEMP.length; i++) {
+          console.log("Получаю дела по сделке: ", NotExpensiveCall_InNew_TEMP[i]);
+            const options = {
+              method: 'POST',
+              headers: {
+                cookie: 'qmb=0.',
+                'Content-Type': 'application/json',
+                'User-Agent': 'insomnia/8.5.1'
+              },
+              body: '{"filter":{"OWNER_TYPE_ID":"2","OWNER_ID":"'+NotExpensiveCall_InNew_TEMP[i].ID+'"}}'
+            };
+
+            fetchPromises1.push(
+              fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.activity.list', options)
+                .then(response => response.json())
+                .catch(err => {
+                  console.error('Error fetching data:', err);
+                  return null;
+                })
+            );
+        }
+
+        Promise.all(fetchPromises1) 
+          .then(AllOPPORTUNITY2 => {
+              console.log("AllOPPORTUNITY2: ", AllOPPORTUNITY2)
+              for (var j = 0; j < AllOPPORTUNITY2.length; j++) {
+                if (AllOPPORTUNITY2[j].total > 0) {
+                  for (var k = 0; k < NotExpensiveCall_InNew_TEMP.length; k++) {
+                    if (AllOPPORTUNITY2[j].result[0].OWNER_ID == NotExpensiveCall_InNew_TEMP[k].ID) {
+                      NotExpensiveCall_InNew.push(NotExpensiveCall_InNew_TEMP[k])
+                    }
+                  }
+                }
+              }
+              console.log("Все новые звонки с дорогим трафиком после сортировки: ", ExpensiveCall_InNew)
+              console.log("Все новые звонки с недорогим трафиком после сортировки: ", NotExpensiveCall_InNew)
+              GetDeal_ToWork_AfterBery()
+          });
+    });
+
+  
+
+  
+}
+
+function GetDeal_ToWork_AfterBery(){
+  console.log("")
+  console.log("-------------------------- У меня все готово! --------------------------")
+  console.log("")
+
+
+
+  console.log("Все Сделки в новых: ", AllNews_ForBery)
+  console.log("Все Сделки в новых из недозвонов: ", NedovonList_For_Bery)
+  console.log("Все Сделки в новых, которые не были в недозвонах: ", AllNewDeals_InNew)
+  console.log("Все новые звонки, которые не были в недозвонах: ", AllNewCalls_InNew)
+
+
+  console.log("")
+
+  console.log("Все новые звонки с дорогим трафиком: ", ExpensiveCall_InNew)
+  console.log("Все новые звонки с недорогим трафиком: ", NotExpensiveCall_InNew)
+
+  console.log("")
+
+    console.log("Все новые заявки, которые не были в недозвонах: ", NewDeals_InNew)
+
+  console.log("")
+
+  console.log("Звонки и заявки сегодняшнего дня из недозвонов: ", Today_NedozvonDeals_InNew);
+  console.log("Звонки и заявки предыдущих дней из недозвонов: ", Early_NedozvonDeals_InNew);
+
+  if (ExpensiveCall_InNew.length > 0) {
+    console.log("Выбрал заявку из категории новые звонки с дорогим трафиком")
+    console.log("Перевожу заявку: ", ExpensiveCall_InNew[0])
+    SendDeal_ToWork(ExpensiveCall_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
+  }
+  else if (NotExpensiveCall_InNew.length > 0) {
+    console.log("Выбрал заявку из категории новые звонки с недорогим трафиком")
+    console.log("Перевожу заявку: ", NotExpensiveCall_InNew[0])
+    SendDeal_ToWork(NotExpensiveCall_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
+  }
+  else if (NewDeals_InNew.length > 0) {
+    console.log("Выбрал заявку из категории новые заявки, которые не были в недозвонах")
+    console.log("Перевожу заявку: ", NewDeals_InNew[0])
+    SendDeal_ToWork(NewDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
+  }
+  else if (Today_NedozvonDeals_InNew.length > 0) {
+    console.log("Выбрал заявку из категории заявки сегодняшнего дня из недозвонов")
+    console.log("Перевожу заявку: ", Today_NedozvonDeals_InNew[0])
+    SendDeal_ToWork(Today_NedozvonDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
+  }
+  else if (Early_NedozvonDeals_InNew.length > 0) {
+    console.log("Выбрал заявку из категории заявки предыдущих дней из недозвонов")
+    console.log("Перевожу заявку: ", Early_NedozvonDeals_InNew[0])
+    SendDeal_ToWork(Early_NedozvonDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
+  }
+  else{
+    console.log("В новых ничего нет -_-")
+  }
+
+  //Очищаем все списки
+  AllNews_ForBery = []
+  NedovonList_For_Bery = []
+  AllNewDeals_InNew = [] 
+  AllNewCalls_InNew = [] 
+  NewDeals_InNew = [] 
+  ExpensiveCall_InNew = [] 
+  NotExpensiveCall_InNew = [] 
+  Today_NedozvonDeals_InNew = []
+  Early_NedozvonDeals_InNew = [] 
+}
+function SendDeal_ToWork(deal_id_toBery){
+  const Deal_ToWork = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+        'Content-Type': 'application/json',
+        'User-Agent': 'insomnia/8.6.0'
+    },
+    body: '{"id":"'+deal_id_toBery+'","fields":{"STAGE_ID":"PREPARATION"}}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', Deal_ToWork)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response)
+
+      const SetOtvetstnenniy_ToBery = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.1'
+        },
+        body: '{"id":"'+deal_id_toBery+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToBery)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          console.log("----------------- Сделка " + deal_id_toBery + " переведена в работу Агенту " + document.getElementById("user-block").getAttribute("data-user-id") + " -----------------")
+          window.location.href = "/crm/deal/details/"+deal_id_toBery+"/?BeryDeal";
+          
+
+        })
+        .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+}
+
+
+
+
+
+// Это незаконная магия, нужная для перевода входяшки In Work,
+// другого работающего вариант не нашел
+// через какое время оно ебнется я не знаю, но ебнется оно точно
+// TODO: переделать
+
+
+function Get_New_Deals(){
+  //1. Получаем все Новые, номера, метрику, id и стадию сделки
+  if (document.getElementsByClassName("ui-btn-text")[1].innerText == 'ЗАЯВКИ') {
+    const Get_News = {
+      method: 'POST',
+      headers: {
+        cookie: 'qmb=0.',
+        'Content-Type': 'application/json',
+        'User-Agent': 'insomnia/8.5.1'
+      },
+      body: '{"filter":{"STAGE_ID":"NEW"},"start":"0","select":["ID"]}'
+    };
+
+    fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_News)
+      .then(response => response.json())
+      .then(response => {
+        console.log("response1", response)
+        for (let index = 0; index < response.result.length; index++) {
+          Deals_For_Check.push([response.result[index].ID])
+
+          console.log("Deals_For_Check [index]", Deals_For_Check[index][0])
+        }
+        if (response.total > 49) {
+          const Get_News2 = {
+            method: 'POST',
+            headers: {
+              cookie: 'qmb=0.',
+              'Content-Type': 'application/json',
+              'User-Agent': 'insomnia/8.5.1'
+            },
+            body: '{"filter":{"STAGE_ID":"NEW"},"start":"51","select":["ID"]}'
+          };
+
+          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_News2)
+            .then(response1 => response1.json())
+            .then(response1 => {
+              console.log("response2", response1)
+              for (let index = 51; index < response1.result.length; index++) {
+                Deals_For_Check.push([response1.result[index].ID])   //[index][0] = response1.result[index].ID
+
+              }
+              Get_InWork_Deals();
+            })
+            .catch(err => console.log("err2: ", err));
+        }
+        else{
+          Get_InWork_Deals();
+        }
+      })
+      .catch(err => console.log("err1: ", err));
+  }
+}
+function Get_InWork_Deals(){
+  //2. Получаем все В работе, номера, метрику и id
+  console.log('Deals_For_Check1: ', Deals_For_Check)
+
+  const Get_InWork = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"PREPARATION"},"start":"0","select":["ID"]}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_InWork)
+    .then(response => response.json())
+    .then(response => {
+      console.log("response1", response)
+      for (let index = 0; index < response.result.length; index++) {
+        Deals_For_Check.push([response.result[index].ID])
+
+        console.log("Deals_For_Check [index]", Deals_For_Check[index][0])
+      }
+      Get_Nedozvon_Deals()
+      
+    })
+    .catch(err => console.log("err1: ", err));
+}
+function Get_Nedozvon_Deals(){
+  //3. Получаем все Недозвоны, номера, метрику и id
+
+  console.log('Deals_For_Check2: ', Deals_For_Check)
+  const Get_Nedozvon = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/8.5.1'
+    },
+    body: '{"filter":{"STAGE_ID":"UC_0SAOJL"},"start":"0","select":["ID"]}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_Nedozvon)
+    .then(response => response.json())
+    .then(response => {
+      console.log("response1", response)
+      for (let index = 0; index < response.result.length; index++) {
+        Deals_For_Check.push([response.result[index].ID])
+
+        console.log("Deals_For_Check [index]", Deals_For_Check[index][0])
+      }
+      if (response.total > 49) {
+        const Get_Nedozvon2 = {
+          method: 'POST',
+          headers: {
+            cookie: 'qmb=0.',
+            'Content-Type': 'application/json',
+            'User-Agent': 'insomnia/8.5.1'
+          },
+          body: '{"filter":{"STAGE_ID":"UC_0SAOJL"},"start":"51","select":["ID"]}'
+        };
+
+        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Get_Nedozvon2)
+          .then(response1 => response1.json())
+          .then(response1 => {
+            console.log("response2", response1)
+            for (let index = 51; index < response1.result.length; index++) {
+              Deals_For_Check.push([response1.result[index].ID])   //[index][0] = response1.result[index].ID
+            }
+            setTimeout(Get_Deals_Data, 3000);
+            //Get_Deals_Data();
+          })
+          .catch(err => console.log("err2: ", err));
+      }
+      else{
+        setTimeout(Get_Deals_Data, 3000);
+        //Get_Deals_Data();
+      }
+    })
+    .catch(err => console.log("err1: ", err));
+}
+
+// Переходим на новый токен: https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/
+async function Get_Deals_Data(){
+  //4. Получаем необходимые данные по сделке (Номер и Местрику)
+  console.log('Deals_For_Check3: ', Deals_For_Check)
+
+  const requests = [];
+  for (let i = 0; i < Deals_For_Check.length; i++) {
+    const options = {
+      method: 'POST',
+      headers: {
+        cookie: 'qmb=0.',
+        'Content-Type': 'application/json',
+        'User-Agent': 'insomnia/8.5.1'
+      },
+      body: '{"id":"'+Deals_For_Check[i][0]+'"}'
+    };
+
+    requests.push(fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.get', options)
+      .then(response => response.json())
+      .then(response => {
+        Deals_For_Check[i][1] = response.result.UF_CRM_1604651268;
+        Deals_For_Check[i][2] = response.result.UTM_SOURCE;
+        Deals_For_Check[i][3] = response.result.STAGE_ID;
+      })
+      .catch(err => console.error(err))
+    );
+  }
+
+  // Ждем завершения всех запросов
+  await Promise.all(requests);
+
+  console.log('Все запросы завершены: ', requests);
+
+  console.log('Deals_For_Check5: ', Deals_For_Check)
+  //Sort_Matrix()
+  Replace_Numbers_To_Pattern()
+  
+}
+function Replace_Numbers_To_Pattern(){
+  //5. Приводим все номера к одному формату 79233024909
+
+  for (var i = 0; i < Deals_For_Check.length; i++) {
+    console.log("Deals_For_Check in Replace_Numbers_To_Pattern", Deals_For_Check)
+    try{
+      if(Deals_For_Check[i][1] != false && (Deals_For_Check[i][1][0] == 9 || Deals_For_Check[i][1][1] == 9 || Deals_For_Check[i][1][2] == 9 || Deals_For_Check[i][1][3] == 9) ){
+        Deals_For_Check[i][1] = Deals_For_Check[i][1].replace(/[^0-9]/g, '')
+        Deals_For_Check[i][1] = '9'+extractAfter9(Deals_For_Check[i][1])
+      }
+    }
+    catch(e){
+      console.error(e)
+    }
+  }
+  console.log('Deals_For_Check6: ', Deals_For_Check)
+  Sort_Matrix()
+}
+function Sort_Matrix(){
+  /*
+  6. Имея матрицу:
+  Deals_For_Check =  [
+    ['12345', 'per-set', '79233024909', 'NEW'],
+    ['12349', 'per-set', '79233024909', 'PREPARATION'],
+    ['12346', 'dom.ru', '79012064151', 'PREPARATION'],
+    ['12347', 'per-set', '79012064151', 'NEW'],
+    ['12348', 'SpeedInet', '79029592377', 'NEW'],
+    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL'],
+    ['12350', 'Izet', '79239414565', 'UC_0SAOJL']
+  ]
+  Сортируем ее так, что бы получить только заявки с повторяющимися номерами и разной метрикой
+  [
+    ['12345', 'per-set', '79233024909', 'NEW'],
+    ['12349', 'per-set', '79233024909', 'PREPARATION'],
+    ['12348', 'SpeedInet', '79029592377', 'NEW'],
+    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL']
+  ]
+*/
+  /*
+  var Deals_For_Check =  [
+    ['12345', 'per-set', '79233024909', 'NEW'],
+    ['12349', 'per-set', '79233024909', 'PREPARATION'],
+    ['12346', 'dom.ru', '79012064151', 'PREPARATION'],
+    ['12347', 'per-set', '79012064151', 'NEW'],
+    ['12348', 'SpeedInet', '79029592377', 'NEW'],
+    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL'],
+    ['12351', 'Izet', '79239414565', 'UC_0SAOJL']
+  ]*/
+  
+  repeatedRequests = [];
+  DublicateMatrix = [];
+  InArrayIndicator = false;
+
+  for (var i = 0; i < Deals_For_Check.length; i++) {
+    for (var j = 0; j < Deals_For_Check.length; j++) {
+
+      
+
+      if (Deals_For_Check[i][2] == Deals_For_Check[j][2] && Deals_For_Check[i][1] == Deals_For_Check[j][1] && Deals_For_Check[i][0] != Deals_For_Check[j][0]) {
+        console.log("Сделки совпали")
+        for (var k = 0; k < repeatedRequests.length; k++) {
+          console.log("Сравниваю", repeatedRequests[i], "и", Deals_For_Check[i])
+          if (repeatedRequests[k][0] == Deals_For_Check[i][0]) {
+            console.log("совпалость")
+            InArrayIndicator = true
+          }
+        }
+        if (InArrayIndicator == false) {
+
+          repeatedRequests.push(Deals_For_Check[i])
+        }
+        else{
+          InArrayIndicator = false;
+        }
+      }
+
+    }
+  }
+
+  var InMatrix_Indicator = false  
+  for (var i = 0; i < repeatedRequests.length; i++) {
+    for (var j = 0; j < repeatedRequests.length; j++) {
+      console.log("Сравниваю", repeatedRequests[i]," и ", repeatedRequests[j])
+
+      if (repeatedRequests[i][2] == repeatedRequests[j][2] && repeatedRequests[i][0] != repeatedRequests[j][0]) {
+        console.log(" ----- Совпало -----", repeatedRequests[i]," и ", repeatedRequests[j])
+        for (var k = 0; k < DublicateMatrix.length; k++) { 
+          console.log("Сравниваю 1", DublicateMatrix[k][0][2]," и ", repeatedRequests[i][2])
+          if (DublicateMatrix[k][0][2] == repeatedRequests[i][2]) {
+            console.log(" ----- Совпало 1 -----", DublicateMatrix[k][0][2]," и ", repeatedRequests[i][2])
+            DublicateMatrix[k].push(repeatedRequests[i])
+            InMatrix_Indicator = true;
+          }
+        }
+        console.log(InMatrix_Indicator)
+        if (InMatrix_Indicator == false) {
+          console.log(" Не совпало, всуну НОВУЮ")
+          DublicateMatrix.push([repeatedRequests[i]])
+        }
+        InMatrix_Indicator = false
+      }
+
+    }
+  }
+
+  console.log("Дубликаты с одной метрикой: ", repeatedRequests);
+  console.log("Дубликаты с одной метрикой после сортировки: ", DublicateMatrix);
+
+  /*for (var i = 0; i < DublicateMatrix.length; i++) {
+    for (var j = 0; j < DublicateMatrix[i].length; j++) {
+      for (var k = 0; k < DublicateMatrix[i].length; k++) {
+        [i]
+      }
+      DublicateMatrix[i][j]
+    }
+    DublicateMatrix[i]
+  }*/
+
+  try{
+    document.getElementById("BeryButt").removeAttribute('disabled');
+  }
+  catch(e){
+    console.log("Кнопки Взять Заявку нет!")
+  }
+  try{
+    document.getElementById("BeryButt_InQueue").removeAttribute('disabled');
+  }
+  catch(e){
+    console.log("Кнопки Выйти из очереди нет!")
+  }
+  try{
+    document.getElementById("BeryButt_OutQueue").removeAttribute('disabled');
+  }
+  catch(e){
+    console.log("Кнопки В очередь нет!")
+  }
+  if (DublicateMatrix.length > 0 && DublicateMatrix.length < 7) {
+    Delete_Dublicates()
+  }
+}
+function Delete_Dublicates(){
+  // Через API кидаем все заявки из второй матрицы на удаление с признаком "Дубликат"
+  //for (var i = 0; i < repeatedRequests.length; i++) {
+    //document.querySelectorAll('[data-id="'+repeatedRequests[i][2]+'"]')[0].style.display = 'none'
+
+    //document.querySelectorAll('[data-id="'+repeatedRequests[i][2]+'"]')[0].style.background = "red"
+    //console.log("Удалил сделку ", repeatedRequests[i][2], " как дубликат!")
+
+    
+    
+  //}
+  for (var i = 0; i < DublicateMatrix.length; i++) {
+    if (DublicateMatrix[i][0][3] == "NEW" && DublicateMatrix[i][1][3] == "NEW") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "PREPARATION" && DublicateMatrix[i][1][3] == "PREPARATION") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "UC_0SAOJL" && DublicateMatrix[i][1][3] == "UC_0SAOJL") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "NEW" && DublicateMatrix[i][1][3] == "PREPARATION") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "PREPARATION" && DublicateMatrix[i][1][3] == "UC_0SAOJL") {
+      console.log("удаляю ", DublicateMatrix[i][1][0])
+      DealId_To_Send += DublicateMatrix[i][1][0]+', с номером: '+DublicateMatrix[i][1][1]+' удалена из стадии ' +DublicateMatrix[i][1][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][1][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "NEW" && DublicateMatrix[i][1][3] == "UC_0SAOJL") {
+      console.log("удаляю ", DublicateMatrix[i][1][0])
+      DealId_To_Send += DublicateMatrix[i][1][0]+', с номером: '+DublicateMatrix[i][1][1]+' удалена из стадии ' +DublicateMatrix[i][1][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][1][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "PREPARATION" && DublicateMatrix[i][1][3] == "NEW") {
+      console.log("удаляю ", DublicateMatrix[i][1][0])
+      DealId_To_Send += DublicateMatrix[i][1][0]+', с номером: '+DublicateMatrix[i][1][1]+' удалена из стадии ' +DublicateMatrix[i][1][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][1][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "UC_0SAOJL" && DublicateMatrix[i][1][3] == "PREPARATION") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+    if (DublicateMatrix[i][0][3] == "UC_0SAOJL" && DublicateMatrix[i][1][3] == "NEW") {
+      console.log("удаляю ", DublicateMatrix[i][0][0])
+      DealId_To_Send += DublicateMatrix[i][0][0]+', с номером: '+DublicateMatrix[i][0][1]+' удалена из стадии '+DublicateMatrix[i][0][3];
+      const DelDublicate = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+          'Content-Type': 'application/json',
+          'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DublicateMatrix[i][0][0]+'","fields":{"UF_CRM_1694601072":"5586","STAGE_ID":"UC_93XIL7"}}'
+      };
+
+      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', DelDublicate)
+        .then(response => response.json())
+        .then(response => {
+          console.log("REST: ",response)
+          console.log("Отправляю ", DublicateMatrix[i])
+          
+          const SendDublicate = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"1395354115","text":"Заявка '+DealId_To_Send+' удалена как Дубликат Агентом '+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+          };
+
+          fetch('https://api.telegram.org/bot6881870667:AAEtWo3EkLw6HqsjdLxbY0eJwt1Y_Uqr8io/sendMessage', SendDublicate)
+            .then(response => response.json())
+            .then(response => {
+              console.log("TG: ",response);
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
+    }
+
+  }
+  
+
+}
+
+function getCallCard(){
+  
+  try{
+    if (Agent_In_WhiteList) {
+      document.getElementsByClassName("im-phone-call-title-text")[0].style.display = "block"
+    }
+    if (document.getElementsByClassName("im-phone-call-btn-mute").length > 0) {
+      document.getElementsByClassName("im-phone-call-title-text")[0].style.display = "block"
+      if (document.getElementsByClassName("crm-list-stage-bar-title").length > 0) {
+        if (document.getElementsByClassName("crm-list-stage-bar-title")[0].innerText == 'Новая') {
+          console.log("Идет звонок")
+
+          Deal_id_FromCallCard = document.getElementsByClassName("crm-card-show-detail-info-name-item")[document.getElementsByClassName("crm-card-show-detail-info-name-item").length-1].getElementsByTagName("a")[0].getAttribute("href").split("/", 5)[4];
+          document.getElementsByClassName("crm-list-stage-bar-title")[0].innerText = 'В работе'
+          document.getElementsByClassName("crm-card-show-detail-info-name-item")[document.getElementsByClassName("crm-card-show-detail-info-name-item").length-1].getElementsByTagName("a")[0].click()
+          const options = {
+            method: 'POST',
+            headers: {
+              cookie: 'qmb=0.',
+              'Content-Type': 'application/json',
+              'User-Agent': 'insomnia/8.6.0'
+            },
+            body: '{"id":"'+Deal_id_FromCallCard+'","fields":{"STAGE_ID":"PREPARATION"}}'
+          };
+
+          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+            .then(response => response.json())
+            .then(response => {
+              console.log(response)
+              const options = {
+                method: 'POST',
+                headers: {
+                  cookie: 'qmb=0.',
+                  'Content-Type': 'application/json',
+                  'User-Agent': 'insomnia/8.6.1'
+                },
+                body: '{"id":"'+Deal_id_FromCallCard+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+              };
+
+              fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+                .then(response => response.json())
+                .then(response => {
+                  console.log(response)
+                  
+                })
+                .catch(err => console.error(err));
+            })
+            .catch(err => console.error(err));
+
+        }
+      }
+      else{
+        console.log("Идет звонок 2")
+        // /crm/deal/details/5265756/
+          // 
+        DealPhoneNumber_FromCard = document.getElementsByClassName("im-phone-call-header")[0].innerText.match(phonePattern)[1]
+        
+    
+        console.log(DealPhoneNumber_FromCard)
+        if(document.getElementsByClassName("im-phone-call-status-description")[0].innerHTML.indexOf("Перейти в сделку") < 0){
+          const options = {
+            method: 'POST',
+            headers: {
+              cookie: 'qmb=0.',
+              'Content-Type': 'application/json',
+              'User-Agent': 'insomnia/8.5.1'
+            },
+            body: '{"filter":{"STAGE_ID":"NEW"},"start":"0"}'
+          };
+
+          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+            .then(response => response.json())
+            .then(response => {
+              for (var i = 0; i < response.result.length; i++) {
+                //console.log("Сравниваю: ", DealPhoneNumber_FromCard, " и ", response.result[i].TITLE)
+                //console.log("Итог: ", response.result[i].TITLE.indexOf(DealPhoneNumber_FromCard) >= 0)
+                if(response.result[i].TITLE.indexOf(DealPhoneNumber_FromCard) >= 0){
+                  console.log(response.result[i].ID)
+                  DealId_From_DealPhoneNumber = response.result[i].ID;
+                  const options = {
+                    method: 'POST',
+                    headers: {
+                      cookie: 'qmb=0.',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'insomnia/8.6.0'
+                    },
+                    body: '{"id":"'+DealId_From_DealPhoneNumber+'","fields":{"STAGE_ID":"PREPARATION"}}'
+                  };
+
+                  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+                    .then(response => response.json())
+                    .then(response => {
+                      console.log(response)
+                      setTimeout(function(){
+                        const options = {
+                          method: 'POST',
+                          headers: {
+                            cookie: 'qmb=0.',
+                            'Content-Type': 'application/json',
+                            'User-Agent': 'insomnia/8.6.1'
+                          },
+                          body: '{"id":"'+DealId_From_DealPhoneNumber+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+                        };
+
+                        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+                          .then(response => response.json())
+                          .then(response => {
+                            console.log(response)
+                            document.getElementsByClassName("im-phone-call-status-description")[0].innerHTML += '<div class="im-phone-call-status-description-item" style="margin-top: 10px;"><a class="m-phone-call-status-description-item-link" style="color: white;text-decoration: underline;" href="'+"/crm/deal/details/"+DealId_From_DealPhoneNumber+'/">Перейти в сделку</a></div>'
+                            document.getElementsByClassName("m-phone-call-status-description-item-link")[0].click()
+                          })
+                        .catch(err => console.error(err));
+                      }, 1000)
+                    })
+                    .catch(err => console.error(err));
+                //Берем заявку в работу, добавляем на страницу ссылку на заявку и жмем на нее
+              }
+            }
+            console.log(response)
+          })
+          .catch(err => console.error(err));
+        }
+      }
+    }
+  }
+  catch(e){
+    console.log(e)
+    console.log("Жду звонок")
+  }
 }

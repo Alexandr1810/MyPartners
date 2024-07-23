@@ -31,18 +31,23 @@ window.addEventListener('load', function () {
 })
 
 function Find_SendCode_Button(){
-  console.log(Hide_SendCode_Button)
-  document.getElementById("Show_SendCode_Button").onclick = function(){
-    console.log('ТЫК')
-    if (prompt('Ваш код доступа: ', '') == 'R_B') {
-      Hide_SendCode_Button = false;
+  try{
+    console.log(Hide_SendCode_Button)
+    document.getElementById("Show_SendCode_Button").onclick = function(){
+      console.log('ТЫК')
+      if (prompt('Ваш код доступа: ', '') == 'R_B') {
+        Hide_SendCode_Button = false;
+      }
+    }
+    if (Hide_SendCode_Button) {
+      document.getElementById('sendcodebut').style.display = 'none'
+    }
+    else{
+      document.getElementById('sendcodebut').style.display = 'inline-block'
     }
   }
-  if (Hide_SendCode_Button) {
-    document.getElementById('sendcodebut').style.display = 'none'
-  }
-  else{
-    document.getElementById('sendcodebut').style.display = 'inline-block'
+  catch(e){
+
   }
 }
 
@@ -61,9 +66,17 @@ function InStart(){
     ExitText = document.getElementsByClassName("navbar-text")[0];
     ExitText.innerHTML += '<a href="http://sales.krk.ru/" style="margin-left: 10px; color: white;">Выбор Региона</a>';
     ExitText.innerHTML += '<a id="Show_SendCode_Button" style="margin-left: 30px;color: white;cursor: pointer;float: right;">Заказать код</a>';
-    formGroup = document.getElementsByClassName("form-group")[0];
+    formGroup = document.getElementsByTagName("label")[0];
     formGroup.innerHTML += '<div id="tooltip"><img src="https://cdn3.iconfinder.com/data/icons/pix-glyph-set/50/520769-paper_pin-1024.png" style=" height: 8%; position: absolute; filter: grayscale(1) brightness(1000%); right: 5%; "><span style="text-align: center">ВАЖНО!!!</span><br><br> <span>КОММЕНТАРИЙ ДОЛЖЕН ВЫГЛЯДЕТЬ СЛЕДУЮЩИМ ОБРАЗОМ:</span><br><br><span>"Улица, дом, квартира.   Необходимое оборудование(Роутер, Приставка, Домофон) и Стоимость подключения"</span><br><br><span>Тарифный план и Город указывать ЗАПРЕЩЕНО!!</span></div>';
     comment.setAttribute('placeholder','Улица, дом, квартира. Стоимость подключения + (Роутер, Приставка, Домофон)');
+
+    document.getElementsByTagName("label")[0].innerHTML += '<span class="tooltiptext1">Записываем в порядке: сначала фамилия, потом имя, потом отчество (при наличии).</span>'
+    document.getElementsByTagName("label")[1].innerHTML += '<span class="tooltiptext1" style=" top: 100px; ">Контактный номер вписываем с восьмерки, без пробелов и тире.</span>'
+    document.getElementsByTagName("label")[2].innerHTML += '<span class="tooltiptext1" style=" top: 180px; ">Контактный номер вписываем со второй цифры, без пробелов и тире. Во второй строке только имя контактного лица.</span>'
+    document.getElementsByTagName("label")[3].innerHTML += '<span class="tooltiptext1" style=" top: 325px; ">Выбираем тариф, который продали.</span>'
+    document.getElementsByTagName("label")[4].innerHTML += '<span class="tooltiptext1" style=" top: 385px; ">Выбираем «Активная продажа».</span>'
+    document.getElementsByTagName("label")[5].innerHTML += '<span class="tooltiptext1" style=" top: 460px; ">Заполняется автоматически.</span>'
+    document.getElementsByTagName("label")[6].innerHTML += '<span class="tooltiptext1" style=" top: 530px; ">Всегда выбираем «Из другого города - первое подключение».</span>'
   
     
   }
@@ -81,7 +94,7 @@ function FindPaste(){
 
   formGroup.innerHTML += '<a style="border-radius: 4px;padding: 9px;color: white;border: 1px solid;text-decoration: none;cursor: pointer;background-image: linear-gradient(to bottom,#2aafff 0,#008ef1 100%);background-repeat: repeat-x;border-color: #3e8f3e;" id="PasteButton">Вставить</a>';
   formGroup.innerHTML += '<h2 id="MyErrorText" style=" display: inline-block; margin: 0; margin-left: 3%; font-size: 16px; color: red; "></h2>'
-  formGroup.innerHTML += '<img src="https://detskiy-sad.com/wp-content/uploads/2021/12/plakaty-ng-elka4.png" style="position: fixed;height: 20%; bottom: 10%;   left: 5%;">';
+  formGroup.innerHTML += '<img style="display:none" src="https://detskiy-sad.com/wp-content/uploads/2021/12/plakaty-ng-elka4.png" style="position: fixed;height: 20%; bottom: 10%;   left: 5%;">';
   
   document.getElementById("PasteButton").addEventListener("click", e => {
     navigator.clipboard.readText()

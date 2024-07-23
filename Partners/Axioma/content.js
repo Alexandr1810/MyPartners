@@ -80,25 +80,35 @@ function InStart(){
             document.getElementById('login_container').innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
         }
     }
+    try{
+        MyPartnersLog.onclick = function() {
+            console.log(document.querySelectorAll('[type="submit"]')[0])
+            if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
+                document.querySelectorAll('[placeholder="Имя пользователя"]')[0].value = Axioma_Login;
+                document.querySelectorAll('[placeholder="Пароль"]')[0].value = Axioma_Password;
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[type="submit"]')[0])
-        if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
-            document.querySelectorAll('[placeholder="Имя пользователя"]')[0].value = Axioma_Login;
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = Axioma_Password;
-
-            document.querySelectorAll('[placeholder="Имя пользователя"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Имя пользователя"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
 
 
-            document.querySelectorAll('[type="submit"]')[0].click();
+                document.querySelectorAll('[type="submit"]')[0].click();
 
-            document.querySelectorAll('[placeholder="Имя пользователя"]')[0].value = 'Логин';
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = 'Пароль';
+                document.querySelectorAll('[placeholder="Имя пользователя"]')[0].value = 'Логин';
+                document.querySelectorAll('[placeholder="Пароль"]')[0].value = 'Пароль';
 
-            setTimeOut(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+                setTimeOut(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+            }
+        };
+    }
+    catch(e){
+        for (var i = 0; i < document.getElementsByClassName("form-row").length; i++) {
+            if (document.getElementsByClassName("form-row")[i].innerText == 'Дополнительная информация, пожелания абонента и т.д.') {
+                if (document.getElementsByClassName("form-row")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("form-row")[i].innerHTML += '<span class="tooltiptext1" style=" top: 1%; width: 76%; ">При продаже ТП для МАП и агрегаторов подробно прописываем условия ТП (скорость шпд с 6:00 до 24:00, с 24:00 до 6:00, АП, оборудование).<br> Если ТП базовый - можно не прописывать условия, но аренду/рассрочку (срок рассрочки)/выкуп оборудования нужно указать.<br> Указываем наличие кабеля, наличие технологического отверстия, наличие паспорта РФ.<br>  Обязательно нужно прописать, что настройка роутера бесплатно!</span>'
+                }
+            }
         }
-    };
+    }
 }
 
 

@@ -105,6 +105,7 @@ window.addEventListener('load', function () {
                             setInterval(FindError, 2000);
                             setInterval(FindPaste, 2000);
                             setInterval(HidePassword, 200);
+                            setInterval(SetTickets, 2000);
                         }
                         else{
                             console.log('Код не подходит')
@@ -135,7 +136,50 @@ window.addEventListener('load', function () {
 })
 
 
+function SetTickets(){
+    try{
+        for (var i = 0; i < document.getElementsByClassName("expanded-box__title").length; i++) {
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Общая информация по заявке") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1" >В поле «Регион» нужно выбрать ФО РФ, в котором планируется подключение и область/округ/край/республику.<br> Далее в поле «Организация», если филиал не выбрался автоматически, нужно указать его вручную.</span>'
+                }
+            } 
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Адрес подключения и проверка технической возможности") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1" >В поля «Населенный пункт», «Улица», «Дом» и «Квартира» нужно ввести адрес для проверки технической возможности подключения. В таблице справа должны появиться услуги и технологии, по которым на этом адресе работает провайдер.</span>'
+                }
+            } 
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Контактная информация") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1">В поля «Фамилия», «Имя» и «Отчество» информацию записываем с большой буквы без пробелов. В поле «Моб. Телефон» указываем контактный номер со второй цифры без пробелов и тире.Пример: 9332660125. В поле «Дополнительная информация» подробно прописываем конфигурацию ТП, название ТП, условия ТП, период скидки и стоимость по скидке (при наличии), оборудование и стоимость подключения.</span>'
+                }
+            } 
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Персональные данные клиента") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1" >Поля «Фамилия», «Имя» и «Отчество» заполняются нажатием кнопки «Копировать из контактной информации». Поле «Тип документа» должно быть в значении «Не определен».</span>'
+                }
+            } 
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Подключаемые услуги") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1" ">Ставим галочки рядом с теми услугами, которые входят в ТП, который предложили.</span>'
+                }
+            } 
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Домашний Интернет") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1">ТП можно выбрать рандомно: основную информацию КЦ будут брать из поля «Дополнительная информация».</span>'
+                }
+            }
+            if (document.getElementsByClassName("expanded-box__title")[i].innerText == "Дата и время подключения") {
+                if (document.getElementsByClassName("expanded-box__title")[i].innerHTML.indexOf("tooltiptext1") < 0) {
+                    document.getElementsByClassName("expanded-box__title")[i].innerHTML += '<span class="tooltiptext1">Не трогаем.</span>'
+                }
+            } 
+        }
+    }
+    catch(e){
 
+    }
+}
 function HidePassword(){
     if (LoginInput.length > 0) {
         LoginInput[0].setAttribute('type', 'password')
@@ -400,10 +444,10 @@ try {
 // Выходим из Попова если время не подходит 
 window.addEventListener('load', function () { 
     try { 
-        if (Profile[1].innerText == "Попов Дмитрий Владимирович") {
+        if (Profile[1].innerText == "Попов Дмитрий Владимирович" || Profile[1].innerText == "Ветров Иван Петрович") {
             document.getElementsByClassName('top-logo')[0].innerHTML += '<span id="MovedText" style="position: absolute;right: 30%;color: white;">На эту учетку можно заводить заявки только в Субботу, Воскресенье и Ночью!</span>'
             if (Hour_Of_Day >= 7 &&  Hour_Of_Day < 24 && Day_Of_Week != 6 && Day_Of_Week != 0) {
-                document.getElementsByClassName('logout')[0].click()
+                //document.getElementsByClassName('logout')[0].click()
             }
             MyComboTree[2].style.display = "none";
         }

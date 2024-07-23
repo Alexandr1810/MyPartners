@@ -81,28 +81,44 @@ function InStart(){
         }
     }
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[type="submit"]')[0])
-        if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
-            document.getElementById('inputUsername').value = Izet_Login;
-            document.getElementById('inputPassword').value = Izet_Password;
 
-            document.getElementById('inputUsername').dispatchEvent(event);
-            document.getElementById('inputPassword').dispatchEvent(event);
+    try{
+        MyPartnersLog.onclick = function() {
+            console.log(document.querySelectorAll('[type="submit"]')[0])
+            if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
+                document.getElementById('inputUsername').value = Izet_Login;
+                document.getElementById('inputPassword').value = Izet_Password;
 
-
-            document.querySelectorAll('[type="submit"]')[0].click();
-
-            //document.getElementById('inputUsername').value = 'Логин';
-            //document.getElementById('inputPassword').value = 'Пароль';
+                document.getElementById('inputUsername').dispatchEvent(event);
+                document.getElementById('inputPassword').dispatchEvent(event);
 
 
+                document.querySelectorAll('[type="submit"]')[0].click();
 
-            setTimeout(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+                //document.getElementById('inputUsername').value = 'Логин';
+                //document.getElementById('inputPassword').value = 'Пароль';
 
+
+
+                setTimeout(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+
+
+            }
+        };
+    }
+    catch(e){
+        if (document.getElementsByTagName("label")[0].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByTagName("h3")[0].innerText == 'Добавление заявки') {
+            document.getElementsByTagName("label")[0].innerHTML += '<span class="tooltiptext1" >Нужно выбрать город, соответствующий провайдеру, по ТП которого консультируем.<br> Череповец-телеком - г. Череповец, Новгород-телеком - г. Великий Новгород и т п.</span>'
+            document.getElementsByTagName("label")[1].innerHTML += '<span class="tooltiptext1" style=" top: 11%; ">Для заполнения этого поля нужно вписать улицу и номер дома в формате: «Зыряновская 18» или «Воскресенский бульвар 8».</span>'
+            document.getElementsByTagName("label")[2].innerHTML += '<span class="tooltiptext1"  style=" top: 22%; ">Записываем в порядке: сначала фамилия, потом имя, потом отчество (при наличии).</span>'
+            
+            document.getElementsByTagName("label")[4].innerHTML += '<span class="tooltiptext1" style="top: 44%;">Контактный номер вписываем с семерки, без пробелов и тире.</span>'
+            document.getElementsByTagName("label")[5].innerHTML += '<span class="tooltiptext1" style=" top: 59%; ">Не трогаем.</span>'
+            document.getElementsByTagName("label")[7].innerHTML += '<span class="tooltiptext1" style=" top: 70%; ">ТП выбираем по названию. Тарификация доступна в тарифной матрице и на дилерском сайте.</span>'
+            document.getElementsByTagName("label")[8].innerHTML += '<span class="tooltiptext1" style=" top: 76%; ">Здесь можно написать что-то для помощи КЦ и монтажнику.<br>Пример: роутер свой - настройка бесплатно, кабель есть, нужно набрать за час до монтажа. Звонок от КЦ примет после 17:00.</span>'
 
         }
-    };
+    }
 }
 
 

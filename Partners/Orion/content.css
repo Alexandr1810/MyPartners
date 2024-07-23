@@ -30,3 +30,35 @@
 #newform:hover #tooltip {
     visibility: visible;
 }
+
+
+.row .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 25px;
+    left: 102%;
+
+    width: 80%;
+    text-align: left;
+    padding: 6px;
+    background-color: #000000cc;
+
+}
+
+.row .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent black transparent transparent;
+}
+.row:hover .tooltiptext1 {
+    visibility: visible;
+}

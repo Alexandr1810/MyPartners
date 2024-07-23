@@ -81,30 +81,40 @@ function InStart(){
             document.getElementsByClassName("login-info")[0].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
         }
     }
+    try{
+        MyPartnersLog.onclick = function() {
+            console.log(document.querySelectorAll('[type="submit"]')[0])
+            if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
+                document.querySelectorAll('[placeholder="Логин"]')[0].value = Almatel_Login;
+                document.querySelectorAll('[placeholder="Пароль"]')[0].value = Almatel_Password;
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[type="submit"]')[0])
-        if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
-            document.querySelectorAll('[placeholder="Логин"]')[0].value = Almatel_Login;
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = Almatel_Password;
-
-            document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
-
-
-            document.querySelectorAll('[type="submit"]')[0].click();
-
-            document.querySelectorAll('[placeholder="Логин"]')[0].value = 'Логин';
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = 'Пароль';
-
-            document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
 
 
-            document.querySelectorAll('[type="submit"]')[0].click();
+                document.querySelectorAll('[type="submit"]')[0].click();
 
+                document.querySelectorAll('[placeholder="Логин"]')[0].value = 'Логин';
+                document.querySelectorAll('[placeholder="Пароль"]')[0].value = 'Пароль';
+
+                document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
+
+
+                document.querySelectorAll('[type="submit"]')[0].click();
+
+            }
+        };
+    }
+    catch(e){
+        if (document.getElementsByTagName("label")[0].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByClassName('order-create__title').length > 0) {
+            document.getElementsByTagName("label")[0].innerHTML += '<span class="tooltiptext1">Поля №1, №2, №3 («Фамилия», «Имя», «Отчество»)<br>Записываем без лишних пробелов.</span>'
+            document.getElementsByTagName("label")[3].innerHTML += '<span class="tooltiptext1" style=" top: 45%; ">Контактный номер вписываем со второй цифры, без пробелов и тире. <br>При наличии записываем второй номер.</span>'
+            document.getElementsByTagName("label")[4].innerHTML += '<span class="tooltiptext1" style=" top: 55%; ">Не пишем.</span>'
+            document.getElementsByTagName("label")[5].innerHTML += '<span class="tooltiptext1" style=" top: 60%; ">Обозначаем наличие кабеля, тип кабеля и его исправность (по возможности),<br> наличие технологического отверстия, наличие паспорта РФ, потом оборудование и стоимость его аренды/рассрочки (срок рассрочки)/выкупа.<br>Пример: кабель есть, тех отверстие есть, паспорт рф, роутер в аренду за 150р.</span>'
         }
-    };
+    }
+
 }
 
 

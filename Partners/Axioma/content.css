@@ -40,3 +40,34 @@
     top: -32px;
     background: rgb(0 142 237);
 }
+
+form .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    text-align: left;
+    padding: 6px;
+    
+    top: 26%;
+    left: 102%;
+    width: 51%;
+    background-color: rgb(101 106 111);
+
+}
+
+form .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgb(255 39 34) transparent transparent;
+}
+form:hover .tooltiptext1 {
+    visibility: visible;
+}

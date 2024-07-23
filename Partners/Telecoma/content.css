@@ -41,3 +41,34 @@
     top: 121px;
     background: rgb(0 142 237);
 }
+
+tr td form table tbody tr .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 22%;
+    width: 22%;
+    left: 56%;
+    background-color: rgb(45 45 45);
+
+}
+
+tr td form table tbody tr .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent rgb(0 0 0) transparent transparent;
+}
+tr td form table tbody tr:hover .tooltiptext1 {
+    visibility: visible;
+}

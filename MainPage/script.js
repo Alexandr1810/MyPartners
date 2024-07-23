@@ -151,6 +151,31 @@ $('.dropdown24').click(function () {
         $(this).toggleClass('active25');
         $(this).find('.dropdown-menu').slideToggle(300);
     });
+$('.dropdown25').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active26');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+$('.dropdown26').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active27');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+$('.dropdown27').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active28');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
+window.addEventListener('load', function () { 
+    document.getElementById("DevPanel").onclick = function(){
+        if (prompt('Ваш код доступа: ', '') == PerToken) {
+            
+            window.location.href = '../MainPage/DevPanel/index.html';
+        }
+        
+    }
+});
+
 window.addEventListener('load', function () { 
     document.getElementById("DevPanel").onclick = function(){
         if (prompt('Ваш код доступа: ', '') == PerToken) {

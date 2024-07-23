@@ -34,6 +34,7 @@ var Tarifs = [
 "Интернет на все 500_750р",
 "Оптимальный (100 Mb/s+IPTV)_500р.",
 "Смотри онлайн_(100 Мбит/с_+ IPTV)_ 530р.",
+"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 690р.",
 "Кино онлайн_(100 Мбит/с_+ IPTV)_ 650р.",
 "Всё включено (500 Mb/s+IPTV)_750р.",
 "Интернет на все 100_400р",
@@ -64,15 +65,25 @@ var randomIndex1 = getRandomInt(100)
 console.log(randomIndex1)
 
 //Agent_names = [["SPEEDINET "],["Брюзгин Дмитрий Владимирович "],["Горбань Карина Васильевна "],["Волохов Никита Романович ","Кулешов Павел Константинович "],["Пешкова Юлия Ивановна "],["Касьяненко Кристина Денисовна "]]
-
+/*
 var RegionNames = {
-  SpeedInet: [" г Новосибирск,", " г Бердск,", " г Искитим,", " г Обь,", " г Академгородок,", " г Красноярск,", " г Ачинск,", " г Лесосибирск,", " г Назарово,", " г Минусинск,", " г Зеленогорск,", " г Черногорск,"," г Заозерный,", " г Абакан,", " г Бородино,", " г Дивногорск,", " г Барнаул,", " г Бийск,"," г Новоалтайск,", " г Заринск,", " г Рубцовск,", " г Анжеро-Судженск,", " г.о. Анжеро-Судженский, ", " г Белово,", " г Березовский,", " г Грамотеино,", " г Гурьевск,", " г Инской,", " г Кемерово,", " г Ленинск-Кузнецкий", " г Полысаево,", " г Топки,", " г Юрга,", " г Новокузнецк,", " г Междуреченск,", " г Осинники,", " г Калтан,", " г Прокопьевск,", " г Киселевск,", " г Мыски,"],
+  SpeedInet: [" г Новосибирск,", " г Бердск,", " г Искитим,", " г Обь,", " г Академгородок,", " г Красноярск,", " г Ачинск,", " г Лесосибирск,", " г Назарово,", " г Минусинск,", " г Зеленогорск,", " г Черногорск,"," г Заозерный,", " г Абакан,", " г Бородино,", " г Дивногорск,", " г Анжеро-Судженск,", " г.о. Анжеро-Судженский, ", " г Белово,", " г Березовский,", " г Грамотеино,", " г Гурьевск,", " г Инской,", " г Кемерово,", " г Ленинск-Кузнецкий", " г Полысаево,", " г Топки,", " г Юрга,", " г Новокузнецк,", " г Междуреченск,", " г Осинники,", " г Калтан,", " г Прокопьевск,", " г Киселевск,", " г Мыски,"],
   Norkom:[" г Норильск,", " г Игарка,", " г Кайеркан,", " г Талнах,"],
   Kemerovo: [" г Анжеро-Судженск,", " г.о. Анжеро-Судженский, ", " г Белово,", " г Березовский,", " г Грамотеино,", " г Гурьевск,", " г Инской,", " г Кемерово,", " г Ленинск-Кузнецкий", " г Полысаево,", " г Топки,", " г Юрга,"],
   Krasnoyarsk: [" г Ачинск,", " г Назарово,", " г Красноярск,", " г Минусинск,", " г Зеленогорск,", " г Абакан,", " г Черногорск,", " г Дивногорск,", " г Лесосибирск"],
   Novokyznetsk: [" г Новокузнецк,", " г Междуреченск,", " г Осинники,", " г Калтан,", " г Прокопьевск,", " г Киселевск,", " г Мыски,"],
   Novosibirsk: [" г -,", " г -,", " г -,", " г -,", " рп -,"],
   Barnaul: [" г Барнаул,", " г Бийск,", " г Заринск,", " г Новоалтайск,", " г Рубцовск,"]
+}
+
+*/
+var RegionNames = {
+  SpeedInet: [],
+  Norkom:[],
+  Krasnoyarsk: [],
+  Novokyznetsk: [],
+  Novosibirsk: [],
+  Barnaul: []
 }
 //Novosibirsk: [" г Новосибирск,", " г Бердск,", " г Бердск,", " г Обь,", " рп Краснообск,"]
 IsSpeedInet = false;
@@ -164,14 +175,26 @@ window.addEventListener('load', function () {
                       AccauntPasswords.BarnaulPass1 = tasks.BarnaulPass1
                       AccauntPasswords.NorComLog1 = tasks.NorComLog1
                       AccauntPasswords.NorComPass1 = tasks.NorComPass1
+                      AccauntPasswords.SpeedInetLog1 = tasks.SpeedInetLog1
+                      AccauntPasswords.SpeedInetPass1 = tasks.SpeedInetPass1
                       Norilsk_SS_Names = tasks.Norilsk_SS_Names;
                       Kemerovo_SS_Names = tasks.Kemerovo_SS_Names;
                       Novokuznezk_SS_Names = tasks.Novokuznezk_SS_Names;
                       Novosibirsk_SS_Names = tasks.Novosibirsk_SS_Names;
                       Krasnoyarsk_SS_Names = tasks.Krasnoyarsk_SS_Names;
                       Barnaul_SS_Names = tasks.Barnaul_SS_Names;
+                      Speedinet_SS_Names = tasks.Speedinet_SS_Names;
                       console.log(Norilsk_SS_Names,Kemerovo_SS_Names,Novokuznezk_SS_Names,Novosibirsk_SS_Names,Krasnoyarsk_SS_Names,Barnaul_SS_Names)
-                      
+                      RegionNames.SpeedInet = tasks.RegionNames_SpeedInet
+                      RegionNames.Norkom = tasks.RegionNames_Norkom
+                      RegionNames.Kemerovo = tasks.RegionNames_Kemerovo
+                      RegionNames.Krasnoyarsk = tasks.RegionNames_Krasnoyarsk
+                      RegionNames.Novokyznetsk = tasks.RegionNames_Novokyznetsk
+                      RegionNames.Novosibirsk = tasks.RegionNames_Novosibirsk
+                      RegionNames.Barnaul = tasks.RegionNames_Barnaul
+
+                      console.log(RegionNames)
+
                       if (LoginKey == tasks.LoginCode) {
                         GetPasswords();
                         setInterval(InStart, 500); 
@@ -248,11 +271,11 @@ function GetPasswords(){
         <div id="ChangeAccountBlock"> 
           <h1 class="ChangeAccountHeader">Выбор учетной записи:</h1>
           <a class="ChangeAccount" id="ChangeNorCom" onmouseover="javascript:document.getElementById('NorComСities').style.display = 'block'" onmouseout="javascript:document.getElementById('NorComСities').style.display = 'none'">Норильск</a> 
-          <a class="ChangeAccount" id="ChangeKemerovo" onmouseover="javascript:document.getElementById('KemerovoСities').style.display = 'block'" onmouseout="javascript:document.getElementById('KemerovoСities').style.display = 'none'">Кемерово</a>
-          <a class="ChangeAccount" id="ChangeNovokyznezk" onmouseover="javascript:document.getElementById('NovokyznezkСities').style.display = 'block'" onmouseout="javascript:document.getElementById('NovokyznezkСities').style.display = 'none'">Новокузнецк</a>
-          <a class="ChangeAccount" id="ChangeNovosibirsk" onmouseover="javascript:document.getElementById('NovosibirskСities').style.display = 'block'" onmouseout="javascript:document.getElementById('NovosibirskСities').style.display = 'none'">Новосибирск</a>
-          <a class="ChangeAccount" id="ChangeKrasnoyarsk" onmouseover="javascript:document.getElementById('KrasnoyarskСities').style.display = 'block'" onmouseout="javascript:document.getElementById('KrasnoyarskСities').style.display = 'none'">Красноярск</a>
-          <a class="ChangeAccount" id="ChangeBarnaul" onmouseover="javascript:document.getElementById('BarnaulСities').style.display = 'block'" onmouseout="javascript:document.getElementById('BarnaulСities').style.display = 'none'">Барнаул</a>
+          <a class="ChangeAccount" id="ChangeKemerovo" onmouseover="javascript:document.getElementById('KemerovoСities').style.display = 'block'" onmouseout="javascript:document.getElementById('KemerovoСities').style.display = 'none'" style="display:none;">Кемерово</a>
+          <a class="ChangeAccount" id="ChangeNovokyznezk" onmouseover="javascript:document.getElementById('NovokyznezkСities').style.display = 'block'" onmouseout="javascript:document.getElementById('NovokyznezkСities').style.display = 'none'" style="display:none;">Новокузнецк</a>
+          <a class="ChangeAccount" id="ChangeNovosibirsk" onmouseover="javascript:document.getElementById('NovosibirskСities').style.display = 'block'" onmouseout="javascript:document.getElementById('NovosibirskСities').style.display = 'none'" style="display:none;">Новосибирск</a>
+          <a class="ChangeAccount" id="ChangeKrasnoyarsk" onmouseover="javascript:document.getElementById('KrasnoyarskСities').style.display = 'block'" onmouseout="javascript:document.getElementById('KrasnoyarskСities').style.display = 'none'" style="display:none;">Красноярск</a>
+          <a class="ChangeAccount" id="ChangeBarnaul" onmouseover="javascript:document.getElementById('BarnaulСities').style.display = 'block'" onmouseout="javascript:document.getElementById('BarnaulСities').style.display = 'none'" style="display:none;">Барнаул</a>
           <a class="ChangeAccount" id="ChangeSpeedInet" onmouseover="javascript:document.getElementById('SpeedInetСities').style.display = 'block'" onmouseout="javascript:document.getElementById('SpeedInetСities').style.display = 'none'">SpeedInet</a>
 
           <div class="СitiesInfo" id="NorComСities">
@@ -269,7 +292,7 @@ function GetPasswords(){
           </div>
           <div class="СitiesInfo" id="SpeedInetСities">
               <h1 class="СitiesInfoHeader">Города</h1>
-              <h3 class="СitiesInfoBody">Все регионы кроме Норильска<br> УЧЕТКА ЗАКРЫТА!!!</h3>
+              <h3 class="СitiesInfoBody">Все регионы кроме Норильска!</h3>
           </div>
           <div class="СitiesInfo" id="NovosibirskСities">
               <h1 class="СitiesInfoHeader">Города</h1>
@@ -403,8 +426,16 @@ function GetPasswords(){
         };
         ChangeSpeedInet.onclick = function() {
           if (document.getElementsByClassName("btn")[0] != undefined) {
-            document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.SpeedInetLog;
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.SpeedInetPass;
+
+            if (randomIndex1 < 50) {
+              document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.SpeedInetLog;
+              document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.SpeedInetPass;
+            }
+            else{
+              document.querySelectorAll('[placeholder="Логин"]')[0].value = AccauntPasswords.SpeedInetLog1;
+              document.querySelectorAll('[placeholder="Пароль"]')[0].value = AccauntPasswords.SpeedInetPass1;
+            }
+            
 
             document.querySelectorAll('[placeholder="Логин"]')[0].dispatchEvent(event);
             document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
@@ -518,8 +549,8 @@ function InStart(){
 
     //console.log("Учетка:", СurrentAccount)
     if (document.getElementsByClassName("navbar-brand")[0].innerHTML.indexOf("RegionText") < 0) {
-      if (СurrentAccount == "SPEEDINET ") {
-        document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Все регионы кроме Норильска, УЧЕТКА ЗАКРЫТА!!!</h1>';
+      if (СurrentAccount == Speedinet_SS_Names[0] || СurrentAccount == Speedinet_SS_Names[1]) {
+        document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Все регионы кроме Норильска!!!!</h1>';
       }
       if (СurrentAccount == Norilsk_SS_Names[0] || СurrentAccount == Norilsk_SS_Names[1]) {
         document.getElementsByClassName("navbar-brand")[0].innerHTML += '<h1 id="RegionText">Только Норильск, Игарка!</h1>';
@@ -543,7 +574,7 @@ function InStart(){
     }
     try{
       for (var i = 0; i <= (RegionNames.SpeedInet.length); i++) {
-        if (document.getElementById("input-location-house").value.indexOf(RegionNames.SpeedInet[i]) >= 0 && СurrentAccount == "SPEEDINET ") {
+        if (document.getElementById("input-location-house").value.indexOf(RegionNames.SpeedInet[i]) >= 0 && СurrentAccount == Speedinet_SS_Names[0] || document.getElementById("input-location-house").value.indexOf(RegionNames.SpeedInet[i]) >= 0 && СurrentAccount == Speedinet_SS_Names[1]) {
           IsSpeedInet = true
           //console.log("Тригер на: ", RegionNames.SpeedInet[i])
         }
@@ -587,61 +618,61 @@ function InStart(){
 
 
 
-      //console.log("IsNorkom: ", IsNorkom)
-      //console.log("IsKemerovo: ", IsKemerovo)
-      //console.log("IsNovokyznetsk: ", IsNovokyznetsk)
-      //console.log("IsSpeedInet: ", IsSpeedInet)
-      //console.log("IsNovosibirsk: ", IsNovosibirsk)
-      //console.log("IsKrasnoyarsk: ", IsKrasnoyarsk)
-      //console.log("IsBarnaul: ", IsBarnaul)
+      console.log("IsNorkom: ", IsNorkom)
+      console.log("IsKemerovo: ", IsKemerovo)
+      console.log("IsNovokyznetsk: ", IsNovokyznetsk)
+      console.log("IsSpeedInet: ", IsSpeedInet)
+      console.log("IsNovosibirsk: ", IsNovosibirsk)
+      console.log("IsKrasnoyarsk: ", IsKrasnoyarsk)
+      console.log("IsBarnaul: ", IsBarnaul)
 
       if (IsNorkom == true && IsKemerovo == false && IsNovokyznetsk == false && IsNovosibirsk == false && IsKrasnoyarsk == false && IsSpeedInet == false && IsBarnaul == false) { // Даем кнопку
-        //console.log("Даем кнопку Норком")
+        console.log("Даем кнопку Норком")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
 
       else if (IsNorkom == false && IsKemerovo == true && IsNovokyznetsk == false && IsNovosibirsk == false && IsKrasnoyarsk == false && IsSpeedInet == false && IsBarnaul == false) { // Даем кнопку
-        //console.log("Даем кнопку Кемерово")
+        console.log("Даем кнопку Кемерово")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
 
       else if (IsNorkom == false && IsKemerovo == false && IsNovokyznetsk == true && IsNovosibirsk == false && IsKrasnoyarsk == false && IsSpeedInet == false && IsBarnaul == false) { // Даем кнопку
-        //console.log("Даем кнопку Новокузнецк")
+        console.log("Даем кнопку Новокузнецк")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
       
       else if (IsNorkom == false && IsKemerovo == false && IsNovokyznetsk == false && IsNovosibirsk == true && IsKrasnoyarsk == false && IsSpeedInet == false && IsBarnaul == false) { // Даем кнопку
-        //console.log("Даем кнопку Новосибирск")
+        console.log("Даем кнопку Новосибирск")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
       else if (IsNorkom == false && IsKemerovo == false && IsNovokyznetsk == false && IsNovosibirsk == false && IsKrasnoyarsk == true && IsSpeedInet == false && IsBarnaul == false) { // Даем кнопку
-        //console.log("Даем кнопку Красноярск")
+        console.log("Даем кнопку Красноярск")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
       else if (IsNorkom == false && IsKemerovo == false && IsNovokyznetsk == false && IsNovosibirsk == false && IsKrasnoyarsk == false && IsSpeedInet == false && IsBarnaul == true) { // Даем кнопку
-        //console.log("Даем кнопку Барнаул")
+        console.log("Даем кнопку Барнаул")
         document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
         document.getElementById("RegionError").style.display = "none";
       }
       else if (IsNorkom == false && IsKemerovo == false && IsNovokyznetsk == false && IsNovosibirsk == false && IsKrasnoyarsk == false && IsSpeedInet == true && IsBarnaul == false) { // Даем кнопку
-        //console.log("Забираем кнопку SpeedInet")
-        document.getElementsByClassName("btn-primary")[2].style.display = "none";
+        console.log("Даем кнопку SpeedInet")
+        document.getElementsByClassName("btn-primary")[2].style.display = "block";
 
-        document.getElementById("RegionError").style.display = "block";
+        document.getElementById("RegionError").style.display = "none";
       }
       else{ // Забираем кнопку
-        //console.log("Забираем кнопку")
+        console.log("Забираем кнопку")
         document.getElementsByClassName("btn-primary")[2].style.display = "none";
 
         document.getElementById("RegionError").style.display = "block";
@@ -671,7 +702,7 @@ function InStart(){
     AllFields.push.apply(AllFields, Monos);
     AllFields.push.apply(AllFields, Pakets);
     var indicator = false;
-    console.log("============================================================================================")
+    //console.log("============================================================================================")
     for (var i = 0; i < AllFields.length; i++) {
       for (var j = 0; j < Tarifs.length; j++) {
         //console.log("Сравниваю", AllFields[i].innerText, " и ", Tarifs[j]+' ')
@@ -686,13 +717,29 @@ function InStart(){
       }
       else {
         
-        console.log("Удалить", AllFields[i].innerText)
+        //console.log("Удалить", AllFields[i].innerText)
         
         AllFields[i].style.display = 'none'
       }
       
     }
-    console.log("============================================================================================")
+    //console.log("============================================================================================")
+  }
+  catch(e){
+    console.log(e)
+  }
+
+
+  try{
+    if (document.getElementById("input-group-description__BV_label_").innerHTML.indexOf("tooltiptext1") < 0) {
+        document.getElementById("input-group-description__BV_label_").innerHTML += '<span class="tooltiptext1" style="top: 25%;width: 30%;left: 53%;">Указываем конфигурацию ТП, условия ТП, период скидки и стоимость по скидке (при наличии), оборудование, стоимость его аренды/рассрочки (срок рассрочки)/выкупа и дополнительную информацию.</span>'
+        document.getElementById("input-group-location-house__BV_label_").innerHTML += '<span class="tooltiptext1" style="top: 0%;width: 40%; left: 103%;">Вписать нужно вручную, а потом выбрать из выпадающего списка. Обязательно вписать номер квартиры. Если после проверки адреса внизу будет указано, что дом на аутсорсинге - не обращаем внимания, а если указано, что дом обслуживается на линиях ТТК -  лучше продать ТТК. Так будет быстрее.</span>'
+        document.getElementById("input-group-types__BV_label_").innerHTML += '<span class="tooltiptext1" style="top: 25%;width: 60%;left: 103%;">В поле «Тип» всегда «Физ. Лицо».<br> Нажимаем галочку «Без паспортных данных».<br> ФИО указываем с большой буквы по одному слову, потом нажимаем «Поиск».<br> Если ничего не найдено - нажимаем «Новый контакт +».<br> А если нашелся какой-то контакт - либо выбираем его, либо просим у клиента доп номер или заводим заявку на другого человека.<br> В поле «Основной телефон» и «Дополнительные телефоны» контактный номер вписываем со второй цифры без пробелов и тире.<br> Поле «Дата рождения» заполняется обязательно через точку в формате: «дд.м.гггг».</span>'
+        document.getElementById("input-group-phone__BV_label_").innerHTML += '<span class="tooltiptext2" style="">В поле «Телефон для связи по заявке» вписываем основной номер для связи с клиентом.<br><br> Поле «Лицевой счет» не трогаем.<br><br> В поле «Вид операции» указываем «Новое подключение».<br><br> В поле «Тематика» указывается конфигурация ТП (пакет/моно шпд).<br><br> После выбора в «Тематике», в поле «Вид услуги» указываем услги, которые есть в тарифе, который мы продали.<br><br> В поле «Причина тематики» вставляем всегда «Абонент отказался от ответа»</span>'
+        document.getElementById("input-group-channel__BV_label_").innerHTML += '<span class="tooltiptext2" style="">Поля «Канал продаж» и «Агент» в агентских учетках заполнены автоматически, не трогаем.<br><br> Поле «Пакет» будет открыто для выбора,<br> если в «Тематике» мы выбрали «702 Подключение пакета», а поле «Тариф», если выбрали «701 Подключение моно услуги».<br><br> Поле «Услуги» мы не трогаем. В поле «Оборудование» указываем роутеры и тв-приставки, а также формат их приобретения (стоимость аренды/рассрочки (срок рассрочки)/выкупа).<br><br> Поле «Перешел с провайдера» не обязательно для заполнения.</span>'
+        
+    }
+    
   }
   catch(e){
     console.log(e)

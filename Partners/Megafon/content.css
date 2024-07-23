@@ -42,3 +42,70 @@
     top: -179px;
     background: rgb(0 142 237);
 }
+
+
+.check-address .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 24%;
+    left: 19%;
+    width: 22%;
+    background-color: rgb(51 51 51);
+
+}
+
+.check-address .tooltiptext1::after {
+      content: " ";
+      position: absolute;
+      top: 50%;
+      left: -3%; /* To the right of the tooltip */
+      margin-top: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent #45bd32 transparent transparent;
+}
+.check-address:hover .tooltiptext1 {
+    visibility: visible;
+}
+
+
+
+
+.tab-pane__input .tooltiptext2 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1000;
+    text-align: left;
+    padding: 6px;
+    
+    top: 24%;
+    left: 19%;
+    width: 22%;
+    background-color: rgb(51 51 51);
+
+}
+
+.tab-pane__input .tooltiptext2::after {
+      content: " ";
+      position: absolute;
+      top: 50%;
+      left: -3%; /* To the right of the tooltip */
+      margin-top: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent #45bd32 transparent transparent;
+}
+.tab-pane__input:hover .tooltiptext2 {
+    visibility: visible;
+}
+

@@ -77,28 +77,36 @@ function InStart(){
             document.getElementsByClassName("active")[0].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
         }
     }
+    try{
+        MyPartnersLog.onclick = function() { //мкр Северное Чертаново, д 3 к Б-261
+            console.log(document.querySelectorAll('[type="submit"]')[0])
+            if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
+                document.querySelectorAll('[placeholder="Ваш логин"]')[0].value = Akado_Login;
+                document.querySelectorAll('[placeholder="Пароль"]')[0].value = Akado_Password;
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[type="submit"]')[0])
-        if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
-            document.querySelectorAll('[placeholder="Ваш логин"]')[0].value = Akado_Login;
-            document.querySelectorAll('[placeholder="Пароль"]')[0].value = Akado_Password;
-
-            document.querySelectorAll('[placeholder="Ваш логин"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
-
-
-            document.querySelectorAll('[type="submit"]')[0].click();
-
-            document.querySelectorAll('[placeholder="Ваш логин"]')[0] = 'Логин';
-            document.querySelectorAll('[placeholder="Пароль"]')[0] = 'Пароль';
+                document.querySelectorAll('[placeholder="Ваш логин"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="Пароль"]')[0].dispatchEvent(event);
 
 
+                document.querySelectorAll('[type="submit"]')[0].click();
 
-            setTimeout(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+                document.querySelectorAll('[placeholder="Ваш логин"]')[0] = 'Логин';
+                document.querySelectorAll('[placeholder="Пароль"]')[0] = 'Пароль';
+
+
+
+                setTimeout(document.querySelectorAll('[type="submit"]')[0].click(), 500);
+            }
+
+        };
+    }
+    catch(e){
+        if (document.getElementsByTagName("label")[20].innerHTML.indexOf("tooltiptext1") < 0) {
+            document.getElementsByTagName("label")[20].innerHTML += '<span style="top: 65%; left: 31%;" class="tooltiptext1">Услуги, которые будут подключаться, нужно выбрать галочками. Далее выбрать тариф.</span>'
+            document.getElementsByTagName("label")[23].innerHTML += '<span style="top: 28%; left: 55%;" class="tooltiptext1">В полях «Дата планируемого подключения» и «Выберите временной интервал» указываем желаемые дату и время выезда монтажника.</span>'
+            document.getElementsByTagName("h3")[5].innerHTML += '<span style="top: 28%;left: 69%;" class="tooltiptext1">Указываем сам ТП и оборудование.<br>Пример: моно шпд 200мбит/с за 518р + роутер в аренду за 150р.</span>'
         }
-
-    };
+    }
 }
 
 

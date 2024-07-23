@@ -90,7 +90,7 @@ function InStart(){
 
     if (document.getElementById('id_password') != undefined) { 
         if (document.querySelectorAll('[for="id_password"]')[0].innerHTML.indexOf("MyPartnersLog") < 0) {
-            document.querySelectorAll('[for="id_password"]')[0].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Билайн РФ</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a><a id="MyPartnersLogMSK"><span id="MyPartnersTextMSK">Билайн МСК</span></a>'
+            document.querySelectorAll('[for="id_password"]')[0].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a><a id="MyPartnersLogMSK" style="display:none"><span id="MyPartnersTextMSK">Билайн МСК</span></a>'
         }
     }
     try{
@@ -118,7 +118,7 @@ function InStart(){
                     document.getElementById('id_workercode').dispatchEvent(event);
 
                     document.getElementsByClassName('button')[0].click()
-                }, 100)
+                }, 200)
             }
         };
         MyPartnersLogMSK.onclick = function() {
@@ -144,13 +144,25 @@ function InStart(){
                     document.getElementById('id_workercode').dispatchEvent(event);
 
                     document.getElementsByClassName('button')[0].click()
-                }, 100)
+                }, 200)
             }
         };
     }
     catch(e){
 
     }
+
+    try{
+        if (document.getElementsByClassName("mb-16")[0].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByClassName("mb-16")[0].innerText == 'Адрес абонента') {
+            document.getElementsByClassName("mb-16")[0].innerHTML += '<span class="tooltiptext1" style="top: 9%; width: 30%; left: 94%;"> Номер квартиры, подъезда и этажа обязательно нужно указать. В поле «Домофон» нужно вписать номер квартиры.</span>'
+            document.getElementsByClassName("mb-16")[2].innerHTML += '<span class="tooltiptext1" style="top: 45%; width: 30%; left: 56%;"> ФИО вписываем по одному слову без пробелов. Контактный и дополнительный номер указываем со второй цифры без пробелов и тире.<br>Пример: 9332660125.</span>'
+            
+        }
+    }
+    catch(e){
+
+    }
+    /*
     if (document.getElementsByClassName('ng-binding')[0].innerText.indexOf('Новая заявка') >= 0)  {
         if (document.getElementsByClassName('ng-binding')[1].innerText == '1000000000') {
             //console.log("IsMSK до проверок: ", IsMSK)
@@ -212,6 +224,7 @@ function InStart(){
             document.querySelectorAll('[type="submit"]')[i].style.display = 'inline-block'
         }
     }
+    */
 }
 
 

@@ -81,26 +81,42 @@ function InStart(){
             document.getElementsByClassName("col-md-12")[1].innerHTML += '<a id="MyPartnersLog"><span id="MyPartnersText">Вход</span><img id="MyPartnersImg" src="https://cdn.icon-icons.com/icons2/1520/PNG/512/chevronflat_106005.png"></a>'
         }
     }
+    try{
+        MyPartnersLog.onclick = function() {
+            console.log(document.querySelectorAll('[type="submit"]')[0])
+            if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
+                document.querySelectorAll('[placeholder="логин"]')[0].value = RTKMos_Login;
+                document.querySelectorAll('[placeholder="пароль"]')[0].value = RTKMos_Password;
 
-    MyPartnersLog.onclick = function() {
-        console.log(document.querySelectorAll('[type="submit"]')[0])
-        if (document.querySelectorAll('[type="submit"]')[0] != undefined) {
-            document.querySelectorAll('[placeholder="логин"]')[0].value = RTKMos_Login;
-            document.querySelectorAll('[placeholder="пароль"]')[0].value = RTKMos_Password;
-
-            document.querySelectorAll('[placeholder="логин"]')[0].dispatchEvent(event);
-            document.querySelectorAll('[placeholder="пароль"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="логин"]')[0].dispatchEvent(event);
+                document.querySelectorAll('[placeholder="пароль"]')[0].dispatchEvent(event);
 
 
-            document.querySelectorAll('[type="submit"]')[0].click();
-            setTimeout(function(){
-                document.querySelectorAll('[placeholder="логин"]')[0].value = 'Логин';
-                document.querySelectorAll('[placeholder="пароль"]')[0].value = 'Пароль';
-            }, 200);
+                document.querySelectorAll('[type="submit"]')[0].click();
+                setTimeout(function(){
+                    document.querySelectorAll('[placeholder="логин"]')[0].value = 'Логин';
+                    document.querySelectorAll('[placeholder="пароль"]')[0].value = 'Пароль';
+                }, 200);
 
-            
+                
+            }
+        };
+    }
+    catch(e){
+
+    }
+
+    if (window.location.href.indexOf("/create/") >= 0) {
+        if (document.getElementsByClassName("form-group")[3].innerHTML.indexOf("tooltiptext1") < 0) {
+            document.getElementsByTagName('label')[5].innerHTML += '<span class="tooltiptext1" style="top: 15%;">Поля №1, №2, №3, №4, №5 («Улица», «Дом (корпус, строение)», «Подъезд», «Этаж», «Квартира»)<br>Записываем без пробелов, тире и черточек. Все поля обязательные.</span>'
+            document.getElementsByTagName('label')[12].innerHTML += '<span class="tooltiptext1" style="">Поля №6 и №7 («Имя», «Отчество»)<br>В поле «Имя» нужно вписать фамилию (если клиент не отказался ее говорить) и имя (обязательно). Поле «Отчество» не обязательно заполнять.</span>'
+            document.getElementsByTagName('label')[14].innerHTML += '<span class="tooltiptext1" style="top: 20%;">Контактный номер записываем с третьей цифры без пробелов и тире.<br>Пример: 332660125.</span>'
+            document.getElementsByTagName('label')[16].innerHTML += '<span class="tooltiptext1" style="top: 48%;">Не трогаем.</span>'
+            document.getElementsByTagName('label')[17].innerHTML += '<span class="tooltiptext1" style="top: 59%;">Указываем конфигурацию ТП, условия ТП, период скидки и стоимость по скидке (при наличии), оборудование, стоимость его аренды/рассрочки (срок рассрочки)/выкупа и дополнительную информацию.<br>Пример: моно шпд "Технологии доступа 500. Апгрейд" за 550р + онт в аренду за 100р. кабель старый - возможно, нужно будет заменить.</span>'
         }
-    };
+
+        
+    }
 }
 
 

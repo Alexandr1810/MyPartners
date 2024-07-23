@@ -277,3 +277,26 @@ textarea{
     position: relative;
     top: 6px;
 }
+
+.expanded-box .tooltiptext1 {
+    visibility: hidden;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 0;
+    z-index: 1;
+    text-align: left;
+    padding: 6px;
+    
+    width: 29%;
+    background-color: rgb(101 106 111);
+
+    position: fixed;
+    top: 10%;
+    right: 1%;
+    font: 18px / 1 Roboto, arial, sans-serif
+
+}
+
+.expanded-box:hover .tooltiptext1 {
+    visibility: visible;
+}
