@@ -102,8 +102,6 @@ SendCode_a.onclick = function() {
         }
     })
     .then(tasks => {
-
-                          
         const SendKeyToChat = {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},

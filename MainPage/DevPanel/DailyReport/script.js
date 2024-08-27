@@ -1,5 +1,6 @@
 
 var today = new Date();
+
 var dd = Number(String(today.getDate()).padStart(2, '0'));
 var mm = Number(String(today.getMonth() + 1).padStart(2, '0'));
 var ddStr = String(today.getDate()).padStart(2, '0');
@@ -11,24 +12,27 @@ var UserId = '5668'
 var UserName = ''
 
 var UserDate = '2024-01-18'
+var LastUserDate = new Date('2024-01-17')
 
 var ItogSumm = 0
 var ItogKol = 0
 
 var SdelanaResponse = 0
 var PorcluchaetsyaResponse = 0
-var ZavedenaResponse = 0
 
 var SdelanaSum = 0
 var PorcluchaetsyaSum = 0
-var ZavedenaSum = 0
 
+var NedozvonyKol = 0
+var Pozvonit_TodayKol = 0
+var ArhiveKol = 0
+var Dorapotka_TodayKol = 0
 var SdelanaKol = 0
 var PorcluchaetsyaKol = 0
-var ZavedenaKol = 0
+var Yr_LitsaKol = 0
 var OtkazKol = 0
 
-var ProzentOtkaza = 0
+var ProzentKonvers = 0
 
 var Prodaza_TexPod = 0
 
@@ -44,27 +48,32 @@ window.addEventListener('load', function () {
     }
     document.getElementById("UserBut1").onclick = function(){
         document.getElementById("UserId").value = '5668';
-        document.getElementById("UserDate").value = ddStr+'-'+mmStr+'-'+yyyy
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
         reqestForm();
     }
     document.getElementById("UserBut2").onclick = function(){
         document.getElementById("UserId").value = '7020';
-        document.getElementById("UserDate").value = ddStr+'-'+mmStr+'-'+yyyy
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
         reqestForm();
     }
     document.getElementById("UserBut3").onclick = function(){
         document.getElementById("UserId").value = '7520';
-        document.getElementById("UserDate").value = ddStr+'-'+mmStr+'-'+yyyy 
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
         reqestForm();
     }
     document.getElementById("UserBut4").onclick = function(){
-        document.getElementById("UserId").value = '29666';
-        document.getElementById("UserDate").value = ddStr+'-'+mmStr+'-'+yyyy 
+        document.getElementById("UserId").value = '16788';
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
         reqestForm();
     }
     document.getElementById("UserBut5").onclick = function(){
         document.getElementById("UserId").value = '23656';
-        document.getElementById("UserDate").value = ddStr+'-'+mmStr+'-'+yyyy 
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
+        reqestForm();
+    }
+    document.getElementById("UserBut6").onclick = function(){
+        document.getElementById("UserId").value = '35130';
+        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
         reqestForm();
     }
     document.getElementById("SendFormInTG").onclick = function(){
@@ -85,7 +94,69 @@ window.addEventListener('load', function () {
 function reqestForm(){
 	UserId = document.getElementById('UserId').value
 	UserDate = document.getElementById('UserDate').value
-		
+	console.log(UserDate)
+	LastUserDate = new Date(UserDate)
+	console.log("LastUserDate temp: ", LastUserDate)
+	LastUserDate.setDate(LastUserDate.getDate() - 1);
+	console.log("LastUserDate: ", LastUserDate)
+
+	Last_ddStr = LastUserDate.getDate();
+	Last_mmStr = LastUserDate.getMonth() + 1;
+	Last_yyyy = LastUserDate.getFullYear();
+
+	console.log("Last_mmStr ИТОГ: ", Last_mmStr)
+
+	LastUserDate = Last_yyyy+'-'+Last_mmStr+'-'+Last_ddStr 
+	console.log("LastUserDate ИТОГ: ", LastUserDate)
+
+	/*
+	if (UserDate[0] != '0' && UserDate[1] != '1') {
+		LastUserDate = Number((UserDate[0] + UserDate[1])-1)+'-'+mmStr+'-'+yyyy 
+	}
+	else{
+		LastUserDate = Number((UserDate[0] + UserDate[1])-1)+'-'+mmStr+'-'+yyyy 
+	}
+	*/
+		const Nedozvony = {
+			method: 'POST',
+				headers: {
+				cookie: 'qmb=0.',
+				'Content-Type': 'application/json',
+				'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"UC_0SAOJL","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
+
+
+		const Pozvonit_Today = {
+			method: 'POST',
+			headers: {
+			   cookie: 'qmb=0.',
+			   'Content-Type': 'application/json',
+			   'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"2","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
+
+		const Arhive = {
+			method: 'POST',
+			headers: {
+			  cookie: 'qmb=0.',
+			  'Content-Type': 'application/json',
+			  'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"5","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
+
+		const Dorapotka_Today = {
+			method: 'POST',
+			headers: {
+			  cookie: 'qmb=0.',
+			  'Content-Type': 'application/json',
+			  'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"4","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
 
 		const Sdelana = {
 			method: 'POST',
@@ -94,18 +165,9 @@ function reqestForm(){
 				'Content-Type': 'application/json',
 				'User-Agent': 'insomnia/8.5.1'
 			},
-			body: '{"filter":{"STAGE_ID":"PREPAYMENT_INVOICE","ASSIGNED_BY_ID":"'+UserId+'",">OPPORTUNITY":"1",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+			body: '{"filter":{"STAGE_ID":"PREPAYMENT_INVOICE","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 
-		const Zavedena = {
-			method: 'POST',
-			headers: {
-			cookie: 'qmb=0.',
-				'Content-Type': 'application/json',
-				'User-Agent': 'insomnia/8.5.1'
-			},
-			body: '{"filter":{"STAGE_ID":"EXECUTING","ASSIGNED_BY_ID":"'+UserId+'",">OPPORTUNITY":"1",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
-		};
 
 		const Porcluchaetsya = {
 			method: 'POST',
@@ -114,7 +176,17 @@ function reqestForm(){
 			   'Content-Type': 'application/json',
 			   'User-Agent': 'insomnia/8.5.1'
 			},
-			body: '{"filter":{"STAGE_ID":"1","ASSIGNED_BY_ID":"'+UserId+'",">OPPORTUNITY":"1",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+			body: '{"filter":{"STAGE_ID":"1","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
+
+		const Yr_Litsa = {
+			method: 'POST',
+			headers: {
+			  cookie: 'qmb=0.',
+			  'Content-Type': 'application/json',
+			  'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"6","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 
 		const Otkaz = {
@@ -124,8 +196,9 @@ function reqestForm(){
 			  'Content-Type': 'application/json',
 			  'User-Agent': 'insomnia/8.5.1'
 			},
-			body: '{"filter":{"STAGE_ID":"LOSE","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+			body: '{"filter":{"STAGE_ID":"LOSE","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
+
 
 		const TriYslygi = {
 			method: 'POST',
@@ -134,7 +207,7 @@ function reqestForm(){
 				'Content-Type': 'application/json',
 				'User-Agent': 'insomnia/8.5.1'
 			},
-			body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00","UF_CRM_1669956599":[5562]},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+			body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00","UF_CRM_1669956599":[5562]},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 
 		const TriYslygi1 = {
@@ -144,7 +217,7 @@ function reqestForm(){
 				'Content-Type': 'application/json',
 				'User-Agent': 'insomnia/8.5.1'
 				},
-				body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00","UF_CRM_1669956599":[5564]},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+				body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00","UF_CRM_1669956599":[5564]},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 
 
@@ -155,7 +228,7 @@ function reqestForm(){
 			   'Content-Type': 'application/json',
 			   'User-Agent': 'insomnia/8.5.1'
 			},
-			body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+UserDate+'T00:00:00","<DATE_CREATE":"'+UserDate+'T23:59:00","UF_CRM_1694601072":"5584"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+			body: '{"filter":{"=STAGE_ID":["EXECUTING","1"],"ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00","UF_CRM_1613117583":"5738"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 		const Dorapotka = {
 			method: 'POST',
@@ -191,19 +264,39 @@ function reqestForm(){
 		  .then(response => {console.log(response); UserName = response.result[0].NAME + ' ' + response.result[0].LAST_NAME})
 		  .catch(err => console.error(err));
 
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Nedozvony)
+			.then(response => response.json())
+			.then(response => {console.log(response); NedozvonyKol = response.total;})
+			.catch(err => console.error(err));
+
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Pozvonit_Today)
+			.then(response => response.json())
+			.then(response => {console.log(response); Pozvonit_TodayKol = response.total;t})
+			.catch(err => console.error(err));
+
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Arhive)
+			.then(response => response.json())
+			.then(response => {console.log(response); ArhiveKol = response.total;})
+			.catch(err => console.error(err));
+
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Dorapotka_Today)
+			.then(response => response.json())
+			.then(response => {console.log(response); Dorapotka_TodayKol = response.total;})
+			.catch(err => console.error(err));
+
 		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Sdelana)
 			.then(response => response.json())
 			.then(response => {console.log(response); SdelanaKol = response.total; SdelanaResponse = response.result})
 			.catch(err => console.error(err));
 
-		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Zavedena)
-			.then(response => response.json())
-			.then(response => {console.log(response); ZavedenaKol = response.total; ZavedenaResponse = response.result})
-			.catch(err => console.error(err));
-
 		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Porcluchaetsya)
 			.then(response => response.json())
 			.then(response => {console.log(response); PorcluchaetsyaKol = response.total; PorcluchaetsyaResponse = response.result})
+			.catch(err => console.error(err));
+
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Yr_Litsa)
+			.then(response => response.json())
+			.then(response => {console.log(response); Yr_LitsaKol = response.total;})
 			.catch(err => console.error(err));
 
 		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Otkaz)
@@ -275,30 +368,25 @@ function reqestForm(){
 					SdelanaSum += Number(SdelanaResponse[i].OPPORTUNITY)
 				}
 			}
-			if (ZavedenaKol != 0) {
-				for (var i = 0; i < ZavedenaResponse.length; i++) {
-					ZavedenaSum += Number(ZavedenaResponse[i].OPPORTUNITY)
-				}
-			}
 			if (PorcluchaetsyaKol != 0) {
 				for (var i = 0; i < PorcluchaetsyaResponse.length; i++) {
 					PorcluchaetsyaSum += Number(PorcluchaetsyaResponse[i].OPPORTUNITY)
 				}
 			}
 
-			ItogSumm = SdelanaSum + ZavedenaSum + PorcluchaetsyaSum
+			ItogSumm = SdelanaSum + PorcluchaetsyaSum
 
-			ItogKol = SdelanaKol + ZavedenaKol + PorcluchaetsyaKol
+			ItogKol = SdelanaKol + PorcluchaetsyaKol
 
-			ProzentOtkaza = parseInt(100/(SdelanaKol + ZavedenaKol + PorcluchaetsyaKol + OtkazKol) * OtkazKol)
+			ProzentKonvers = parseInt(((SdelanaKol + PorcluchaetsyaKol + Yr_LitsaKol)/(NedozvonyKol + Pozvonit_TodayKol + ArhiveKol + Dorapotka_TodayKol + SdelanaKol + PorcluchaetsyaKol + Yr_LitsaKol + OtkazKol)) * 100)
 			Othet = `
 				Отчет `+ UserName +` за `+ UserDate +`
 				1) Сдал `+ ItogKol +` заявок: на `+ ItogSumm.toLocaleString() +` Руб.
+				Лидов за день: `+ (NedozvonyKol + Pozvonit_TodayKol + ArhiveKol + Dorapotka_TodayKol + SdelanaKol + PorcluchaetsyaKol + Yr_LitsaKol + OtkazKol) +`
 				Сделана: `+ SdelanaKol +`
 				Подключается: `+ PorcluchaetsyaKol +`
-				Заведена: `+ ZavedenaKol +`
-				Отказ: `+ OtkazKol +`
-				2) Процент отказа: `+ ProzentOtkaza +`%
+				Отменённые лиды: `+ OtkazKol +`
+				2) Конверсия: `+ ProzentKonvers +`%
 				3) Продажа с тех пода: `+ Prodaza_TexPod +`
 				Продажа 3 услуг и более: `+ TriYslygiKol +`
 				Просрочки: `+ Prosrochki +`
@@ -312,24 +400,27 @@ function reqestForm(){
 
 			console.log("SdelanaResponse: ", SdelanaResponse)
 			console.log("PorcluchaetsyaResponse: ", PorcluchaetsyaResponse)
-			console.log("ZavedenaResponse: ", ZavedenaResponse)
 
 			console.log('')
 
 			console.log("SdelanaSum: ", SdelanaSum)
-			console.log("ZavedenaSum: ", ZavedenaSum)
 			console.log("PorcluchaetsyaSum: ", PorcluchaetsyaSum)
 
 			console.log('')
 
+
+			console.log("NedozvonyKol: ", NedozvonyKol)
+			console.log("Pozvonit_TodayKol: ", Pozvonit_TodayKol)
+			console.log("ArhiveKol: ", ArhiveKol)
+			console.log("Dorapotka_TodayKol: ", Dorapotka_TodayKol)
 			console.log("SdelanaKol: ", SdelanaKol)
-			console.log("ZavedenaKol: ", ZavedenaKol)
 			console.log("PorcluchaetsyaKol: ", PorcluchaetsyaKol)
+			console.log("Yr_LitsaKol: ", Yr_LitsaKol)
 			console.log("OtkazKol: ", OtkazKol)
 
 			console.log('')
 
-			console.log("ProzentOtkaza: ", ProzentOtkaza)
+			console.log("ProzentKonvers: ", ProzentKonvers)
 
 			console.log('')
 
@@ -361,18 +452,15 @@ function reqestForm(){
 
 			SdelanaResponse = 0
 			PorcluchaetsyaResponse = 0
-			ZavedenaResponse = 0
 
 			SdelanaSum = 0
 			PorcluchaetsyaSum = 0
-			ZavedenaSum = 0
 
 			SdelanaKol = 0
 			PorcluchaetsyaKol = 0
-			ZavedenaKol = 0
 			OtkazKol = 0
 
-			ProzentOtkaza = 0
+			ProzentKonvers = 0
 
 			Prodaza_TexPod = 0
 

@@ -166,6 +166,11 @@ $('.dropdown27').click(function () {
         $(this).toggleClass('active28');
         $(this).find('.dropdown-menu').slideToggle(300);
     });
+$('.dropdown28').click(function () {
+        $(this).attr('tabindex', 1).focus();
+        $(this).toggleClass('active29');
+        $(this).find('.dropdown-menu').slideToggle(300);
+    });
 window.addEventListener('load', function () { 
     document.getElementById("DevPanel").onclick = function(){
         if (prompt('Ваш код доступа: ', '') == PerToken) {

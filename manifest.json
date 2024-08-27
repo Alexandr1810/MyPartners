@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "MyPartners",
     "description": "Помощь в работе с партнерскими программами различных Провайдеров",
-    "version": "22.3",
+    "version": "23.6",
     "author": "Rothaarige_Bestia",
     "action": {
         "default_popup": "Popup/LogIn/LogIn.html",
@@ -280,6 +280,16 @@
                 "https://id.dom.ru/*"
             ],
             "css": ["Partners/RMS_Login/content.css"]
+        },
+        {
+            "js": [
+                "Partners/Telegram/content.js"
+            ],
+
+            "matches": [
+                "https://web.telegram.org/*"
+            ],
+            "css": ["Partners/Telegram/content.css"]
         }
 
     ],

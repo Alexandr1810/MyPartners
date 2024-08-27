@@ -2065,7 +2065,7 @@ span.choose {
 .dropdown27:hover {
     box-shadow: 0 0 4px rgb(204, 204, 204)
 }
-.dropdown25:active {
+.dropdown27:active {
     background-color: #f8f8f8
 
 }
@@ -2102,6 +2102,78 @@ span.choose {
     list-style: none
 }
 .dropdown27 .dropdown-menu li:active {
+    background-color: #e2e2e2
+}
+
+/*Styling Selectbox*/
+.dropdown28 {
+    margin-top: 2%;
+    width: 90%;
+    display: inline-block;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgb(204, 204, 204);
+    transition: all .5s ease;
+    position: relative;
+    font-size: 24px;
+    color: #474747;
+    height: 50px;
+    text-align: left;
+}
+.dropdown28 .select {
+
+    cursor: pointer;
+    display: block;
+    padding: 10px
+}
+.dropdown28 .select > i {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    float: right;
+    line-height: 20px
+}
+.dropdown28:hover {
+    box-shadow: 0 0 4px rgb(204, 204, 204)
+}
+.dropdown28:active {
+    background-color: #f8f8f8
+
+}
+.dropdown28.active:hover,
+.dropdown28.active {
+    box-shadow: 0 0 4px rgb(204, 204, 204);
+    border-radius: 2px 2px 0 0;
+    background-color: #f8f8f8
+}
+.dropdown28.active .select > i {
+    transform: rotate(-90deg)
+}
+.dropdown28 .dropdown-menu {
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    left: 0;
+    margin-top: 1px;
+    box-shadow: 0 1px 2px rgb(204, 204, 204);
+    border-radius: 0 1px 2px 2px;
+    overflow: hidden;
+    display: none;
+    overflow-y: auto;
+    z-index: 9
+}
+.dropdown28 .dropdown-menu li {
+    border-bottom: 2px solid #d4d1d1;
+    padding: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer
+} 
+.dropdown28 .dropdown-menu {
+    padding: 0;
+    list-style: none
+}
+.dropdown28 .dropdown-menu li:active {
     background-color: #e2e2e2
 }
 .active{
@@ -2190,6 +2262,9 @@ span.choose {
 }
 .active28 {
     margin-bottom: 138%;
+}
+.active29 {
+    margin-bottom: 20%;
 }
 #screenIMG{
 	margin-top: 15px;
