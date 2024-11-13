@@ -425,13 +425,13 @@ function FindFio(){
             inputPatronymic = document.querySelector('[placeholder="Отчество"]');
             inputPhone = document.querySelector('[placeholder="Телефон"]')
 
-            inputSername.value = JSON.fio.split(" ")[0]
+            inputSername.value = json.fio.split(" ")[0]
             inputSername.dispatchEvent(event);
-            inputName.value = JSON.fio.split(" ")[1]
+            inputName.value = json.fio.split(" ")[1]
             inputName.dispatchEvent(event);
-            inputPatronymic.value = JSON.fio.split(" ")[2]
+            inputPatronymic.value = json.fio.split(" ")[2]
             inputPatronymic.dispatchEvent(event);
-            ReplacedNum = replaseNumber(JSON.PhoneNumber)
+            ReplacedNum = replaseNumber(json.PhoneNumber)
             ReplacedNum = (ReplacedNum[0] === '7' || ReplacedNum[0] === '8') ? ReplacedNum.slice(1) : ReplacedNum
             inputPhone.value = '8' + ReplacedNum;
             inputPhone.dispatchEvent(event);

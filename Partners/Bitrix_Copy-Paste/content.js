@@ -1386,6 +1386,45 @@ function PasteData(){
         Oplata += Number(data.PristavkaCount )*465
         itogResponse += '"OPPORTUNITY": "'+Oplata+'",'
       }
+      if (data.privider == "MTS") {
+        if (data.AbName.length > 0) {
+          itogResponse += '"UF_CRM_1604651209": "'+data.AbName+'",'
+        }
+        if (data.Adress != "") {
+          itogResponse += '"UF_CRM_1605781310": "'+data.Adress+'",'
+        }
+        if (data.ServicesCount != 0) {
+          switch(data.ServicesCount) {
+            case 1:
+              itogResponse += '"UF_CRM_1669956599": [5558],'
+              break;
+            case 3:
+              itogResponse += '"UF_CRM_1669956599": [5562],'
+              break;
+            default:
+              console.log("Кол-Во услуг не прокинулось");
+          }
+          
+        }
+        if (data.Comment != "") {
+          itogResponse += '"UF_CRM_1604651288": "'+data.Comment+'",'
+        }
+        if (data.id != "") {
+          itogResponse += '"UF_CRM_1633762539": "'+data.id+'",'
+        }
+        //Ставим провайдера
+        itogResponse += '"UF_CRM_1604415602": "'+78+'",'
+        
+
+        // ---- Подсчет оплаты ---- //
+        if (data.FullAP != "") {
+          //Inet, !CTV, !KTV
+          Oplata += Number(data.FullAP)*2 
+        }
+        Oplata += Number(data.ObodudkaCount)*350
+
+        itogResponse += '"OPPORTUNITY": "'+Oplata+'",'
+      }
     }
     itogResponse = itogResponse.slice(0, -1) + '}'
     itogResponse = itogResponse.replace(/\n/g, ' ');
