@@ -75,9 +75,10 @@ button:hover {
     background: #ffffff;
     border: 2px solid #4bb2ee;
 }
-.UserButton{
+.UserButton {
     height: 27px;
     margin-left: 10px;
+    margin-top: 1%;
     width: auto;
     font-size: 17px;
     color: #474747;
@@ -104,6 +105,10 @@ button:hover {
 #ContentBlock{
 	border-bottom: 2px solid gray;
     font-size: 18px;
+}
+.ButtBlock{
+    margin-top: 1%;
+    margin-left: -0.7%;
 }
 @media screen and (max-width: 1800px) {
   header h1 {

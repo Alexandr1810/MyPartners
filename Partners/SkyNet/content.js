@@ -118,6 +118,7 @@ function InStart(){
     catch(e){
 
     }
+    /*
     try{
         if (document.getElementsByTagName("span")[11].innerHTML.indexOf("tooltiptext1") < 0 && document.getElementsByTagName("div")[5].innerText == 'Создание заявки') {
             document.getElementsByTagName("span")[11].innerHTML += '<span class="tooltiptext1" style="">Мы самостоятельно ставим СЗ в график подключений. Нужно согласовать с клиентом.</span>'
@@ -131,6 +132,7 @@ function InStart(){
     catch(e){
 
     }
+    */
 }
 
 

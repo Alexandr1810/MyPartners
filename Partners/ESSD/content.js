@@ -86,6 +86,7 @@ window.addEventListener('load', function () {
                       }
                       // handle error
                     }).then(tasks => {
+                        console.log(tasks)
                         if (LoginKey == tasks.LoginCode) {
                             if (localStorage.getItem("ESSDlog") != 'undefined'){
                                 OtherMRF_login = localStorage.getItem("ESSDlog");

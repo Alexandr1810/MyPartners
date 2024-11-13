@@ -6,9 +6,6 @@ var AbName = null;
 var AbPatronymic = null;
 
 
-
-
-
 window.addEventListener('load', function () { 
     console.log("Начинаю шаманить")
     chrome.runtime.sendMessage({

@@ -4,6 +4,7 @@
 	<title>Ежедневный отчет</title>
 	<link rel="icon" href="img/Otchet.svg" type="image/x-icon">
 	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<style type="text/css">
 		
@@ -23,7 +24,10 @@
 		</div>
 		<div id="ContentBlock">
 			<h3>Ваш ID:</h3>
-			<input type="text" id="UserId" placeholder="7020"><button id="UserBut1" class="UserButton">Александр</button><button id="UserBut2" class="UserButton">Павел</button><button id="UserBut3" class="UserButton">Марк</button><button id="UserBut4" class="UserButton">Данил</button><button id="UserBut5" class="UserButton">Влад</button><button id="UserBut6" class="UserButton">Юля</button>
+			<input type="text" id="UserId" placeholder="7020">
+			<div class="ButtBlock">
+				<button data-id="16788" class="UserButton">Далиил П.</button>
+			</div>
 			<h3>Дата отчета в формате ГГГГ-ММ-ДД:</h3>
 			<input type="text" id="UserDate" placeholder="2024-01-18"><br><br>
 			<button id="SendForm">Сформировать</button><button id="SendFormInTG">Отправить</button><br><br>

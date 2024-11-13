@@ -330,13 +330,29 @@ function GetValues(SiteName){
 }
 
 
+let receivedData = null;
 
-//console.log(Bitrix, Tarifnik, ESSD);
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "sendData1") {
+  	if (message.data != null) {
+    	receivedData = message.data; // Сохраняем данные
+    }
+  }
+  console.log("Принял данные:", receivedData)
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "requestData") {
+    sendResponse({ data: receivedData }); // Отправляем сохраненные данные+
+    console.log("Отправил данные:", receivedData)
+  }
+});
+
 
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse){
-		//console.log(request, sender, sendResponse);
+
 		if (request.user == "popup") {
 			SetValues(request.Bitrix, request.Tarifnik, request.ESSD, request.RMS, request.Orion, request.novotelecom, request.MTS, request.SibSeti, request.TTK, request.RTKYr, request.RTKMos, request.Megafon, request.DomRyOld, request.Telecoma, request.Axioma, request.Almatel, request.SkyNet, request.Akado, request.Maryno, request.YfaNet, request.Izet, request.Etelekom, request.RMS_Login, request.MTS_Login, request.Beeline);
 			console.log(request.ESSDlogin);

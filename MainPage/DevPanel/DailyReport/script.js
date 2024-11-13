@@ -1,4 +1,3 @@
-
 var today = new Date();
 
 var dd = Number(String(today.getDate()).padStart(2, '0'));
@@ -19,9 +18,11 @@ var ItogKol = 0
 
 var SdelanaResponse = 0
 var PorcluchaetsyaResponse = 0
+var TekMesyatsResponse = 0
 
 var SdelanaSum = 0
 var PorcluchaetsyaSum = 0
+var TekMesyatsSum = 0
 
 var NedozvonyKol = 0
 var Pozvonit_TodayKol = 0
@@ -40,44 +41,55 @@ var TriYslygiKol = 0
 
 var Prosrochki = 0
 
+var TekMesyatsKol = 0
+
 var Othet = 0
 
+var MenagerList = [{M_Name: "Александр Ш.", M_Id: "5668"}]
+
+const options = {
+  method: 'POST',
+  headers: {
+    cookie: 'qmb=0.',
+    'Content-Type': 'application/json',
+    'User-Agent': 'insomnia/10.1.1'
+  },
+  body: '{"filter":{"ACTIVE":true,"UF_DEPARTMENT":10}}'
+};
+
+fetch('https://speedinet.bitrix24.ru/rest/25550/92yb1mz0rkt5e2cl/user.get', options)
+  .then(response => response.json())
+  .then(response => {
+  	console.log(response)
+  	for (var i = 0; i < response.total; i++) {
+  		Agent_Name = response.result[i].NAME + ' ' + response.result[i].LAST_NAME[0] + '.'
+  		Agent_Id = response.result[i].ID
+
+  		document.getElementsByClassName("ButtBlock")[0].innerHTML += '<button data-id="'+Agent_Id+'" class="UserButton">'+Agent_Name+'</button>'
+  	}
+  })
+  .catch(err => console.error(err));
+
 window.addEventListener('load', function () { 
-    document.getElementById("SendForm").onclick = function(){
-        reqestForm();
-    }
-    document.getElementById("UserBut1").onclick = function(){
-        document.getElementById("UserId").value = '5668';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
-    document.getElementById("UserBut2").onclick = function(){
-        document.getElementById("UserId").value = '7020';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
-    document.getElementById("UserBut3").onclick = function(){
-        document.getElementById("UserId").value = '7520';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
-    document.getElementById("UserBut4").onclick = function(){
-        document.getElementById("UserId").value = '16788';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
-    document.getElementById("UserBut5").onclick = function(){
-        document.getElementById("UserId").value = '23656';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
-    document.getElementById("UserBut6").onclick = function(){
-        document.getElementById("UserId").value = '35130';
-        document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
-        reqestForm();
-    }
+
+		// Получаем родительский элемент, содержащий кнопки
+		const buttonContainer = document.querySelector('.ButtBlock');
+
+		// Назначаем обработчик события для контейнера
+		buttonContainer.addEventListener('click', function(event) {
+		    // Проверяем, что клик был на кнопке с классом UserButton
+		    if (event.target.classList.contains('UserButton')) {
+		        // Получаем id кнопки
+		        const userId = event.target.getAttribute('data-id');
+		        // Вызываем нужную функцию с параметром userId
+		        UserButt(userId);
+		    }
+		});
+
+
+
     document.getElementById("SendFormInTG").onclick = function(){
-        const options = {
+    const options = {
 		  method: 'POST',
 		  headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
 		  body: '{"chat_id":"-4113347602","text":"/ask@chatsgpts_bot '+Othet+'"}'
@@ -90,6 +102,14 @@ window.addEventListener('load', function () {
 	}
 });
 
+
+
+
+function UserButt(M_Id){
+	document.getElementById("UserId").value = M_Id;
+	document.getElementById("UserDate").value = yyyy+'-'+mmStr+'-'+ddStr
+  reqestForm();
+}
 
 function reqestForm(){
 	UserId = document.getElementById('UserId').value
@@ -168,6 +188,15 @@ function reqestForm(){
 			body: '{"filter":{"STAGE_ID":"PREPAYMENT_INVOICE","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
 		};
 
+		const TekMesyats = {
+			method: 'POST',
+				headers: {
+				cookie: 'qmb=0.',
+				'Content-Type': 'application/json',
+				'User-Agent': 'insomnia/8.5.1'
+			},
+			body: '{"filter":{"STAGE_ID":"C6:UC_Y6OU39","ASSIGNED_BY_ID":"'+UserId+'",">DATE_CREATE":"'+LastUserDate+'T20:00:00","<DATE_CREATE":"'+UserDate+'T20:00:00"},"select":["ASSIGNED_BY_ID","OPPORTUNITY"],"start":"0"}'
+		};
 
 		const Porcluchaetsya = {
 			method: 'POST',
@@ -293,6 +322,11 @@ function reqestForm(){
 			.then(response => response.json())
 			.then(response => {console.log(response); PorcluchaetsyaKol = response.total; PorcluchaetsyaResponse = response.result})
 			.catch(err => console.error(err));
+			
+		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', TekMesyats)
+			.then(response => response.json())
+			.then(response => {console.log(response); TekMesyatsKol += response.total;  TekMesyatsResponse = response.result;})
+			.catch(err => console.error(err));
 
 		fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', Yr_Litsa)
 			.then(response => response.json())
@@ -356,7 +390,6 @@ function reqestForm(){
 					  .catch(err => console.error(err));
 					
 				}
-				//Prosrochki += response.total; 
 				setTimeout(ConsoleResponse, 1500)
 			})
 			.catch(err => console.error(err));
@@ -373,12 +406,17 @@ function reqestForm(){
 					PorcluchaetsyaSum += Number(PorcluchaetsyaResponse[i].OPPORTUNITY)
 				}
 			}
+			if (TekMesyatsKol != 0) {
+				for (var i = 0; i < TekMesyatsResponse.length; i++) {
+					TekMesyatsSum += Number(TekMesyatsResponse[i].OPPORTUNITY)
+				}
+			}
 
-			ItogSumm = SdelanaSum + PorcluchaetsyaSum
+			ItogSumm = SdelanaSum + PorcluchaetsyaSum + TekMesyatsSum
 
-			ItogKol = SdelanaKol + PorcluchaetsyaKol
+			ItogKol = SdelanaKol + PorcluchaetsyaKol + TekMesyatsKol
 
-			ProzentKonvers = parseInt(((SdelanaKol + PorcluchaetsyaKol + Yr_LitsaKol)/(NedozvonyKol + Pozvonit_TodayKol + ArhiveKol + Dorapotka_TodayKol + SdelanaKol + PorcluchaetsyaKol + Yr_LitsaKol + OtkazKol)) * 100)
+			ProzentKonvers = parseInt(((SdelanaKol + PorcluchaetsyaKol + TekMesyatsKol + Yr_LitsaKol)/(NedozvonyKol + Pozvonit_TodayKol + ArhiveKol + Dorapotka_TodayKol + SdelanaKol + PorcluchaetsyaKol + TekMesyatsKol + Yr_LitsaKol + OtkazKol)) * 100)
 			Othet = `
 				Отчет `+ UserName +` за `+ UserDate +`
 				1) Сдал `+ ItogKol +` заявок: на `+ ItogSumm.toLocaleString() +` Руб.

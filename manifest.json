@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "MyPartners",
     "description": "Помощь в работе с партнерскими программами различных Провайдеров",
-    "version": "23.6",
+    "version": "25.2",
     "author": "Rothaarige_Bestia",
     "action": {
         "default_popup": "Popup/LogIn/LogIn.html",
@@ -36,6 +36,28 @@
                 "https://*.bitrix24.ru/*"
             ],
             "css": ["Partners/BitrixApi/content.css"]
+
+        },
+        {
+            "js": [
+                "Partners/BitrixNew/content.js"
+            ],
+
+            "matches": [
+                "https://*.bitrix24.ru/*"
+            ],
+            "css": ["Partners/BitrixNew/content.css"]
+
+        },
+        {
+            "js": [
+                "Partners/Bitrix_Copy-Paste/content.js"
+            ],
+
+            "matches": [
+                "https://*.bitrix24.ru/*"
+            ],
+            "css": ["Partners/Bitrix_Copy-Paste/content.css"]
 
         },
         {

@@ -1,6 +1,146 @@
-/*
-body{
-  background: url('https://catherineasquithgallery.com/uploads/posts/2021-03/1614546667_50-p-snezhinki-na-belom-fone-56.jpg') !important;
-  background-size: 100% !important; 
+.modal {
+  display: none; /* Скрыто по умолчанию */
+  position: fixed; /* Оставаться на месте */
+  z-index: 1; /* Сидеть на вершине */
+  left: 0;
+  top: 0;
+  width: 100%; /* Полная ширина */
+  height: 100%; /* Полная высота */
+  overflow: auto; /* Включите прокрутку, если это необходимо */
+  background-color: rgb(0,0,0); /* Цвет запасной вариант */
+  background-color: rgba(0,0,0,0.4); /* Черный с непрозрачностью */
 }
-*/
+
+/* Модальное содержание/коробка */
+.modal-contentr {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    width: 27%;
+    border-radius: 10px;
+}
+
+/* Кнопка закрытия */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ModalHead{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.ModalHead h1{
+    font-size: 200%;
+}
+
+.ModalBody{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.ModalBody button {
+    overflow: visible;
+    margin: 1%;
+    font-size: 122%;
+    font-weight: 500;
+    background: #f5f8fb;
+    height: 50px;
+    width: 150px;
+    border: 0px solid black;
+    border-radius: 10px;
+}
+.ModalBody button:hover {
+    background: #f0f7ff;
+}
+
+.ModalFooter{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.ModalFooter button{
+    width: 100px;
+    font-size: 52%;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    padding: 5px;
+}
+.ModalFooter button:hover {
+    background: #ebebeb;
+}
+
+.FullModal_input{
+    width: 83px;
+    margin-top: 10px;
+    height: 31px;
+    padding: 10px 0px 10px 10px;
+    font-size: 200%;
+    border: none;
+    border-bottom: 2px solid black;
+}
+.FullModal_input_text{
+    font-size: 200%;
+    margin-top: 5px;
+}
+.ModalSelect{
+    width: 50%;
+    margin-top: 1%;
+    border: none;
+    border-bottom: 2px solid #2a3032;
+    padding: 5px;
+    text-align: center;
+    font-size: 150%;
+}
+
+.MiniInputText{
+    font-size: 117%;
+    font-weight: 700;
+}
+
+.MiniInput{
+    width: 48px;
+    font-size: 100%;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid black;
+}
+.Yslygi_block{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.Yslygi_block_plus{
+  font-size: 180%;
+  display: block;
+  margin-bottom: -8px;
+}
+
+
+.FillComment{
+  cursor: pointer;
+  border-bottom: 1px dashed #2a3032;
+}
+.FillComment:hover{
+  border-bottom: 1px dashed #b5b5b5;
+}
+
+.CopyText{
+  font-weight: 500;
+}
+#TP_Name{
+  width: 90% !important;
+}

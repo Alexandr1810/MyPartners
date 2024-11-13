@@ -10,60 +10,24 @@ var Novosibirsk_SS_Names = null;
 var Krasnoyarsk_SS_Names = null;
 var Barnaul_SS_Names = null;
 
-var Tarifs = [
-"Интернет на все 100_450р",
-"Интернет на все 300_550р",
-"Интернет на все 500_650р",
-"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 580р.",
-"Кино онлайн_(100 Мбит/с_+ IPTV)_ 650р.",
-"Всё включено (500 Mb/s+IPTV)_750р.",
-"Интернет на все 100_600р",
-"Интернет на все 300_700р",
-"Интернет на все 500_800р",
-"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 530р.",
-"Кино онлайн_(100 Мбит/с_+ IPTV)_ 650р.",
-"Всё включено (500 Mb/s+IPTV)_750р.",
-"Интернет на все 100_450р",
-"Интернет на все 300_550р",
-"Интернет на все 500_650р",
-"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 530р.",
-"Кино онлайн_(100 Мбит/с_+ IPTV)_ 650р.",
-"Всё включено (500 Mb/s+IPTV)_850р.",
-"Интернет на все 100_450р",
-"Интернет на все 300_650р",
-"Интернет на все 500_750р",
-"Оптимальный (100 Mb/s+IPTV)_500р.",
-"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 530р.",
-"Смотри онлайн_(100 Мбит/с_+ IPTV)_ 690р.",
-"Кино онлайн_(100 Мбит/с_+ IPTV)_ 650р.",
-"Всё включено (500 Mb/s+IPTV)_750р.",
-"Интернет на все 100_400р",
-"Интернет на все 300_550р",
-"Интернет на все 500_650р",
-"Смотри онлайн_(100 Mb/s+IPTV)_ 690р.",
-"Мир кино (100 Mb/s+IPTV)_750р.",
-"Всё включено (500 Mb/s+IPTV)_950р.",
-"Интернет_15 Мбит/с_2200р",
-"Интернет_20 Мбит/с_2650р",
-"Интернет_40 Мбит/с_3650р",
-"Интернет, ТВ, Умный домофон (15 Мбит/с+IPTV+УД)_2550р",
-"Интернет, ТВ, Телефония (15 Мбит/с+IPTV+ ГТС)_2600р",
-"Пакет 3400 (ШПД_30 Мбит 3100 руб + IPTV 300 руб)",
-"Интернет, ТВ, Умный домофон (15 Мбит/с+КТВ+УД)_2500р",
-"Интернет, ТВ, Телефония (15 Мбит/с+КТВ+ ГТС)_2550р",
-"Интернет и ТВ (30 Мбит/с+КТВ)_3400р",
-"Интернет_15 Мбит/с_1400р Игарка",
-"Интернет_20 Мбит/с_1700р Игарка",
-"Интернет_50 Мбит/с_2100р Игарка",
-"Интернет и ТВ (20 Мбит/с+IPTV)_2100р Игарка",
-"Смотри онлайн (50 Мбит/с+IPTV)_2400р Игарка"]
+var SpeedInet_yz_Name;
+var Norilsk_yz_Name;
+
+var Tarifs = []
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 var randomIndex1 = getRandomInt(100)
 console.log(randomIndex1)
-
+if (randomIndex1 < 50) {
+  SpeedInet_yz_Name = "Ерисов";
+  Norilsk_yz_Name = "Ерисова";
+}
+else{
+  SpeedInet_yz_Name = "Полховский";
+  Norilsk_yz_Name = "Брюзгин";
+}
 //Agent_names = [["SPEEDINET "],["Брюзгин Дмитрий Владимирович "],["Горбань Карина Васильевна "],["Волохов Никита Романович ","Кулешов Павел Константинович "],["Пешкова Юлия Ивановна "],["Касьяненко Кристина Денисовна "]]
 /*
 var RegionNames = {
@@ -192,6 +156,7 @@ window.addEventListener('load', function () {
                       RegionNames.Novokyznetsk = tasks.RegionNames_Novokyznetsk
                       RegionNames.Novosibirsk = tasks.RegionNames_Novosibirsk
                       RegionNames.Barnaul = tasks.RegionNames_Barnaul
+                      Tarifs = tasks.SS_Tarifs
 
                       console.log(RegionNames)
 
@@ -280,7 +245,7 @@ function GetPasswords(){
 
           <div class="СitiesInfo" id="NorComСities">
               <h1 class="СitiesInfoHeader">Города</h1>
-              <h3 class="СitiesInfoBody">Норильск,<br> Кайеркан,<br> Игарка,<br> Талнах</h3>
+              <h3 class="СitiesInfoBody">Норильск,<br> Кайеркан,<br> Игарка,<br> Талнах,<br> Учетка: `+Norilsk_yz_Name+` </h3>
           </div>
           <div class="СitiesInfo" id="KemerovoСities">
               <h1 class="СitiesInfoHeader">Города</h1>
@@ -292,7 +257,7 @@ function GetPasswords(){
           </div>
           <div class="СitiesInfo" id="SpeedInetСities">
               <h1 class="СitiesInfoHeader">Города</h1>
-              <h3 class="СitiesInfoBody">Все регионы кроме Норильска!</h3>
+              <h3 class="СitiesInfoBody">Все регионы кроме Норильска!<br> Учетка: `+SpeedInet_yz_Name+` </h3>
           </div>
           <div class="СitiesInfo" id="NovosibirskСities">
               <h1 class="СitiesInfoHeader">Города</h1>
@@ -311,45 +276,6 @@ function GetPasswords(){
     }
   }
 
-
-  //-------------------------------Выбор учетки при входе в партнерку-----------//
-  /*
-    fetch('https://'+passToken+'.mockapi.io/MyPartners/EISSD_Pass/1', {
-      method: 'GET',
-      headers: {'content-type':'application/json'},
-    }).then(res => {
-      if (res.ok) {
-          return res.json();
-      }
-      // handle error
-    }).then(tasks => {
-      
-      AccauntPasswords.NorComLog = tasks.NorComLog
-      AccauntPasswords.NorComPass  = tasks.NorComPass
-      AccauntPasswords.KemerovoLog = tasks.KemerovoLog
-      AccauntPasswords.KemerovoPass = tasks.KemerovoPass
-      AccauntPasswords.NovokyznezkLog = tasks.NovokyznezkLog
-      AccauntPasswords.NovokyznezkPass  = tasks.NovokyznezkPass
-      AccauntPasswords.SpeedInetLog = tasks.SpeedInetLog
-      AccauntPasswords.SpeedInetPass = tasks.SpeedInetPass
-      AccauntPasswords.NovosibirskLog = tasks.NovosibirskLog
-      AccauntPasswords.NovosibirskPass = tasks.NovosibirskPass
-      AccauntPasswords.KrasnoyarskLog = tasks.KrasnoyarskLog
-      AccauntPasswords.KrasnoyarskPass = tasks.KrasnoyarskPass
-      AccauntPasswords.BarnaulLog = tasks.BarnaulLog
-      AccauntPasswords.BarnaulPass = tasks.BarnaulPass
-      AccauntPasswords.BarnaulLog = tasks.BarnaulLog
-      AccauntPasswords.BarnaulPass = tasks.BarnaulPass
-      AccauntPasswords.NovokyznezkLog1 = tasks.NovokyznezkLog1
-      AccauntPasswords.NovokyznezkPass1 = tasks.NovokyznezkPass1
-      AccauntPasswords.BarnaulLog1 = tasks.BarnaulLog1
-      AccauntPasswords.BarnaulPass1 = tasks.BarnaulPass1
-      AccauntPasswords.NorComLog1 = tasks.NorComLog1
-      AccauntPasswords.NorComPass1 = tasks.NorComPass1
-    }).catch(error => {
-      // handle error
-    })
-    */
 
 
     try { 
@@ -703,25 +629,27 @@ function InStart(){
     AllFields.push.apply(AllFields, Pakets);
     var indicator = false;
     //console.log("============================================================================================")
-    for (var i = 0; i < AllFields.length; i++) {
-      for (var j = 0; j < Tarifs.length; j++) {
-        //console.log("Сравниваю", AllFields[i].innerText, " и ", Tarifs[j]+' ')
-        if (AllFields[i].innerText.indexOf(Tarifs[j]) >= 0) {
-          //console.log("Сошлось!")
-          indicator = true;
+    if (Tarifs.length > 0) {
+      for (var i = 0; i < AllFields.length; i++) {
+        for (var j = 0; j < Tarifs.length; j++) {
+          //console.log("Сравниваю", AllFields[i].innerText, " и ", Tarifs[j]+' ')
+          if (AllFields[i].innerText.indexOf(Tarifs[j]) >= 0) {
+            //console.log("Сошлось!")
+            indicator = true;
+          }
         }
-      }
-      if (indicator) {
-        indicator = false
-        AllFields[i].style.display = 'block'
-      }
-      else {
+        if (indicator) {
+          indicator = false
+          AllFields[i].style.display = 'block'
+        }
+        else {
+          
+          //console.log("Удалить", AllFields[i].innerText)
+          
+          AllFields[i].style.display = 'none'
+        }
         
-        //console.log("Удалить", AllFields[i].innerText)
-        
-        AllFields[i].style.display = 'none'
       }
-      
     }
     //console.log("============================================================================================")
   }
@@ -750,31 +678,3 @@ function InStart(){
 
 
   
-
-
-/*
-    if (document.getElementById("input-location-house").value.indexOf(" г Норильск,") >= 0 && СurrentAccount == "SPEEDINET " || document.getElementById("input-location-house").value.indexOf(" г Игарка,") >= 0 && СurrentAccount == "SPEEDINET ") {
-      
-    }
-    else if(document.getElementById("input-location-house").value.indexOf(" г Норильск,") < 0 && СurrentAccount == "SPEEDINET " || document.getElementById("input-location-house").value.indexOf(" г Игарка,") < 0 && СurrentAccount == "SPEEDINET "){
-      document.getElementsByClassName("btn-primary")[2].style.display = "block";
-      if (document.getElementById("RegionError") != null) {
-        document.getElementById("RegionError").style.display = "none";
-      }
-    }
-    
-    if (document.getElementById("input-location-house").value.indexOf(" г Норильск,") < 0 && document.getElementsByClassName("d-md-block")[0].innerText == "Брюзгин Дмитрий Владимирович " || document.getElementById("input-location-house").value.indexOf(" г Игарка,") < 0 && СurrentAccount == "Брюзгин Дмитрий Владимирович ") {
-      document.getElementsByClassName("btn-primary")[2].style.display = "none";
-      if (document.getElementsByClassName("btn-group")[1].innerText.indexOf("Выберите другую учетку") < 0) {
-        document.getElementsByClassName("btn-group")[1].innerHTML += '<a id="RegionError" href="#/auth/logout">Выберите другую учетку</a>'
-      }
-    }
-
-    
-    else if(document.getElementById("input-location-house").value.indexOf(" г Норильск,") >= 0 && СurrentAccount == "Брюзгин Дмитрий Владимирович " || document.getElementById("input-location-house").value.indexOf(" г Игарка,") >= 0 && СurrentAccount == "Брюзгин Дмитрий Владимирович "){
-      document.getElementsByClassName("btn-primary")[2].style.display = "block";
-      if (document.getElementById("RegionError") != null) {
-        document.getElementById("RegionError").style.display = "none";
-      }
-    }
-*/

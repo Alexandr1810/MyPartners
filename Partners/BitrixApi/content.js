@@ -32,15 +32,26 @@ var NewsMonobrendsIsklychenia = ['R_B']
 var WhiteList;
 var RemoveDisable_FromBery = true;
 var currentdate = new Date();
+var HideWorkImg;
+var StartEventIsOn = false
+var StopEventIsOn = false
+
+var UserIsAgent = true;
+
+var cool_version = "25.1"
+
+//Индикаторы
 var SearchNedozvons_IsTrue = false;
 var IsListen = false;
 var BeryDealIsTrue = false;
 var Hide_NewDeals = false;
+var ReplacePagetitle = false;
 
 var CurrentHour = currentdate.getHours();
 var CurrentMinutes = currentdate.getMinutes();
 var ApiHour;
 var ApiMinutes;
+var NewsCount = 0;
 
 var Deal_id_FromCallCard;
 var repeatedRequests = [];
@@ -51,7 +62,7 @@ var DealId_To_Send = '';
 var CallRemove_Button_isHide = false;
 var CallRemove_Button_obj;
 
-var currentUnix = Math.round(new Date().getTime()/1000.0);
+var currentUnix = Math.round(new Date().getTime()/1000.0)
 var AgentInList = false;
 
 //Матрицы для сбора инфы про новым, работе и недозвонам для удаления Дубликатов
@@ -62,6 +73,7 @@ var New_Deals_For_Choice = [];
 // Списки для выбора заявки из новых
   //Вспомогательные
 var ButtonOn;
+var ReservButtonOn;
 var AllNews_ForBery = []
 var NedovonList_For_Bery = []
 var ExpensiveTrafik = ['domru-site', 'domrusob', 'seodomru', 'domru-site-nomer', 'domru.site2']
@@ -104,6 +116,27 @@ var BeryButtState = "R_B"
     Я искуплю вину чистым кодом. 
     Аминь. 
 */
+//Оповевещение об обновлении!
+if (localStorage.getItem("IsYved") == null || localStorage.getItem("IsYved") != cool_version) {
+  localStorage.setItem("IsYved", false);
+}
+if (localStorage.getItem("IsYved") == 'false') {
+  const options = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+    body: '{"chat_id":"1395354115","text":"Расширение обновилось до версии '+cool_version+' у Агента '+document.getElementById("user-block").innerText+'"}'
+  };
+
+  fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', options)
+    .then(response => response.json())
+    .then(response => {
+      console.log("Увед отправил")
+      localStorage.setItem("IsYved", cool_version);
+    })
+    .catch(err => console.error(err));
+}
+
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
@@ -128,7 +161,7 @@ var SimvolsArr = ['f','d','rt','f','g','h','j','t','-','k','f','m','&','df','=',
 var randomStr = SimvolsArr[randomIndex1] + SimvolsArr[randomIndex2] + SimvolsArr[randomIndex3] + randomInt1 + SimvolsArr[randomIndex4] + SimvolsArr[randomIndex5] + SimvolsArr[randomIndex6] + randomInt2 + SimvolsArr[randomIndex7] + SimvolsArr[randomIndex8] + randomInt3 + SimvolsArr[randomIndex9] + SimvolsArr[randomIndex10] + SimvolsArr[randomIndex11]
 var Apidd = null;
 
-
+UserCkeck()
 
 
 function GetAllDeals1(){
@@ -150,7 +183,7 @@ function GetAllDeals1(){
       .then(response => {
         AllDealsLenght = response.total
         console.log(AllDealsLenght)
-        console.log(document.getElementById("user-name").innerText, "111")
+        console.log(document.getElementById("user-block").innerText, "111")
         
         GetAllDeals2()
         
@@ -242,7 +275,7 @@ function GetAllDeals4(){
         console.log("AllOPPORTUNITY in GetAllDeals4", AllOPPORTUNITY)
         AllDealsArrInLastMonth = AllOPPORTUNITY;
         console.log("AllDealsArrInLastMonth: ", AllDealsArrInLastMonth)
-        console.log(document.getElementById("user-name").innerText)
+        console.log(document.getElementById("user-block").innerText)
         
       });
 }
@@ -538,7 +571,6 @@ function Calculation_Of_Payment_From_CurrentMonth(AllUsers, userID, StageId){
             Price1[0].innerHTML += '<span class="crm-kanban-total-price-total2">'+'≈'+Math.round(CurrentMounth).toLocaleString()+' руб.'+'</span>';
           }
           else{
-
             document.getElementsByClassName('crm-kanban-total-price2')[0].innerText = '≈'+Math.round(CurrentMounth).toLocaleString()+' руб.';;
 
           }
@@ -811,10 +843,12 @@ window.addEventListener('load', function () {
                         ApiToken = request.Token;
                         Apidd = tasks.LoginDate
                         ButtonOn = tasks.ButtonOn;
+                        ReservButtonOn = tasks.ReservButtonOn;
                         ButtonOn = true;
                         ApiHour = tasks.DublicateLastTime_H;
                         ApiMinutes = tasks.DublicateLastTime_M;
                         Hide_NewDeals = tasks.Hide_NewDeals;
+                        HideWorkImg = tasks.HideWorkImg;
 
                         console.log("CurrentHour:", CurrentHour)
                         console.log("CurrentMinutes:", CurrentMinutes)
@@ -863,13 +897,13 @@ window.addEventListener('load', function () {
                         }
                         console.log("PasswordToken: ", PasswordToken)
                         if (document.getElementById("user-name").innerText == "Александр Шатохин") {
-                            document.getElementById("user-name").innerText = "Чертова Рыжая Бестия";
+                            document.getElementById("user-name").innerText = "Александр Шатохин";
                             document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 700; background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
                         }
 
                         if (document.getElementById("user-name").innerText == "Павел Обухов") {
                             document.getElementById("user-name").innerText = "Павел Андреевич";
-                            //document.getElementById("user-name").setAttribute('style', 'background: linear-gradient(90deg, #ff4b4b 13%, #ff0000 43%, #f88e38 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
+                            document.getElementById("user-name").setAttribute('style', 'font-size: 15px; font-weight: 600; color: white; -webkit-background-clip: text;');
                         }
                         Queue_Start_Script()
                         setTimeout(GetAllDeals1, 5000);
@@ -878,7 +912,7 @@ window.addEventListener('load', function () {
                         setInterval(ReplaceAlerts, 100);
                         
                         for (var k = 0; k < tasks.Pidorasi.length; k++) {
-                          if (document.getElementById("user-name").innerText == tasks.Pidorasi[k]) {
+                          if (document.getElementById("user-block").innerText == tasks.Pidorasi[k]) {
                             setInterval(CutPidorasov, 80); 
                           }
                         }
@@ -1309,7 +1343,9 @@ function UpdateCard(){
       var EventCollage = iDocument.getElementsByClassName("crm-entity-stream-planned-label")[0];
       const iframeHead = iDocument.querySelectorAll("head")[0];
       //console.log(ButtonCollage);
-
+      if (Agent_In_WhiteList && iDocument.querySelectorAll('input[name="SOURCE_ID"').length > 0) {
+        iDocument.querySelectorAll('input[name="SOURCE_ID"')[0].type = ''
+      }
       for (let index = 0; index < iDocument.getElementsByClassName("crm-timeline__text-block").length; index++) {
         if (iDocument.getElementsByClassName("crm-timeline__text-block")[index].innerText.indexOf('Приложение: Облачная АТС билайн бизнес:') >= 0) {
             console.log(iDocument.getElementsByClassName("crm-timeline__text-block")[index].innerText)
@@ -1412,7 +1448,7 @@ function UpdateCard(){
             });
 
     }
-
+    /*
     if (ButtonCollage.innerHTML.indexOf("Скопировать") < 0) {
       iframeHead.innerHTML += "<style>#CopyButton{border-bottom:1px dashed #2067b0;margin-left:10px}#CopyButton:hover{border-bottom:1px dashed #eef2f4; cursor: pointer;}#CloseRevision{color: white !important; font-weight: 600 !important; border-bottom: 1px dashed #ffffff; margin-left: 10px;}#CloseRevision:hover{border-bottom:1px dashed #9dcf00; cursor: pointer;}.crm-widget-employee-name{font-weight: 500;}</style>"
       ButtonCollage.innerHTML += '<a id="CopyButton">Скопировать</a><a style="margin-left: 10px;color: white;background-color: rgb(63, 205, 74);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlert">Успешно скопированно!</a><a style="margin-left: 10px;color: white;background-color: rgb(205 63 63);padding: 3px;border-radius: 9px;font-weight: 600;display: none;" id="newAlertError">Ошибка при Копировании!</a><a style="float: right; vertical-align: middle; border: 1px solid #eaeaea; border-radius: 10px; cursor: pointer;" id="CodyIcon"><img src="https://www.kody.su/favicon.ico" style="vertical-align: middle; height: 17px; border: medium none; padding: 4px;"></a><div class="Cody"></div>';
@@ -1530,7 +1566,7 @@ function UpdateCard(){
             //editButton.click();
         });
     }
-    
+    */
   } catch (e) {
     //console.log("Нет открытой карты");
     //console.log(e);
@@ -1545,8 +1581,20 @@ function AddAlertError(){
 }
 
 function SetNames(){ //основное тело программы
+  SetStartEvents()
+  //Подготовка невидимой ссылки для беру и резервной кнопки
+  if (document.getElementById("pagetitle").innerText == 'Сделки' && !ReplacePagetitle){
+    console.log("Подготовка невидимой ссылки для беру")
+    ReplacePagetitle = true;
+    document.getElementById("pagetitle").innerHTML = '<a id="BeryHref" href="#" style="color:white; cursor: pointer;">Cделки</a>'
+    console.log("Подготовка невидимой ссылки для беру завершена")
+
+    
+  }
+  
+
   try{
-    if (document.getElementsByClassName("im-phone-call-btn-tube").length > 0) {
+    if (document.getElementsByClassName("im-phone-call-btn-tube").length > 0 && !Agent_In_WhiteList) {
       console.log("Нашел кнопку")
       if (CallRemove_Button_obj != document.getElementsByClassName("im-phone-call-btn-tube")[0]) {
         CallRemove_Button_isHide = false;
@@ -1565,7 +1613,7 @@ function SetNames(){ //основное тело программы
       }
     }
     else{
-      console.log("Не нашел кнопку")
+      //console.log("Не нашел кнопку или агент в белом списке")
     }
   }
   catch(e){
@@ -1602,12 +1650,12 @@ function SetNames(){ //основное тело программы
 
   Agent_In_WhiteList = false; 
   for (var i = 0; i < WhiteList.length; i++) {
-    if (document.getElementById("user-name").innerText == WhiteList[i]) {
+    if (document.getElementById("user-block").innerText == WhiteList[i]) {
       Agent_In_WhiteList = true;
     }
   }
   if (Agent_In_WhiteList && ButtonOn) {
-    console.log("Агент в белом списке")
+    //console.log("Агент в белом списке")
   }
   else if(!Agent_In_WhiteList && document.getElementsByClassName("main-kanban-column-title-info")[0].innerText.indexOf('Новая') >= 0 && ButtonOn && Hide_NewDeals){
     try{
@@ -1622,7 +1670,14 @@ function SetNames(){ //основное тело программы
     document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<div id="MoreDealsAlert" style="display: none;">Слишком много новых обращений, срочно возьми заявку!</div><button id="BeryButt" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >Взять заявку</h1></button>'
     document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<button id="BeryButt_InQueue" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >Выйти из очереди</h1></button>'
     document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<button id="BeryButt_OutQueue" disabled class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 style="" class="BeryButtText" >В очередь</h1></button>'
-
+    if (ReservButtonOn) {
+      document.getElementsByClassName("ui-toolbar-title-item-box")[0].innerHTML += '<button id="BeryButt_Reserv" class="ui-btn ui-btn-light-border ui-btn-themes" style="margin-left: 10px;width: auto;"><h1 class="BeryButtText" >БЕРУ!</h1></button>'
+      document.getElementById("BeryButt_Reserv").addEventListener("click", e => {
+        ReservBery()
+      });
+    }
+    
+    
     document.getElementById("BeryButt").addEventListener("click", e => {
       Bery_OnClick()
     });
@@ -1679,25 +1734,25 @@ function SetNames(){ //основное тело программы
 
 
   if(randomIndex1 > 0 && randomIndex1 <= 10){
-    if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ") {
+    if (document.getElementById("user-block").innerText == "Александр Шатохин" || document.getElementById("user-block").innerText == "Павел Обухов" || document.getElementById("user-block").innerText == "Павел Андреевич"|| document.getElementById("user-block").innerText == "Павел Андреевич" || document.getElementById("user-block").innerText =="Александр Шатохин" || document.getElementById("user-block").innerText =="Марк Плющ") {
       document.getElementsByClassName("logo-text")[0].innerText='Прокладка'
     }
   }
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Юлия Рыжова" || document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" ) {
+  if (document.getElementById("user-block").innerText == "Александр Шатохин" || document.getElementById("user-block").innerText == "Юлия Рыжова" || document.getElementById("user-block").innerText =="Александр Шатохин" ) {
     document.getElementsByClassName("logo-text")[0].innerText='ShpeetInet'
   }
 
   
   try{
     for (var i = 0; i <= Columns.length; i++) {
-      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Чертова Рыжая Бестия") {
+      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-block").innerText == "Александр Шатохин") {
         Columns[i].innerHTML = "Мусорка"
       }
-      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Павел Андреевич") {
+      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-block").innerText == "Павел Андреевич") {
         Columns[i].innerHTML = "Мусорка"
       }
 
-      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-name").innerText == "Марк Плющ") {
+      if (Columns[i].innerHTML == "Недозвоны" && document.getElementById("user-block").innerText == "Марк Плющ") {
         Columns[i].innerHTML = "Мусорка"
       }
     }
@@ -1732,11 +1787,11 @@ function SetNames(){ //основное тело программы
                 .then(response => {
                   console.log("NoWork_Agents: ", response)
                   for (var i = 0; i < response.length; i++) {
-                    if (document.getElementById("user-block").innerText == "Чертова Рыжая Бестия") {
-                      document.getElementById("user-block").innerText = "Александр Шатохин"
+                    if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                      document.getElementById("user-name").innerText = "Александр Шатохин"
                     }
-                    if (document.getElementById("user-block").innerText == "Павел Андреевич") {
-                      document.getElementById("user-block").innerText = "Павел Обухов"
+                    if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                      document.getElementById("user-name").innerText = "Павел Обухов"
                     }
                     console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
                     if (response[i].user == document.getElementById("user-block").innerText) {
@@ -1809,10 +1864,10 @@ function SetNames(){ //основное тело программы
         
         
     }
-    else if (Columns[0].innerHTML == "Новая" ){
+    else if (Columns[0].innerHTML == "Новая" && HideWorkImg == false){
         //console.log("Найдена завка ", i)
 
-        if (document.getElementById("user-block").innerText == "Павел Андреевич" || document.getElementById("user-block").innerText == "Марк Плющ" || document.getElementById("user-block").innerText == "Чертова Рыжая Бестия" || document.getElementById("user-block").innerText == "Владислав Супрун") {
+        if (document.getElementById("user-block").innerText == "Павел Андреевич" || document.getElementById("user-block").innerText == "Марк Плющ" || document.getElementById("user-block").innerText == "Александр Шатохин" || document.getElementById("user-block").innerText == "Владислав Супрун") {
           //console.log(NewCards[i].getElementsByClassName('crm-kanban-item-aside'))
           if(NewCards[i].getElementsByClassName('crm-kanban-item-aside')[0].innerHTML.indexOf('WorkIMG') < 0){
             NewCards[i].getElementsByClassName('crm-kanban-item-aside')[0].innerHTML += '<span id="'+NewCards[i].getElementsByClassName("crm-kanban-item-title")[0].href.split('/', 10)[6]+'" data-type="im" class="WorkIMG" style="border-radius: 5px; background-size: 17px 16px; cursor:pointer; font-weight: 600;color: white;font-size: 12px;border: 2px solid white;padding-right: 4px;padding-left: 4px;padding-top: 0px;height: 18px;width: 11px;">W</span>'
@@ -1832,11 +1887,11 @@ function SetNames(){ //основное тело программы
                 .then(response => {
                   console.log("NoWork_Agents: ", response)
                   for (var i = 0; i < response.length; i++) {
-                    if (document.getElementById("user-block").innerText == "Чертова Рыжая Бестия") {
-                      document.getElementById("user-block").innerText = "Александр Шатохин"
+                    if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                      document.getElementById("user-name").innerText = "Александр Шатохин"
                     }
-                    if (document.getElementById("user-block").innerText == "Павел Андреевич") {
-                      document.getElementById("user-block").innerText = "Павел Обухов"
+                    if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                      document.getElementById("user-name").innerText = "Павел Обухов"
                     }
                     console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
                     if (response[i].user == document.getElementById("user-block").innerText) {
@@ -1885,7 +1940,7 @@ function SetNames(){ //основное тело программы
                   }
                 })
                 .catch(err => console.error(err));
-              const options = {
+              const SendToWork_For_WorkImg = {
                 method: 'POST',
                 headers: {
                 cookie: 'qmb=0.',
@@ -1895,27 +1950,41 @@ function SetNames(){ //основное тело программы
                 body: '{"id":"'+this.id+'","fields":{"STAGE_ID":"PREPARATION"}}'
                 };
 
-                fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', options)
+                const SendInfo_To_Bot = {
+                  method: 'POST',
+                  headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+                  body: '{"chat_id":"-4248241774","text":"Я перевел сделку: '+this.id+' в работу Агенту: '+document.getElementById("user-block").innerText+' через Кнопку Беру"}'
+                };
+
+                fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', SendInfo_To_Bot)
                   .then(response => response.json())
                   .then(response => {
-                    console.log(response);
-                        const SetOtvetstnenniy1 = {
-                          method: 'POST',
-                          headers: {
-                            cookie: 'qmb=0.',
-                            'Content-Type': 'application/json',
-                            'User-Agent': 'insomnia/8.6.1'
-                          },
-                          body: '{"id":"'+this.id+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
-                        };
 
-                        fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy1)
-                          .then(response => response.json())
-                          .then(response => {
-                            console.log(response)
-                            window.location.href = "/crm/deal/details/"+this.id+"/";
-                          })
-                          .catch(err => console.error(err));
+                  fetch('https://speedinet.bitrix24.ru/rest/26/48qmdec3obtu7b6w/crm.deal.update', SendToWork_For_WorkImg)
+                    .then(response => response.json())
+                    .then(response => {
+                      console.log(response);
+                          const SetOtvetstnenniy1 = {
+                            method: 'POST',
+                            headers: {
+                              cookie: 'qmb=0.',
+                              'Content-Type': 'application/json',
+                              'User-Agent': 'insomnia/8.6.1'
+                            },
+                            body: '{"id":"'+this.id+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+                          };
+
+                          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy1)
+                            .then(response => response.json())
+                            .then(response => {
+                              console.log(response)
+                              //window.location.href = "/crm/deal/details/"+this.id+"/";
+                              document.getElementById("BeryHref").href = "/crm/deal/details/"+this.id+"/";
+                              document.getElementById("BeryHref").click()
+                            })
+                            .catch(err => console.error(err));
+                    })
+                    .catch(err => console.error(err));
                   })
                   .catch(err => console.error(err));
             });
@@ -1952,7 +2021,6 @@ function SetNames(){ //основное тело программы
      
               NewCards[i].style.display = "block";
               NewCards[i].getElementsByClassName("crm-kanban-item")[0].setAttribute('style', '--crm-kanban-item-color: rgb(164 0 240 / 70%);');
-            
           }
         }
       }
@@ -1985,7 +2053,6 @@ function SetNames(){ //основное тело программы
 
   }
   try{
-    
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.gis, 'SpeedInet');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Pakt, 'Пакт');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SpeedNet, 'Speed-Net');
@@ -2019,8 +2086,6 @@ function SetNames(){ //основное тело программы
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.Etel2, 'E-Телеком');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.YfaNet, 'Уфа-Нет');
       document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML = document.getElementsByClassName('im-phone-call-title-text')[0].innerHTML.replace(Anal_Phone_Reshifrator.SkyNet, 'SkyNet');
-
-
   }
   catch(e){
     //console.log('e', e)
@@ -2028,140 +2093,6 @@ function SetNames(){ //основное тело программы
   
   for (var i = 0; i <= (AllCards.length-1); i++){
     getNumberFromCard(AllCards[i])
-    //console.log("Промежуточний срез по массиву: ");
-    /*
-    if (AllCards[i].innerHTML.indexOf("Билайн АТС") >= 0){
-      for (var j = 0; j < AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value').length; j++){
-        if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.indexOf("Билайн АТС") >= 0) {
-          //AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '')
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.gis) {
-            //console.log("Входящий SpeedInet");
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий SpeedInet";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.SpeedNet) {
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Speed-net";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Pakt) {
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Пакт";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.PerSet) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Первые Сети";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu3) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu4) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu5) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu6) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.DomRu7) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ДомРу";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.SibSet) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий СибСети";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.EG1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Электронный Город";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.EG2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Электронный Город";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Axioma) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Аксиома";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Orion1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Орион";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Orion2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Орион";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.NorCom1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий НорКом";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.NorCom2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий НорКом";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Telecoma1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Телекома";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Telecoma2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Телекома";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.TwoCom) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий 2КОМ";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Izet) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий АйЗет";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.CheTel) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Череповец Телеком";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.NowgorodTel) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Новгород Телеком";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.YarKom) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий ЯрКом";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.YfaNet) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий УфаНет";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Centra) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Центра";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Etel1) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Е-Телеком";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.Etel2) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий Е-Телеком";
-          }
-          if (AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML.replace('Билайн АТС ', '') == Anal_Phone_Reshifrator.SkyNet) {
-
-            AllCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[j].innerHTML = "Входящий SkyNet";
-          }
-
-        }
-      }
-      //NewCards[i].getElementsByClassName('crm-kanban-item-fields-item-value')[0]
-    }
-    */
   }
   
   //console.log("Отправляю в функцию: ", AllNumbers)
@@ -2171,7 +2102,7 @@ function SetNames(){ //основное тело программы
   AllFirlds.length=0
   
 
-  if (document.getElementById("user-name").innerText != "Михаил Ерисов" || document.getElementById("user-name").innerText != "Дмитрий Полховский") {
+  if (document.getElementById("user-block").innerText != "Михаил Ерисов" || document.getElementById("user-block").innerText != "Дмитрий Полховский") {
     for (var i = 0; i <= (names.length-1); i++) { //Смена имени
       //Новый Код
       
@@ -2208,7 +2139,7 @@ function SetNames(){ //основное тело программы
           if (names[i].innerHTML == "Антон Чепиков") {
             names[i].setAttribute('style', 'font-weight: 700; background: #b200c8; -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          if (names[i].innerHTML == "Никита Соседов") {
+          if (names[i].innerHTML == "Владислав Супрун") {
             names[i].setAttribute('style', 'font-weight:700; background: linear-gradient(90deg, #c700ff 13%, #4300ff 67%, #7c00ff 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
           if (names[i].innerHTML == "Никита Верещагин") {
@@ -2217,9 +2148,9 @@ function SetNames(){ //основное тело программы
           if (names[i].innerHTML == "Вячеслав Шаляев") {
             names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #00c2d4 22%, #FF69B4 62%, #00c2d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
-          if (names[i].innerHTML == "Владислав Супрун") {
+          /*if (names[i].innerHTML == "Владислав Супрун") {
             names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #fb3c9b 31%, #f1489d 38%, #FF69B4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-          }
+          } */
           if (names[i].innerHTML == "Павел Обухов") {
             names[i].setAttribute('style', 'animation: background 4s infinite alternate; font-weight: 700; background: linear-gradient(90deg, #3374b7 13%, #004893 67%, #3374b7 81%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
           }
@@ -2280,115 +2211,13 @@ function FoundDublicate(elements, numbers){
           }
         }
       }
-      /*else{
-        
-        if (AllFirlds[i].innerHTML.indexOf('dublicate')>=0) {
-          console.log("Фейковый Дубль", AllFirlds[i])
-          AllFirlds[i].innerHTML = AllFirlds[i].innerHTML.replace('dublicate','')
-        }
-      }*/
+      
     }
     
   }
 
 
 }
-/*
-function SetName(){
-      var IsReset = false;
-      var ResetId = null
-      var OldName = document.getElementById("OriginalName").value;
-      var NewName = document.getElementById("NewName").value;
-      if (OldName != '' && NewName != '') {
-        fetch('https://'+PasswordToken+'.mockapi.io/MyPartners/Kanban_Names', {
-          method: 'GET',
-          headers: {'content-type':'application/json'},
-        }).then(res => {
-          if (res.ok) {
-              return res.json();
-          }
-          // handle error
-        }).then(tasks => {
-          console.log("OldName: ", OldName)
-          console.log("NewName: ", NewName)
-          console.log("tasks: ", tasks)
-          for (var i = 0; i < tasks.length; i++) {
-            if (tasks[i].OldName == OldName) {
-              IsReset = true
-              ResetId = tasks[i].id
-            }
-
-          }
-          if (IsReset) {
-            console.log("Изменить текущее")
-
-            ResetName(ResetId, OldName, NewName)
-            document.getElementById("ResetAlert").style.display = "block";
-            setTimeout(function(){
-              document.getElementById("ResetAlert").style.display = "none";
-            }, 2000);
-          }
-          else {
-            console.log("Дабавить новое")
-            CreateName(OldName, NewName)
-            document.getElementById("CreateAlert").style.display = "block";
-            setTimeout(function(){
-              document.getElementById("CreateAlert").style.display = "none";
-            }, 2000);
-          }
-        }).catch(error => {
-          document.getElementById("ErrorAlert").style.display = "block";
-          setTimeout(function(){
-            document.getElementById("ErrorAlert").style.display = "none";
-          }, 2000);
-        })
-      }
-      else{
-        document.getElementById("NullAlert").style.display = "block";
-          setTimeout(function(){
-            document.getElementById("NullAlert").style.display = "none";
-          }, 2000);
-      }
-    }
-    function ResetName(id, old, newN){
-      fetch('https://'+ PasswordToken +'.mockapi.io/MyPartners/Kanban_Names/'+id, {
-        method: 'PUT', // or PATCH
-        headers: {'content-type':'application/json'},
-        body: JSON.stringify({OldName: old, NewName: newN})
-      }).then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        // handle error
-      }).then(task => {
-        console.log(task)
-      }).catch(error => {
-        // handle error
-      })
-    }
-    function CreateName(old, newN){
-      const newTask = {
-        OldName: old,
-        NewName: newN,
-      };
-
-      fetch('https://'+ PasswordToken +'.mockapi.io/MyPartners/Kanban_Names/', {
-        method: 'POST',
-        headers: {'content-type':'application/json'},
-        // Send your data in the request body as JSON
-        body: JSON.stringify(newTask)
-      }).then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        // handle error
-      }).then(task => {
-        // do something with the new task
-      }).catch(error => {
-        // handle error
-      })
-    }
-*/
 function AddListener_In_Head(){
   try{
     document.getElementById('RestartNedozvonsDiv').addEventListener('click', function (e) {
@@ -2506,7 +2335,7 @@ function CutPidorasovTime(){
 
 function ReplaceAlerts(){
   DealAlerts = document.getElementsByClassName("ui-notification-manager-browser-balloon");
-  if (document.getElementById("user-name").innerText == "Александр Шатохин" || document.getElementById("user-name").innerText == "Павел Обухов" || document.getElementById("user-name").innerText == "Павел Андреевич"|| document.getElementById("user-name").innerText == "Павел Андреевич" ||document.getElementById("user-name").innerText =="Чертова Рыжая Бестия" || document.getElementById("user-name").innerText =="Марк Плющ") {
+  
     for (var i = 0; i < DealAlerts.length; i++) {
       //console.log(DealAlerts[i].innerText) 
       //console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0)
@@ -2516,36 +2345,11 @@ function ReplaceAlerts(){
       //console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
       //console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0))
 
-      if (DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 || DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)) {
-        
-        
-      }
-      else{
-        //DealAlerts[i].parentNode.removeChild(DealAlerts[i]);
-        DealAlerts[i].style.display = "none";
-      }
+      DealAlerts[i].style.display = "none";
+      
     }
-  }
-  else{
-    for (var i = 0; i < DealAlerts.length; i++) {
-      console.log(DealAlerts[i].innerText) 
-      console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0)
-      console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0)
-      console.log(DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)
-      console.log(DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
-      console.log(DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0)
-      console.log(DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 && DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0 && DealAlerts[i].innerHTML.indexOf("Неотвеченый Звонок") >= 0))
-
-      if (DealAlerts[i].innerText.indexOf("У вас новая заявка Заявка") >= 0 && (DealAlerts[i].innerHTML.indexOf("Тест Сайтов") >= 0 || DealAlerts[i].innerHTML.indexOf("Дмитрий Полховский") >= 0)) {
-        
-        //DealAlerts[i].style.display = "none";
-        //DealAlerts[i].parentNode.removeChild(DealAlerts[i]);
-      }
-      else{
-        
-      }
-    }
-  }
+  
+  
 
 }
 
@@ -2666,6 +2470,11 @@ function Interviewing_New(){
     })
     .catch(err => console.error(err));
 }
+
+
+
+
+
 function Bery_InQueue_OnClick(){
   console.log("Жмак 1!")
   fetch('https://656de619bcc5618d3c242ec1.mockapi.io/Bitrix_Queue', {
@@ -2729,6 +2538,8 @@ function Bery_OutQueue_OnClick(){
 }
 
 function Queue_Start_Script(){
+
+
   const options = {
     method: 'POST',
     headers: {
@@ -2759,10 +2570,79 @@ function Queue_Start_Script(){
             for (var i = 0; i < Queue.length; i++) {
               if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
                 BeryButtState = "InQueue"
-                console.log("Меняем кнопку на  «Выйти из очереди»")
-                //  Запускаем в интервале 15сек Скрипт опроса новых
-                console.log("Запускаем в интервале 15сек Скрипт опроса новых")
-                startInterval()
+                const GetAgentList = {
+                  method: 'GET',
+                  headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+                };
+
+                OpenWorkFunc();
+
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+                  .then(response => response.json())
+                  .then(response => {
+                    console.log("NoWork_Agents: ", response)
+                    for (var i = 0; i < response.length; i++) {
+                      if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                        document.getElementById("user-name").innerText = "Александр Шатохин"
+                      }
+                      if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                        document.getElementById("user-name").innerText = "Павел Обухов"
+                      }
+                      console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-name").innerText)
+                      if (response[i].user == document.getElementById("user-name").innerText) {
+                        console.log("Совпалость")
+                        AgentInList = true;
+                        //Если агент есть в списке
+                        fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                          method: 'PUT', // or PATCH
+                          headers: {'content-type':'application/json'},
+                          body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+                        }).then(res => {
+                          if (res.ok) {
+                              return res.json();
+                          }
+                          // handle error
+                        }).then(task => {
+                          console.log("Изменил Unix: ", task)
+
+                        }).catch(error => {
+                          // handle error
+                        })
+                        break;
+                      }
+                    }
+                    if(!AgentInList){
+                      console.log("Агент не найден в списке, добавляю нового")
+                      const newTask = {
+                        "user": document.getElementById("user-block").innerText,
+                        "LastBeryClick": currentUnix,
+                        "Online": true,
+                        "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+                      };
+                      fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                        method: 'POST',
+                        headers: {'content-type':'application/json'},
+                        // Send your data in the request body as JSON
+                        body: JSON.stringify(newTask)
+                      }).then(res => {
+                        if (res.ok) {
+                          return res.json();
+                        }
+                          // handle error
+                      }).then(task => {
+                          // do something with the new task
+                      }).catch(error => {
+                          // handle error
+                      })
+                    }
+
+                    console.log("Меняем кнопку на  «Выйти из очереди»")
+                    //  Запускаем в интервале 15сек Скрипт опроса новых
+                    console.log("Запускаем в интервале 15сек Скрипт опроса новых")
+                    startInterval()
+
+                  })
+                  .catch(err => console.error(err));
 
               }
             }
@@ -2794,10 +2674,80 @@ function Queue_Start_Script(){
             for (var i = 0; i < Queue.length; i++) {
               if (Queue[i].AgentId == document.getElementById("user-block").innerText) {
                 BeryButtState = "InQueue"
-                console.log("Меняем кнопку на  «Выйти из очереди»")
-                //  Запускаем в интервале 15сек Скрипт опроса новых
-                console.log("Запускаем в интервале 15сек Скрипт опроса новых")
-                startInterval()
+
+                const GetAgentList = {
+                  method: 'GET',
+                  headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+                };
+
+                OpenWorkFunc();
+
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+                  .then(response => response.json())
+                  .then(response => {
+                    console.log("NoWork_Agents: ", response)
+                    for (var i = 0; i < response.length; i++) {
+                      if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                        document.getElementById("user-name").innerText = "Александр Шатохин"
+                      }
+                      if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                        document.getElementById("user-name").innerText = "Павел Обухов"
+                      }
+                      console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-name").innerText)
+                      if (response[i].user == document.getElementById("user-name").innerText) {
+                        console.log("Совпалость")
+                        AgentInList = true;
+                        //Если агент есть в списке
+                        fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                          method: 'PUT', // or PATCH
+                          headers: {'content-type':'application/json'},
+                          body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+                        }).then(res => {
+                          if (res.ok) {
+                              return res.json();
+                          }
+                          // handle error
+                        }).then(task => {
+                          console.log("Изменил Unix: ", task)
+
+                        }).catch(error => {
+                          // handle error
+                        })
+                        break;
+                      }
+                    }
+                    if(!AgentInList){
+                      console.log("Агент не найден в списке, добавляю нового")
+                      const newTask = {
+                        "user": document.getElementById("user-block").innerText,
+                        "LastBeryClick": currentUnix,
+                        "Online": true,
+                        "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+                      };
+                      fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                        method: 'POST',
+                        headers: {'content-type':'application/json'},
+                        // Send your data in the request body as JSON
+                        body: JSON.stringify(newTask)
+                      }).then(res => {
+                        if (res.ok) {
+                          return res.json();
+                        }
+                          // handle error
+                      }).then(task => {
+                          // do something with the new task
+                      }).catch(error => {
+                          // handle error
+                      })
+                    }
+
+                    console.log("Меняем кнопку на  «Выйти из очереди»")
+                    //  Запускаем в интервале 15сек Скрипт опроса новых
+                    console.log("Запускаем в интервале 15сек Скрипт опроса новых")
+                    startInterval()
+
+                  })
+                  .catch(err => console.error(err));
 
               }
             }
@@ -2817,100 +2767,168 @@ function sortByDate(a, b) {
   return new Date(a[0].DATE_CREATE) - new Date(b[0].DATE_CREATE);
 }
 
-
-
-function Bery_OnClick(){
-  console.log("Жмак 0!")
-  currentUnix = Math.round(new Date().getTime()/1000.0)
-  console.log(currentUnix)
-
-  const GetAgentList = {
-    method: 'GET',
-    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
-  };
-
-  fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
-    .then(response => response.json())
-    .then(response => {
-      console.log("NoWork_Agents: ", response)
-      for (var i = 0; i < response.length; i++) {
-        if (document.getElementById("user-block").innerText == "Чертова Рыжая Бестия") {
-          document.getElementById("user-block").innerText = "Александр Шатохин"
-        }
-        if (document.getElementById("user-block").innerText == "Павел Андреевич") {
-          document.getElementById("user-block").innerText = "Павел Обухов"
-        }
-        console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
-        if (response[i].user == document.getElementById("user-block").innerText) {
-          console.log("Совпалость")
-          AgentInList = true;
-          //Если агент есть в списке
-          fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
-            method: 'PUT', // or PATCH
-            headers: {'content-type':'application/json'},
-            body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
-          }).then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-            // handle error
-          }).then(task => {
-            console.log("Изменил Unix: ", task)
-          }).catch(error => {
-            // handle error
-          })
-        }
-      }
-      if(!AgentInList){
-        console.log("Агент не найден в списке, добавляю нового")
-        const newTask = {
-          "user": document.getElementById("user-block").innerText,
-          "LastBeryClick": currentUnix,
-          "Online": true,
-          "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
-        };
-        fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
-          method: 'POST',
-          headers: {'content-type':'application/json'},
-          // Send your data in the request body as JSON
-          body: JSON.stringify(newTask)
-        }).then(res => {
-          if (res.ok) {
-            return res.json();
-          }
-            // handle error
-        }).then(task => {
-            // do something with the new task
-        }).catch(error => {
-            // handle error
-        })
-      }
-    })
-    .catch(err => console.error(err));
-
-  const options = {
+function ReservBery(){
+  const GetNewDeals_For_ReservBery = {
     method: 'POST',
     headers: {
       cookie: 'qmb=0.',
       'Content-Type': 'application/json',
       'User-Agent': 'insomnia/8.5.1'
     },
-    body: '{"filter":{"STAGE_ID":"PREPARATION","ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"},"start":"0"}'
+    body: '{"filter":{"STAGE_ID":"NEW"},"start":"0"}'
   };
-
-  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', GetNewDeals_For_ReservBery)
     .then(response => response.json())
-    .then(response => { 
-      console.log(response)
-      if (response.total == 0) {
-        Bery_GetNews()
-      }
-      else{
-        alert("У тебя уже есть заявка в работе, разберись с ней!")
-      }
-
+    .then(response => {
+      res = response.result.reverse();
+      DealId_To_Send_reserv = res[0].ID
+      const Deal_ToWork_ReservBery = {
+        method: 'POST',
+        headers: {
+          cookie: 'qmb=0.',
+            'Content-Type': 'application/json',
+            'User-Agent': 'insomnia/8.6.0'
+        },
+        body: '{"id":"'+DealId_To_Send_reserv+'","fields":{"STAGE_ID":"PREPARATION"}}'
+      };
+      const SetOtvetstnenniy_To_ReservBery = {
+            method: 'POST',
+            headers: {
+              cookie: 'qmb=0.',
+              'Content-Type': 'application/json',
+              'User-Agent': 'insomnia/8.6.1'
+            },
+            body: '{"id":"'+DealId_To_Send_reserv+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+      };
+      const SendInfo_To_ReservBery = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+        body: '{"chat_id":"-4248241774","text":"Я перевел сделку: '+DealId_To_Send_reserv+' в работу Агенту: '+document.getElementById("user-block").innerText+' через Резервную Беру"}'
+      };
+      fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', SendInfo_To_ReservBery)
+        .then(response1 => response1.json())
+        .then(response1 => {
+          console.log("response1", response1)
+          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_To_ReservBery)
+            .then(response2 => response2.json())
+            .then(response2 => {
+              console.log("response2", response2)
+              fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', Deal_ToWork_ReservBery)
+                .then(response3 => response3.json())
+                .then(response3 => {
+                  console.log("response3", response3)
+                  document.getElementById("BeryHref").href = "/crm/deal/details/"+DealId_To_Send_reserv+"/?BeryDeal";
+                  document.getElementById("BeryHref").click()
+                })
+                .catch(err => console.error(err));
+            })
+            .catch(err => console.error(err));
+        })
+        .catch(err => console.error(err));
     })
     .catch(err => console.error(err));
+}
+
+function Bery_OnClick(){
+  console.log("Жмак 0!")
+  currentUnix = Math.round(new Date().getTime()/1000.0)
+  console.log(currentUnix)
+
+  
+    const GetAgentList = {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+    };
+
+    OpenWorkFunc();
+
+    fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+      .then(response => response.json())
+      .then(response => {
+        console.log("NoWork_Agents: ", response)
+        for (var i = 0; i < response.length; i++) {
+          if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+            document.getElementById("user-name").innerText = "Александр Шатохин"
+          }
+          if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+            document.getElementById("user-name").innerText = "Павел Обухов"
+          }
+          console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-name").innerText)
+          if (response[i].user == document.getElementById("user-name").innerText) {
+            console.log("Совпалость")
+            AgentInList = true;
+            //Если агент есть в списке
+            fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+              method: 'PUT', // or PATCH
+              headers: {'content-type':'application/json'},
+              body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+            }).then(res => {
+              if (res.ok) {
+                  return res.json();
+              }
+              // handle error
+            }).then(task => {
+              console.log("Изменил Unix: ", task)
+
+            }).catch(error => {
+              // handle error
+            })
+            break;
+          }
+        }
+        if(!AgentInList){
+          console.log("Агент не найден в списке, добавляю нового")
+          const newTask = {
+            "user": document.getElementById("user-block").innerText,
+            "LastBeryClick": currentUnix,
+            "Online": true,
+            "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+          };
+          fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+            method: 'POST',
+            headers: {'content-type':'application/json'},
+            // Send your data in the request body as JSON
+            body: JSON.stringify(newTask)
+          }).then(res => {
+            if (res.ok) {
+              return res.json();
+            }
+              // handle error
+          }).then(task => {
+              // do something with the new task
+          }).catch(error => {
+              // handle error
+          })
+        }
+
+    const options = {
+      method: 'POST',
+      headers: {
+        cookie: 'qmb=0.',
+        'Content-Type': 'application/json',
+        'User-Agent': 'insomnia/8.5.1'
+      },
+      body: '{"filter":{"STAGE_ID":"PREPARATION","ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"},"start":"0"}'
+    };
+
+    fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', options)
+      .then(response => response.json())
+      .then(response => { 
+        console.log(response)
+        if (response.total == 0) {
+          Bery_GetNews()
+        }
+        else{
+          alert("У тебя уже есть заявка в работе, разберись с ней!")
+        }
+
+      })
+      .catch(err => console.error(err));
+
+  })
+    .catch(err => console.error(err));
+
+
 }
 function Bery_GetNews(){
   
@@ -2930,6 +2948,8 @@ function Bery_GetNews(){
     .then(response => response.json())
     .then(response => {
       console.log("response1", response)
+      NewsCount = response.total;
+
       if (response.total == 0) {
         alert("В новых нет заявок")
       }
@@ -2957,13 +2977,16 @@ function Bery_GetNews(){
 
               console.log("Новая заявка для списка:", AllNews_ForBery[index])
             }
-            console.log("Список новых:", AllNews_ForBery)
+            // Применяем сортировку
+            AllNews_ForBery.reverse()
+            console.log("Список новых для кнопки беру:", AllNews_ForBery)
+            SearchNedozvons_In_BeryList();
           })
           .catch(err => console.log("err2: ", err));
       }
       else{
         // Применяем сортировку
-        AllNews_ForBery.sort(sortByDate);
+        AllNews_ForBery.reverse()
         console.log("Список новых для кнопки беру:", AllNews_ForBery)
         SearchNedozvons_In_BeryList();
       }
@@ -2973,6 +2996,7 @@ function Bery_GetNews(){
 }
 
 function SearchNedozvons_In_BeryList(){
+  console.log("Вошел в проверку недозвонов")
     const fetchPromises = [];
     for (var i = 0; i < AllNews_ForBery.length; i++) {
       const options = {
@@ -3207,66 +3231,75 @@ function GetDeal_ToWork_AfterBery(){
   console.log("")
 
 
+  setTimeout(function(){
+    console.log("Все Сделки в новых: ", AllNews_ForBery)
+    console.log("Все Сделки в новых из недозвонов: ", NedovonList_For_Bery)
+    console.log("Все Сделки в новых, которые не были в недозвонах: ", AllNewDeals_InNew)
+    console.log("Все новые звонки, которые не были в недозвонах: ", AllNewCalls_InNew)
 
-  console.log("Все Сделки в новых: ", AllNews_ForBery)
-  console.log("Все Сделки в новых из недозвонов: ", NedovonList_For_Bery)
-  console.log("Все Сделки в новых, которые не были в недозвонах: ", AllNewDeals_InNew)
-  console.log("Все новые звонки, которые не были в недозвонах: ", AllNewCalls_InNew)
 
+    console.log("")
 
-  console.log("")
+    console.log("Все новые звонки с дорогим трафиком: ", ExpensiveCall_InNew)
+    console.log("Все новые звонки с недорогим трафиком: ", NotExpensiveCall_InNew)
 
-  console.log("Все новые звонки с дорогим трафиком: ", ExpensiveCall_InNew)
-  console.log("Все новые звонки с недорогим трафиком: ", NotExpensiveCall_InNew)
+    console.log("")
 
-  console.log("")
+      console.log("Все новые заявки, которые не были в недозвонах: ", NewDeals_InNew)
 
-    console.log("Все новые заявки, которые не были в недозвонах: ", NewDeals_InNew)
+    console.log("")
 
-  console.log("")
+    console.log("Звонки и заявки сегодняшнего дня из недозвонов: ", Today_NedozvonDeals_InNew);
+    console.log("Звонки и заявки предыдущих дней из недозвонов: ", Early_NedozvonDeals_InNew);
 
-  console.log("Звонки и заявки сегодняшнего дня из недозвонов: ", Today_NedozvonDeals_InNew);
-  console.log("Звонки и заявки предыдущих дней из недозвонов: ", Early_NedozvonDeals_InNew);
+    if (ExpensiveCall_InNew.length > 0) {
+      console.log("Выбрал заявку из категории новые звонки с дорогим трафиком")
+      console.log("Перевожу заявку: ", ExpensiveCall_InNew[0])
+      if(NewsCount > 40) SendDeal_ToWork(ExpensiveCall_InNew[0].ID); //Верхняя
+      else SendDeal_ToWork(ExpensiveCall_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID); //Рандом
+    }
+    else if (NotExpensiveCall_InNew.length > 0) {
+      console.log("Выбрал заявку из категории новые звонки с недорогим трафиком")
+      console.log("Перевожу заявку: ", NotExpensiveCall_InNew[0])
+      if(NewsCount > 40) SendDeal_ToWork(NotExpensiveCall_InNew[0].ID); //Верхняя
+      else SendDeal_ToWork(NotExpensiveCall_InNew[getRandomInt(NotExpensiveCall_InNew.length)].ID); //Рандом
+    }
+    else if (NewDeals_InNew.length > 0) {
+      console.log("Выбрал заявку из категории новые заявки, которые не были в недозвонах")
+      console.log("Перевожу заявку: ", NewDeals_InNew[0])
+      if(NewsCount > 40) SendDeal_ToWork(NewDeals_InNew[0].ID); //Верхняя
+      else SendDeal_ToWork(NewDeals_InNew[getRandomInt(NewDeals_InNew.length)].ID); //Рандом
+    }
+    else if (Today_NedozvonDeals_InNew.length > 0) {
+      console.log("Выбрал заявку из категории заявки сегодняшнего дня из недозвонов")
+      console.log("Перевожу заявку: ", Today_NedozvonDeals_InNew[0])
+      if(NewsCount > 40) SendDeal_ToWork(Today_NedozvonDeals_InNew[0].ID); //Верхняя
+      else SendDeal_ToWork(Today_NedozvonDeals_InNew[getRandomInt(Today_NedozvonDeals_InNew.length)].ID); //Рандом
+    }
+    else if (Early_NedozvonDeals_InNew.length > 0) {
+      console.log("Выбрал заявку из категории заявки предыдущих дней из недозвонов")
+      console.log("Перевожу заявку: ", Early_NedozvonDeals_InNew[0])
+      if(NewsCount > 40) SendDeal_ToWork(Early_NedozvonDeals_InNew[0].ID); //Верхняя
+      else SendDeal_ToWork(Early_NedozvonDeals_InNew[getRandomInt(Early_NedozvonDeals_InNew.length)].ID); //Рандом
+    }
+    else{
+      console.log("В новых ничего нет -_-")
+      alert("В новых ничего нет -_-")
+    }
+  
 
-  if (ExpensiveCall_InNew.length > 0) {
-    console.log("Выбрал заявку из категории новые звонки с дорогим трафиком")
-    console.log("Перевожу заявку: ", ExpensiveCall_InNew[0])
-    SendDeal_ToWork(ExpensiveCall_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
-  }
-  else if (NotExpensiveCall_InNew.length > 0) {
-    console.log("Выбрал заявку из категории новые звонки с недорогим трафиком")
-    console.log("Перевожу заявку: ", NotExpensiveCall_InNew[0])
-    SendDeal_ToWork(NotExpensiveCall_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
-  }
-  else if (NewDeals_InNew.length > 0) {
-    console.log("Выбрал заявку из категории новые заявки, которые не были в недозвонах")
-    console.log("Перевожу заявку: ", NewDeals_InNew[0])
-    SendDeal_ToWork(NewDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
-  }
-  else if (Today_NedozvonDeals_InNew.length > 0) {
-    console.log("Выбрал заявку из категории заявки сегодняшнего дня из недозвонов")
-    console.log("Перевожу заявку: ", Today_NedozvonDeals_InNew[0])
-    SendDeal_ToWork(Today_NedozvonDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
-  }
-  else if (Early_NedozvonDeals_InNew.length > 0) {
-    console.log("Выбрал заявку из категории заявки предыдущих дней из недозвонов")
-    console.log("Перевожу заявку: ", Early_NedozvonDeals_InNew[0])
-    SendDeal_ToWork(Early_NedozvonDeals_InNew[getRandomInt(ExpensiveCall_InNew.length)].ID)
-  }
-  else{
-    console.log("В новых ничего нет -_-")
-  }
-
-  //Очищаем все списки
-  AllNews_ForBery = []
-  NedovonList_For_Bery = []
-  AllNewDeals_InNew = [] 
-  AllNewCalls_InNew = [] 
-  NewDeals_InNew = [] 
-  ExpensiveCall_InNew = [] 
-  NotExpensiveCall_InNew = [] 
-  Today_NedozvonDeals_InNew = []
-  Early_NedozvonDeals_InNew = [] 
+    //Очищаем все списки
+    NewsCount = 0
+    AllNews_ForBery = []
+    NedovonList_For_Bery = []
+    AllNewDeals_InNew = [] 
+    AllNewCalls_InNew = [] 
+    NewDeals_InNew = [] 
+    ExpensiveCall_InNew = [] 
+    NotExpensiveCall_InNew = [] 
+    Today_NedozvonDeals_InNew = []
+    Early_NedozvonDeals_InNew = [] 
+  }, 1000)
 }
 function SendDeal_ToWork(deal_id_toBery){
   BeryDealIsTrue = true
@@ -3289,26 +3322,34 @@ function SendDeal_ToWork(deal_id_toBery){
         body: '{"id":"'+deal_id_toBery+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
       };
 
-  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', Deal_ToWork)
-    .then(response => response.json())
-    .then(response => {
-      console.log(response)
+  const SendInfo_To_Bot = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+    body: '{"chat_id":"-4248241774","text":"Я перевел сделку: '+deal_id_toBery+' в работу Агенту: '+document.getElementById("user-block").innerText+' через Беру"}'
+  };
 
+  fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', SendInfo_To_Bot)
+    .then(response1 => response1.json())
+    .then(response1 => {
+      console.log("response1", response1)
       fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToBery)
-        .then(response => response.json())
-        .then(response => {
-          console.log(response)
-          console.log("----------------- 1. Сделка " + deal_id_toBery + " переведена в работу Агенту " + document.getElementById("user-block").getAttribute("data-user-id") + " -----------------")
-          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToBery)
-            .then(response => response.json())
-            .then(response => {
-              console.log(response)
-              console.log("----------------- 2. Сделка " + deal_id_toBery + " переведена в работу Агенту " + document.getElementById("user-block").getAttribute("data-user-id") + " -----------------")
-              window.location.href = "/crm/deal/details/"+deal_id_toBery+"/?BeryDeal";
+        .then(response2 => response2.json())
+        .then(response2 => {
+          console.log("response2", response2)
+
+          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', Deal_ToWork)
+            .then(response3 => response3.json())
+            .then(response3 => {
+              console.log("response3", response3)
+              console.log("----------------- 1. Сделка " + deal_id_toBery + " переведена в работу Агенту " + document.getElementById("user-block").getAttribute("data-user-id") + " -----------------")
+              //window.location.href = "/crm/deal/details/"+deal_id_toBery+"/?BeryDeal";
+              document.getElementById("BeryHref").href = "/crm/deal/details/"+deal_id_toBery+"/?BeryDeal";
+              document.getElementById("BeryHref").click()
             })
             .catch(err => console.error(err));
         })
         .catch(err => console.error(err));
+
     })
     .catch(err => console.error(err));
 }
@@ -3514,36 +3555,7 @@ function Replace_Numbers_To_Pattern(){
   Sort_Matrix()
 }
 function Sort_Matrix(){
-  /*
-  6. Имея матрицу:
-  Deals_For_Check =  [
-    ['12345', 'per-set', '79233024909', 'NEW'],
-    ['12349', 'per-set', '79233024909', 'PREPARATION'],
-    ['12346', 'dom.ru', '79012064151', 'PREPARATION'],
-    ['12347', 'per-set', '79012064151', 'NEW'],
-    ['12348', 'SpeedInet', '79029592377', 'NEW'],
-    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL'],
-    ['12350', 'Izet', '79239414565', 'UC_0SAOJL']
-  ]
-  Сортируем ее так, что бы получить только заявки с повторяющимися номерами и разной метрикой
-  [
-    ['12345', 'per-set', '79233024909', 'NEW'],
-    ['12349', 'per-set', '79233024909', 'PREPARATION'],
-    ['12348', 'SpeedInet', '79029592377', 'NEW'],
-    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL']
-  ]
-*/
-  /*
-  var Deals_For_Check =  [
-    ['12345', 'per-set', '79233024909', 'NEW'],
-    ['12349', 'per-set', '79233024909', 'PREPARATION'],
-    ['12346', 'dom.ru', '79012064151', 'PREPARATION'],
-    ['12347', 'per-set', '79012064151', 'NEW'],
-    ['12348', 'SpeedInet', '79029592377', 'NEW'],
-    ['12350', 'SpeedInet', '79029592377', 'UC_0SAOJL'],
-    ['12351', 'Izet', '79239414565', 'UC_0SAOJL']
-  ]*/
-  
+
   repeatedRequests = [];
   DublicateMatrix = [];
   InArrayIndicator = false;
@@ -3970,7 +3982,7 @@ function getCallCard(){
       
       
       if (document.getElementsByClassName("crm-list-stage-bar-title").length > 0) {
-        if (document.getElementsByClassName("crm-list-stage-bar-title")[0].innerText == 'Новая') {
+        if (document.getElementsByClassName("crm-list-stage-bar-title")[0].innerText == 'Новая' && document.getElementsByClassName("im-phone-call-title-text")[0].innerText.indexOf("Звонок на") < 0) {
           console.log("Идет звонок")
 
           Deal_id_FromCallCard = document.getElementsByClassName("crm-card-show-detail-info-name-item")[document.getElementsByClassName("crm-card-show-detail-info-name-item").length-1].getElementsByTagName("a")[0].getAttribute("href").split("/", 5)[4];
@@ -3985,12 +3997,7 @@ function getCallCard(){
             },
             body: '{"id":"'+Deal_id_FromCallCard+'","fields":{"STAGE_ID":"PREPARATION"}}'
           };
-
-          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
-            .then(response => response.json())
-            .then(response => {
-              console.log(response)
-              const options = {
+          const SetOtvetstnenniy_ToCall1 = {
                 method: 'POST',
                 headers: {
                   cookie: 'qmb=0.',
@@ -3999,16 +4006,97 @@ function getCallCard(){
                 },
                 body: '{"id":"'+Deal_id_FromCallCard+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
               };
+          const SendInfo_To_Bot = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+            body: '{"chat_id":"-4248241774","text":"Я перевел сделку: '+Deal_id_FromCallCard+' в работу Агенту: '+document.getElementById("user-block").innerText+' через звонок 1"}'
+          };
+          const GetAgentList = {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+              };
 
-              fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
-                .then(response => response.json())
-                .then(response => {
-                  console.log(response)
-                  
+          OpenWorkFunc();
+
+
+
+          fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+            .then(response => response.json())
+            .then(response => {
+              console.log("NoWork_Agents: ", response)
+              for (var i = 0; i < response.length; i++) {
+                if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                  document.getElementById("user-name").innerText = "Александр Шатохин"
+                }
+                if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                  document.getElementById("user-name").innerText = "Павел Обухов"
+                }
+                console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
+                if (response[i].user == document.getElementById("user-block").innerText) {
+                  console.log("Совпалость")
+                  AgentInList = true;
+                  //Если агент есть в списке
+                  fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                    method: 'PUT', // or PATCH
+                    headers: {'content-type':'application/json'},
+                    body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+                  }).then(res => {
+                    if (res.ok) {
+                      return res.json();
+                    }
+                    // handle error
+                  }).then(task => {
+                    console.log("Изменил Unix: ", task)
+                  }).catch(error => {
+                        // handle error
+                  })
+                }
+              }
+              if(!AgentInList){
+                console.log("Агент не найден в списке, добавляю нового")
+                const newTask = {
+                  "user": document.getElementById("user-block").innerText,
+                  "LastBeryClick": currentUnix,
+                  "Online": true,
+                  "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+                };
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                  method: 'POST',
+                  headers: {'content-type':'application/json'},
+                  // Send your data in the request body as JSON
+                  body: JSON.stringify(newTask)
+                }).then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  }
+                  // handle error
+                }).then(task => {
+                  // do something with the new task
+                }).catch(error => {
+                  // handle error
                 })
-                .catch(err => console.error(err));
+              }
             })
             .catch(err => console.error(err));
+
+          fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', SendInfo_To_Bot)
+            .then(response1 => response1.json())
+            .then(response1 => {
+              fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToCall1)
+                .then(response2 => response2.json())
+                .then(response2 => {
+                  console.log(response2)
+                  fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', options)
+                    .then(response3 => response3.json())
+                    .then(response3 => {
+                      console.log(response3)
+                      
+                    })
+                    .catch(err => console.error(err));
+                })
+                .catch(err => console.error(err));
+          })
+          .catch(err => console.error(err));
 
         }
       }
@@ -4031,6 +4119,72 @@ function getCallCard(){
             body: '{"PHONE_NUMBER":"'+DealPhoneNumber_FromCard+'"}'
           };
 
+          OpenWorkFunc();
+
+
+
+          const GetAgentList = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+          };
+          fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+            .then(response => response.json())
+            .then(response => {
+              console.log("NoWork_Agents: ", response)
+              for (var i = 0; i < response.length; i++) {
+                if (document.getElementById("user-name").innerText == "Александр Шатохин") {
+                  document.getElementById("user-name").innerText = "Александр Шатохин"
+                }
+                if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                  document.getElementById("user-name").innerText = "Павел Обухов"
+                }
+                console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
+                if (response[i].user == document.getElementById("user-block").innerText) {
+                  console.log("Совпалость")
+                  AgentInList = true;
+                  //Если агент есть в списке
+                  fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                    method: 'PUT', // or PATCH
+                    headers: {'content-type':'application/json'},
+                    body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+                  }).then(res => {
+                    if (res.ok) {
+                      return res.json();
+                    }
+                    // handle error
+                  }).then(task => {
+                    console.log("Изменил Unix: ", task)
+                  }).catch(error => {
+                        // handle error
+                  })
+                }
+              }
+              if(!AgentInList){
+                console.log("Агент не найден в списке, добавляю нового")
+                const newTask = {
+                  "user": document.getElementById("user-block").innerText,
+                  "LastBeryClick": currentUnix,
+                  "Online": true,
+                  "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+                };
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                  method: 'POST',
+                  headers: {'content-type':'application/json'},
+                  // Send your data in the request body as JSON
+                  body: JSON.stringify(newTask)
+                }).then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  }
+                  // handle error
+                }).then(task => {
+                  // do something with the new task
+                }).catch(error => {
+                  // handle error
+                })
+              }
+            })
+            .catch(err => console.error(err));
           fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/telephony.externalCall.searchCrmEntities', GetContactId)
             .then(response => response.json())
             .then(response => {
@@ -4044,13 +4198,12 @@ function getCallCard(){
                 },
                 body: '{"filter":{"CONTACT_ID":"'+response.result[0].CRM_ENTITY_ID+'"}}'
               };
-
               fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.list', GetDealId)
                 .then(response => response.json())
                 .then(response => {
                   console.log("GetDealId: ", response)
                   DealId_From_DealPhoneNumber = response.result[0].ID;
-                  if (response.result[0].CLOSED != "Y") {
+                  if (response.result[0].CLOSED != "Y" || response.result[0].STAGE_ID == "LOSE") {
                     const Send_ToWork = {
                       method: 'POST',
                       headers: {
@@ -4060,33 +4213,37 @@ function getCallCard(){
                       },
                       body: '{"id":"'+DealId_From_DealPhoneNumber+'","fields":{"STAGE_ID":"PREPARATION"}}'
                     };
-
+                    const SetOtvetstnenniy_ToCall = {
+                      method: 'POST',
+                      headers: {
+                      cookie: 'qmb=0.',
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'insomnia/8.6.1'
+                      },
+                        body: '{"id":"'+DealId_From_DealPhoneNumber+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
+                    };
+                    const SendInfo_To_Bot = {
+                      method: 'POST',
+                      headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+                      body: '{"chat_id":"-4248241774","text":"Я перевел сделку: '+DealId_From_DealPhoneNumber+' в работу Агенту: '+document.getElementById("user-block").innerText+' через звонок 2"}'
+                    };
                     fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', Send_ToWork)
-                      .then(response => response.json())
-                      .then(response => {
-                        console.log(response)
-                        setTimeout(function(){
-                          const SetOtvetstnenniy_ToCall = {
-                            method: 'POST',
-                            headers: {
-                              cookie: 'qmb=0.',
-                              'Content-Type': 'application/json',
-                              'User-Agent': 'insomnia/8.6.1'
-                            },
-                            body: '{"id":"'+DealId_From_DealPhoneNumber+'","fields":{"ASSIGNED_BY_ID":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}}'
-                          };
-
-                          fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToCall)
-                            .then(response => response.json())
-                            .then(response => {
-                              console.log(response)
+                      .then(response1 => response1.json())
+                      .then(response1 => {
+                      fetch('https://speedinet.bitrix24.ru/rest/26/qzz79qlepr8oxwmk/crm.deal.update', SetOtvetstnenniy_ToCall)
+                        .then(response2 => response2.json())
+                        .then(response2 => {
+                          fetch('https://api.telegram.org/bot7536226475:AAG5C4lJljhCzGdqS8nl5DIjK2NoLuHCgbg/sendMessage', SendInfo_To_Bot)
+                            .then(response3 => response3.json())
+                            .then(response3 => {
                               if (document.getElementsByClassName("im-phone-call-status-description")[0].innerHTML.indexOf("Перейти в сделку") < 0) {
                                 document.getElementsByClassName("im-phone-call-status-description")[0].innerHTML += '<div class="im-phone-call-status-description-item" style="margin-top: 10px;"><a class="m-phone-call-status-description-item-link" style="color: white;text-decoration: underline;" href="'+"/crm/deal/details/"+DealId_From_DealPhoneNumber+'/">Перейти в сделку</a></div>'
                               }
                               document.getElementsByClassName("m-phone-call-status-description-item-link")[0].click()
                             })
-                          .catch(err => console.error(err));
-                        }, 1000)
+                            .catch(err => console.error(err));
+                        })
+                        .catch(err => console.error(err));
                       })
                       .catch(err => console.error(err));
                   }
@@ -4102,7 +4259,281 @@ function getCallCard(){
     }
   }
   catch(e){
-    console.log(e)
-    console.log("Жду звонок")
+    //console.log(e)
+    //console.log("Жду звонок")
   }
+}
+
+function OpenWorkFunc(){
+  var M_Name = document.getElementById("user-block").innerText
+  var M_Name_List = []
+  const GetWorkDay = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/10.1.1'
+    },
+    body: '{"user_id":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+  };
+
+  fetch('https://speedinet.bitrix24.ru/rest/25550/92yb1mz0rkt5e2cl/timeman.status', GetWorkDay)
+    .then(response => response.json())
+    .then(response => {
+      console.log(response)
+      if (UserIsAgent && response.result.STATUS != "OPENED") {
+      
+        const OpenWork = {
+          method: 'POST',
+          headers: {
+            cookie: 'qmb=0.',
+            'Content-Type': 'application/json',
+            'User-Agent': 'insomnia/10.1.1'
+          },
+          body: '{"user_id":"'+document.getElementById("user-block").getAttribute("data-user-id")+'"}'
+        };
+
+        fetch('https://speedinet.bitrix24.ru/rest/25550/92yb1mz0rkt5e2cl/timeman.open', OpenWork)
+          .then(response => response.json())
+          .then(response => {
+            const Send_OpenWork_ToLog = {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+              body: '{"chat_id":"-4548879553","text":"Автоматически начал смену у Агента '+M_Name+', Причина: Принял входящий/Нажал на кнопку"}'
+            };
+
+            fetch('https://api.telegram.org/bot7377332361:AAFr8FnibII4GPnfcsHrUjss5amE91GrzYs/sendMessage', Send_OpenWork_ToLog)
+              .then(response => response.json())
+              .then(response => console.log(response))
+              .catch(err => console.error(err));
+          })
+          .catch(err => console.error(err));
+
+      } else {
+          console.log(`Агента нет в массиве.`);
+      }
+    })
+    .catch(err => console.error(err));
+}
+
+function UserCkeck(){
+  var M_Name_List = []
+
+  const GetAgentsList = {
+    method: 'POST',
+    headers: {
+      cookie: 'qmb=0.',
+      'Content-Type': 'application/json',
+      'User-Agent': 'insomnia/10.1.1'
+    },
+    body: '{"filter":{"ACTIVE":true,"UF_DEPARTMENT":10}}'
+  };
+
+  const GetStAgentsList = {
+    method: 'GET',
+    headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'},
+  };
+  
+
+  fetch('https://656de619bcc5618d3c242ec1.mockapi.io/MyPartners/EISSD_Pass/1', GetStAgentsList)
+    .then(response1 => response1.json())
+    .then(response1 => {
+      console.log(response1)
+      fetch('https://speedinet.bitrix24.ru/rest/25550/92yb1mz0rkt5e2cl/user.get', GetAgentsList)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          var M_Name = document.getElementById("user-block").innerText
+
+          if (response1.St_Agents.includes(M_Name)) {
+            console.log(`Пользовватель является Агнентом.`);
+            UserIsAgent = true;
+          }
+
+          else{
+            for (var i = 0; i < response.result.length; i++) {
+              A_Name = response.result[i].NAME + ' ' + response.result[i].LAST_NAME
+              M_Name_List.push(A_Name)
+            }
+            console.log(M_Name_List)
+            if (M_Name_List.includes(M_Name)) {
+              console.log(`Пользовватель является Агнентом.`);
+              UserIsAgent = true;
+
+            } else {
+              console.log(`Пользовватель не является Агнентом.`);
+              UserIsAgent = false;
+            }
+          }
+        })
+        .catch(err => console.error(err));
+    })
+    .catch(err => console.error(err));
+}
+
+function SetStartEvents(){
+  var M_Name = document.getElementById("user-block").innerText
+
+  if (document.getElementsByClassName("ui-btn-icon-start").length > 0) {
+    if (document.getElementsByClassName("ui-btn-icon-start")[0] != StartEventIsOn) {
+      StartEventIsOn = document.getElementsByClassName("ui-btn-icon-start")[0]
+      console.log("добавил связь на старт:", StartEventIsOn != document.getElementsByClassName("ui-btn-icon-start")[0]) 
+      console.log("StartEventIsOn: ", StartEventIsOn)
+      console.log("document: ", document.getElementsByClassName("ui-btn-icon-start")[0])
+
+      document.getElementsByClassName("ui-btn-icon-start")[0].addEventListener('click', function (event) {
+        fetch('https://api.telegram.org/bot7377332361:AAFr8FnibII4GPnfcsHrUjss5amE91GrzYs/sendMessage', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+          body: '{"chat_id":"-4548879553","text":"Автоматически начал смену у Агента '+M_Name+', Причина: Агент сам начал смену"}'
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .catch(err => console.error(err));
+
+        const GetAgentList = {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+        };
+        fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+          .then(response => response.json())
+          .then(response => {
+            console.log("NoWork_Agents: ", response)
+            for (var i = 0; i < response.length; i++) {
+              
+              if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                document.getElementById("user-name").innerText = "Павел Обухов"
+              }
+              console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
+              if (response[i].user == document.getElementById("user-block").innerText) {
+                console.log("Совпалость")
+                AgentInList = true;
+                //Если агент есть в списке
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                  method: 'PUT', // or PATCH
+                  headers: {'content-type':'application/json'},
+                  body: '{"LastBeryClick":'+currentUnix+', "Online":true}'
+                }).then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  }
+                  // handle error
+                }).then(task => {
+                  console.log("Изменил Unix: ", task)
+                  
+                  
+                }).catch(error => {
+                  // handle error
+                })
+              }
+            }
+            if(!AgentInList){
+              console.log("Агент не найден в списке, добавляю нового")
+              const newTask = {
+                "user": document.getElementById("user-block").innerText,
+                "LastBeryClick": currentUnix,
+                "Online": true,
+                "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+              };
+              fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                method: 'POST',
+                headers: {'content-type':'application/json'},
+                // Send your data in the request body as JSON
+                body: JSON.stringify(newTask)
+              }).then(res => {
+                if (res.ok) {
+                  return res.json();
+                }
+                // handle error
+              }).then(task => {
+                // do something with the new task
+              }).catch(error => {
+                      // handle error
+              })
+            }
+          })
+          .catch(err => console.error(err));
+      });
+    }
+  }
+  if (document.getElementsByClassName("ui-btn-icon-stop").length > 0) {
+    if (document.getElementsByClassName("ui-btn-icon-stop")[0] != StopEventIsOn) {
+      StopEventIsOn = document.getElementsByClassName("ui-btn-icon-stop")[0]
+
+      document.getElementsByClassName("ui-btn-icon-stop")[0].addEventListener('click', function (event) {
+        fetch('https://api.telegram.org/bot7377332361:AAFr8FnibII4GPnfcsHrUjss5amE91GrzYs/sendMessage', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/8.5.1'},
+          body: '{"chat_id":"-4548879553","text":"Автоматически закрыл смену у Агента '+M_Name+', Причина: Агент сам закрыл смену"}'
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .catch(err => console.error(err));
+
+        const GetAgentList = {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json', 'User-Agent': 'insomnia/9.3.2'}
+        };
+        fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', GetAgentList)
+          .then(response => response.json())
+          .then(response => {
+            console.log("NoWork_Agents: ", response)
+            for (var i = 0; i < response.length; i++) {
+              
+              if (document.getElementById("user-name").innerText == "Павел Андреевич") {
+                document.getElementById("user-name").innerText = "Павел Обухов"
+              }
+              console.log("Сверяю: ", response[i].user, "и", document.getElementById("user-block").innerText)
+              if (response[i].user == document.getElementById("user-block").innerText) {
+                console.log("Совпалость")
+                AgentInList = true;
+                //Если агент есть в списке
+                fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents/'+response[i].id, {
+                  method: 'PUT', // or PATCH
+                  headers: {'content-type':'application/json'},
+                  body: '{"LastBeryClick":'+currentUnix+', "Online":false}'
+                }).then(res => {
+                  if (res.ok) {
+                    return res.json();
+                  }
+                  // handle error
+                }).then(task => {
+                  console.log("Изменил Unix: ", task)
+
+                }).catch(error => {
+                  // handle error
+                })
+              }
+            }
+            if(!AgentInList){
+              console.log("Агент не найден в списке, добавляю нового")
+              const newTask = {
+                "user": document.getElementById("user-block").innerText,
+                "LastBeryClick": currentUnix,
+                "Online": false,
+                "BT_Id": document.getElementById("user-block").getAttribute("data-user-id")
+              };
+              fetch('https://668253b204acc3545a090ff2.mockapi.io/SpeedInetBase/NoWork_Agents', {
+                method: 'POST',
+                headers: {'content-type':'application/json'},
+                // Send your data in the request body as JSON
+                body: JSON.stringify(newTask)
+              }).then(res => {
+                if (res.ok) {
+                  return res.json();
+                }
+                // handle error
+              }).then(task => {
+                // do something with the new task
+
+              }).catch(error => {
+                      // handle error
+              })
+            }
+          })
+          .catch(err => console.error(err));
+      });
+    }
+  }
+
 }
